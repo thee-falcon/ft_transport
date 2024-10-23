@@ -1,9 +1,9 @@
 * {
-	/* margin : 0;
+	margin : 0;
 	padding: 0;
 	border: none;
 	box-sizing: border-box;
-	/* scroll-behavior: smooth; */
+	scroll-behavior: smooth;
 	/* outline: none; */
 	text-decoration: none;
 	font-family: 'Poppins', sans-serif;
@@ -13,35 +13,85 @@ body {
 	background: #1B3E46;
 }
 
-.header a{
-	
-	
+.header a {
 	
 	color: #E5F690;
+	padding: 2rem;
 	/* background-color: green; */
-	font-size: 25px;
-	padding: 15px;
 	/* position : fixed; */
 	/* top : 0; */
 	/* left: 0; */
 	/* padding: 2rem 9%; */
-	/* background: transparent; */
+	/* background-color: red; */
 	
 }
 
 
-
 .header {
 	
+	font-size: 190%;
 	height: 130px;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	/* position : fixed; */
-	/* top : 100; */
 	/* left: 0; */
 	/* width: 100%; */
-	padding: 2rem;
-	background: transparent;
-
+	padding: 2.5rem;
+	/* background: transparent; */
+	
 }
+
+
+.login {
+	background-color: #1B3E41;
+	border: 3px solid #E5F690;
+	border-radius: 50px ;
+	padding-right: 1%;
+	padding-left: 1%;
+	padding-top: 0.2%;
+	padding-bottom: 0.2%;
+}
+
+.Tournament {
+	padding-top: 2%;
+	color: #1B3E46;
+	display: flex;
+	/* justify-content: space-around; */
+    width: 100%;
+	
+	
+}
+
+.Tournament h2 {
+	font-size: 500%;
+	padding-top: 1.2%;
+	font-style: italic;
+	
+}
+
+.TOURNAMENT_list{
+	background-color: #EFF3DD;
+	border-radius: 70px;
+	width: 50%;
+	padding-left: 2.5%;
+	margin-left: 7%;
+	
+	
+}
+
+.Tournament .TOURNAMENT_details {
+	text-align: end;
+	border: 3px  #E5F690 solid;
+	background-color: #FFFFFF;
+	border-radius: 70px;
+	width: 41%;
+	padding-right: 3.5%;
+	/* margin-left: ; */
+	margin-right: 7%;
+	margin-left: -7%;
+	
+	/* width: 60%; */
+    
+}
+
