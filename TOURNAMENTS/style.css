@@ -34,12 +34,8 @@ body {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	/* position : fixed; */
-	/* left: 0; */
-	/* width: 100%; */
 	padding: 2.5rem;
-	/* background: transparent; */
-	
+
 }
 
 
@@ -55,43 +51,61 @@ body {
 
 .Tournament {
 	padding-top: 2%;
-	color: #1B3E46;
+	color: black;
 	display: flex;
-	/* justify-content: space-around; */
-    width: 100%;
-	
+	justify-content: space-around;
+	height: 1050px;
 	
 }
 
-.Tournament h2 {
-	font-size: 500%;
+.TOURNAMENT_list, .TOURNAMENT_details {
+	width: 100%;
 	padding-top: 1.2%;
-	font-style: italic;
-	
+	font-style: oblique;
+	font-weight: bold;
+	font-size: 500%;
 }
+
 
 .TOURNAMENT_list{
 	background-color: #EFF3DD;
 	border-radius: 70px;
-	width: 50%;
 	padding-left: 2.5%;
 	margin-left: 7%;
-	
-	
 }
 
-.Tournament .TOURNAMENT_details {
+.TOURNAMENT_details {
 	text-align: end;
 	border: 3px  #E5F690 solid;
 	background-color: #FFFFFF;
-	border-radius: 70px;
-	width: 41%;
 	padding-right: 3.5%;
-	/* margin-left: ; */
-	margin-right: 7%;
-	margin-left: -7%;
-	
-	/* width: 60%; */
-    
+	margin-right: 5.5%;
+	margin-left: -4%;
+	z-index: -1;
+	border-radius: 70px;
 }
+
+
+.table {
+	padding-top: 8%;
+	color: black;	
+	font-size: 35%;
+
+}
+.table-row {
+	display: flex;
+	justify-content: space-around;
+	
+}
+
+
+table,th,td {
+	padding-top: 5%;
+	padding-bottom: 5%;
+	text-align: start;
+	border-bottom: #1B3E46 solid 2px;
+	border-collapse: collapse;
+
+}
+
 
