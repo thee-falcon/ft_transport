@@ -10,7 +10,9 @@
 	<body>
 		<!-- header desing -->
 		<header class="header">
-			<a href="#" class="logo" src="img_5terre.jpg">Ping<br>Pong</span></a>
+			<a href="#" class="logo">
+				<img src="../imgs/logo.png" alt="Logo">
+			</a>
 			<nav class="navbar">
 				<a href="#home">Home</a>
 				<a href="#game">Game</a>
@@ -34,41 +36,74 @@
 						<table>
 							<thead class="col1">
 								<tr>
-									<th scope="col">Tournaments<br>Competitors</th>
-									<th scope="col">Matches<br>Won</th>
-									<th scope="col">Tournaments<br>Won</th>
-									<th scope="col">Succes Rate</th>
-									<th scope="col">Points<br>Earned</th>
+									<th scope="col" class="col-tournaments">Tournaments<br>Competitors</th>
+									<th scope="col" class="col-matches">Matches<br>Won</th>
+									<th scope="col" class="col-tournaments-won">Tournaments<br>Won</th>
+									<th scope="col" class="col-success-rate">Success Rate</th>
+									<th scope="col" class="col-points-earned">Points<br>Earned</th>
+								</tr>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<th scope="row"><img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png">Midnight Sons<br>LvL 15</th>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
+									<th scope="row" class="col-tournaments">
+										<div class="row-content">
+											<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+											<div class="text-content">
+												Midnight Sons<br>
+												<span class="level">LvL 15</span>
+											</div>
+										</div>
+									</th>
+									<td class="col-matches">Today,<br>12:59 pm</td>
+									<td class="col-tournaments-won">Today,<br>12:59 pm</td>
+									<td class="col-success-rate">Today,<br>12:59 pm</td>
+									<td class="col-points-earned">Today,<br>12:59 pm</td>
 								</tr>
 								<tr>
-									<th scope="row" ><img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png">Midnight Sons<br>LvL 15</th>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
+									<th scope="row" class="col-tournaments">
+										<div class="row-content">
+											<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+											<div class="text-content">
+												Midnight Sons<br>
+												<span class="level">LvL 15</span>
+											</div>
+										</div>
+									</th>
+									<td class="col-matches">Today,<br>12:59 pm</td>
+									<td class="col-tournaments-won">Today,<br>12:59 pm</td>
+									<td class="col-success-rate">Today,<br>12:59 pm</td>
+									<td class="col-points-earned">Today,<br>12:59 pm</td>
 								</tr>
 								<tr>
-									<th scope="row"><img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png">Midnight Sons<br>LvL 15</th>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
+									<th scope="row" class="col-tournaments">
+										<div class="row-content">
+											<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+											<div class="text-content">
+												Midnight Sons<br>
+												<span class="level">LvL 15</span>
+											</div>
+										</div>
+									</th>
+									<td class="col-matches">Today,<br>12:59 pm</td>
+									<td class="col-tournaments-won">Today,<br>12:59 pm</td>
+									<td class="col-success-rate">Today,<br>12:59 pm</td>
+									<td class="col-points-earned">Today,<br>12:59 pm</td>
 								</tr>
 								<tr>
-									<th scope="row"><img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png">Midnight Sons<br>LvL 15</th>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
-									<td>Today,<br>12:59 pm</td>
+									<th scope="row" class="col-tournaments">
+										<div class="row-content">
+											<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+											<div class="text-content">
+												Midnight Sons<br>
+												<span class="level">LvL 15</span>
+											</div>
+										</div>
+									</th>
+									<td class="col-matches">Today,<br>12:59 pm</td>
+									<td class="col-tournaments-won">Today,<br>12:59 pm</td>
+									<td class="col-success-rate">Today,<br>12:59 pm</td>
+									<td class="col-points-earned">Today,<br>12:59 pm</td>
 								</tr>
 							</tbody>
 						</table>
@@ -79,7 +114,50 @@
 				<!-- <div class="Tournament_details"> -->
 					
 					
-			<div class="TOURNAMENT_details">Tournament<br>Details</div>
+			<div class="TOURNAMENT_details">Tournament<br>Details
+				<div class="TournamentFirst">Tournament First Matches :
+					<div class="tableMatches">
+
+						<div class="vsMatch">
+							<div class="tournament-content">
+								<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+								<div class="tournament-matches">
+									Midnight Sons<br>
+									<span class="level">LvL 15</span>
+								</div>
+							</div>
+							<div class="vs-text">vs</div>
+							<div class="tournament-content">
+								<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+								<div class="tournament-matches">
+									Midnight Sons<br>
+									<span class="level">LvL 15</span>
+								</div>
+							</div>
+						</div>
+						<div class="vsMatch">
+							<div class="tournament-content">
+								<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+								<div class="tournament-matches">
+									Midnight Sons<br>
+									<span class="level">LvL 15</span>
+								</div>
+							</div>
+							<div class="vs-text">vs</div>
+							<div class="tournament-content">
+								<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
+								<div class="tournament-matches">
+									Midnight Sons<br>
+									<span class="level">LvL 15</span>
+								</div>
+							</div>
+						</div>
+
+
+						
+					</div>
+				</div>
+			</div>
 		</section>
 	
 	</body>

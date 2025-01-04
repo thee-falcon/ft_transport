@@ -7,35 +7,56 @@
 	outline: none;
 	text-decoration: none;
 	font-family: 'Poppins', sans-serif;
+	/* max-width: 100%; */
 }
+
+
 
 body {
 	background: #1B3E46;
+	/* min-width: 50%; */
+    margin: 0;
+    padding: 0;
+	width: 100%;
+	height: 100%;
 }
 
-
-.header a {
-	
-	color: #E5F690;
-	padding: 2rem;
-	/* background-color: green; */
-	/* position : fixed; */
-	/* top : 0; */
-	/* left: 0; */
-	/* padding: 2rem 9%; */
-	/* background-color: red; */
-	
+.logo img {
+    width: 110px;
+    height: auto;
 }
-
 
 .header {
-	font-size: 190%;
-	height: 130px;
 	display: flex;
-	justify-content: space-around;
 	align-items: center;
-	padding: 2.5rem;
+	justify-content: space-around;
+	padding: 0px 80px;
+	font-size: 190%;
+	/* height: 130px; */
+	
+}
 
+.navbar a {
+	/* display: flex; */
+	/* justify-content: space-around; */
+	padding: 3rem;
+}
+
+/* display: flex; */
+/* flex-direction: row; */
+/* .header a {
+	color: #E5F690;
+} */
+
+.navbar, .login {
+	display: flex;
+	gap: 15px;
+}
+
+.navbar a, .login a {
+	text-decoration: none;
+	color: #E5F690; 
+	/* font-size: 16px; */
 }
 
 
@@ -52,78 +73,267 @@ body {
 .Tournament {
 	padding-top: 2%;
 	color: #1B3E41;
-	font-size: 80%;
 	display: flex;
+	/* font-size: 120%; */
 	/* justify-content: space-around; */
-	height: 1050px;
+	height: 80vh;
+	justify-content: space-between;
+    position: relative;
 	
 }
 
 .TOURNAMENT_list, .TOURNAMENT_details {
-	width: 100%;
-	padding-top: 1.2%;
+	padding-top: 2%;
 	font-style: oblique;
 	font-weight: bold;
 	font-size: 500%;
+	position: relative;
+	/* height: 100%; */
 }
 
 
 .TOURNAMENT_list{
+	flex-basis: 51%;
+	/* width: auto; */
+	/* min-width: auto; */
 	background-color: #EFF3DD;
 	border-radius: 70px;
-	padding-left: 2.5%;
+	padding: 2.5%;
+	margin-right: -3%; 
+	/* padding: 2.5%;
+	/* margin-right: -50%; */
+	/* margin-left: 8%; */
 	margin-left: 8%;
-
+	z-index: 1;
+	
 }
 
 .TOURNAMENT_details {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 36%;
+	/* width: 35%; */
 	text-align: end;
-	border: 3px  #E5F690 solid;
+	border: 5px  #E5F690 solid;
 	background-color: #FFFFFF;
-	
-	padding-right: 3.5%;
+	padding: 2%;
+	/* margin-left: -2.5%; */
+
+	/* z-index: -1; */
 	margin-right: 8%;
-	margin-left: -8%;
-	z-index: -1;
+	position: sticky;
 	border-radius: 70px;
+
 }
 
 
 .table {
-	width: 95%;
-	padding-top: 4%;
-	color: black;	
+	/* 
 	font-size: 38%;
-	font-style: normal;
+	font-family: Bai Jamjuree; */
+	
+	/* margin-bottom: 20px; */
+	padding: 7% 0%;
+	color: black;	
+	font-size: 20px;
+	/* height: 100vh; */
+	/* width: 100%; */
+	/* min-width: 40%; */
+	
+}
 
+
+
+th {
+	text-align: start;
+	padding: 20% 6px; 
+	/* width: 10%; */
+	
+	/* text-align: center;  */
+    /* vertical-align: middle; */
+}
+
+.col-tournaments {
+	width: 35%;
+	text-align: start;
+	/* height: 100vh; */
+	
+}
+
+.col-matches,
+.col-tournaments-won,
+.col-success-rate,
+.col-points-earned {
+	width: 25%;
 }
 
 
 
 table,th,td {
-	padding-top: 2%;
-	padding-bottom: 2%;
-	text-align: start;
+	width: 100%;
 	
-	border-bottom: #1B3E46 solid 1px;
+	padding-top: 3%;
+	padding-bottom: 3%;
 	border-collapse: collapse;
 	font-family: Bai Jamjuree , Helvetica, sans-serif;
-	position: relative;
-	/* display: inline-block; */
+	/* color: black; */
+	/* position: relative; */
+	
+	
+}
+
+thead tr, tbody tr{
+	border-bottom: #1B3E46 solid 1px;
+	display: flex;
+	
+	/* justify-content: space-between; */
+	
 	
 }
 
 
 
+tbody tr:last-child {
+	border-bottom: none ;
+}
+
 td {
+	font-family: Bai Jamjuree;
+	font-size: 15px;
+	font-weight: 400;
+	/* line-height: 18.75px; */
+	/* text-align: center; */
+	/* padding-left: ; */
+	/* text-underline-position: from-font;
+	text-decoration-skip-ink: none; */
+	
+}
+
+
+
+.row-content {
+	display: flex;
+	/* justify-items: center; */
+    align-items: center;
+    gap: 6%;
+}
+
+.row-content img {
+	width: 60px; /* Set the desired width for the image */
+    height: 60px; /* Set the desired height for the image */
+    border-radius: 100%; /* Optional: make the image rounded */
+}
+
+.text-content {
+	display: flex;
+    flex-direction: column;
 	font-size: 80%;
-	font-weight: normal;
+}
+
+.text-content .level {
+	
+	font-family: Bai Jamjuree;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 30px;	
+}
+
+th, td {
+	
+	text-align: center;
+	
+}
+
+.TournamentFirst {
+	display: flex;
+	flex-direction: column;
+	
+	padding: 5%;
+	/* padding: 7% 0%; */
+	font-family: Bai Jamjuree;
+	
+	padding-left: 10%;
+	font-size: 40%;
+	font-weight: 700;
+	line-height: 30px;
+	text-align: left;
+	font-style: normal;
+	/* font-weight: normal; */
+	/* display: flex; */
+	
+}
+
+.vsMatch {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	padding-bottom: 4%;
 }
 
 
-img,th {
-	width: 22%;
-	height: 22%;
-	border-radius: 100%;
+
+
+.tableMatches {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	padding-top: 4%;
+	/* align-items: center; */
+	/* align-items: start; */
 }
+
+.vs-text {
+	
+	/* display: flex; */
+	/* justify-content: space-between; */
+	/* font-size: 1.5rem;  */
+  	/* font-weight: bold; */
+  	/* margin: 0 10%; */
+  	/* align-self: center;  */
+}
+
+
+.tournament-content {
+	/* justify-content: space-between; */
+	/* display: flex;
+	padding: 2%;
+    align-items: center;
+    gap: 6%; */
+	display: flex;
+	/* flex-direction: column; */
+ 	/* align-items: center; */
+  	/* text-align: center; */
+	/* gap: 6%; */
+    /* justify-content: center; */
+    /* padding: 10px; */
+    /* background-color: #f9f9f9; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 5px; */
+    /* text-align: center; */
+}
+
+.tournament-content img {
+	display: flex;
+	width: 60px; 
+    height: 60px; 
+    border-radius: 100%; 
+}
+
+.tournament-matches {
+	display: flex;
+	flex-direction: column;
+	font-size: 80%;
+}
+
+.tournament-matches .level {
+	display: flex;
+
+	/* font-family: Bai Jamjuree; */
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 30px;
+}
+
+
 
