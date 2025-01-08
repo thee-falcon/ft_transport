@@ -86,9 +86,9 @@ body {
 	padding-top: 1%;
 	color: #1B3E41;
 	display: flex;
-	/* justify-content: space-between; */
+	justify-content: space-between;
     /* position: relative; */
-	/* flex-wrap: wrap; */
+	flex-wrap: wrap;
 }
 
 .TOURNAMENT_list, .TOURNAMENT_details {
@@ -113,12 +113,7 @@ body {
 }
 
 
-/* .finalTounament {
-	display: flex;
-	justify-content: center;
-	padding-top: 4%;
-	width: 100%;
-} */
+
 
 
 .Champion {
@@ -127,44 +122,109 @@ body {
 }
 
 
+.ChampionTouranament {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
 
 .ChampionTouranament .Championfinal {
 	display: flex;
+	flex-direction: row;
 	justify-content: center;
+	width: 50%;
+
+	height: 4%;
+	align-items: center;
+	background-color: black;
 }
 
 .FinalMatch {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	width: 100%;
+	/* background-color: red; */
 }
+
+
+.FinalMatch .Championfinal {
+	display: flex;
+	align-items: start;
+	width: 10%;
+	height: -500px;
+	/* align-items: start; */
+	justify-content: center;
+	/* width: 4%;
+	content: ""; */
+	/* height: 3150%; */
+	background-color: black;
+	
+}
+
+.line {
+	display: flex;
+	justify-content: center;
+	/* background-color: red; */
+	width: 100%;
+	/* align-items: start; */
+
+}
+
+
 .Championfinal  img {
 	display: flex;
-	width: 100px;
-	height: 100px;
-	
+	width: 150px;
+	height: 150px;
+	border-radius: 7%;
+	border: 7px  #F27E20 solid;
+}
+
+.Player {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	width: 100%;
+}
+
+.Players {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 35%;
 
 }
 
 
-
-/* 
-.FinalMatch {
+.Championfinal {
 	display: flex;
-	flex-direction: row;
-} */
-
-
-/* .round {
-	display: flex;
-	flex-direction: row;
+	/* padding-bottom: 5%; */
+	position: relative;
 }
 
-.round img {
+
+.vs {
 	display: flex;
-	width: 90%;
-	height: 35%;
-} */
+	width: 50%;
+	content: "";
+	height: 4%;
+	background-color: black;
+}
+
+
+.FinalMatch .Championfinal {
+	display: flex;
+	justify-content: center;
+	width: 0.4%;
+	content: "";
+	height: 150%;
+	background-color: black;
+}
+
+
+
+
 
 
 .TOURNAMENT_details {
@@ -253,9 +313,7 @@ body {
 	font-family: Bai Jamjuree;
 	font-size: 100%;
 	font-weight: 400;
-	/* line-height: 500%; */
 	text-align: left;
-	/* align-items: end; */
 }
 
 .TournamentPrizes {
