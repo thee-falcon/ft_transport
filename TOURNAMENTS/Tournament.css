@@ -7,7 +7,7 @@
 	outline: none;
 	text-decoration: none;
 	font-family: 'Poppins', sans-serif;
-	/* max-width: 100%; */
+
 }
 
 
@@ -15,7 +15,7 @@
 body {
 
 	background: #1B3E46;
-	/* min-width: 50%; */
+
     margin: 0;
     padding: 0;
 	width: 100%;
@@ -24,18 +24,14 @@ body {
 
 .logo {
 	display: flex;
-    /* width: 220px; */
 	margin-left: 4%;
 	margin-right: 7%;
-	/* flex-direction: row; */
-	
-    /* height: auto; */
+
 }
 
 .header {
 	display: flex;
-	/* flex-direction: row; */
-	/* background-color: red;	 */
+	
 }
 
 .navbar {
@@ -115,12 +111,27 @@ body {
 
 
 
-
 .Champion {
 	display: flex;
 	flex-direction: column;
 }
 
+.ChampionTouranament  .verticalLine {
+	display: flex;
+	align-self: end;
+
+}
+
+
+ .verticalLine {
+	display: flex;
+	background-color: black;
+	height: 52%;
+	width: 0.4%;
+	content: "";
+	align-items: end;
+
+}
 
 .ChampionTouranament {
 	display: flex;
@@ -152,8 +163,8 @@ body {
 .FinalMatch .Championfinal {
 	display: flex;
 	align-items: start;
-	width: 10%;
-	height: -500px;
+	/* width: 10%; */
+	/* height: -500px; */
 	/* align-items: start; */
 	justify-content: center;
 	/* width: 4%;
