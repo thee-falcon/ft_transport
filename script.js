@@ -1,3 +1,5 @@
+let tournamentListClass = "Tournament<br>List";
+
 
 // Components
 const HomeComponent = () => {
@@ -10,7 +12,7 @@ const HomeComponent = () => {
 
 const TournamentTree_Component = () => {
 	return `
-
+	
 	<link rel="stylesheet" href="./TOURNAMENTS/TournamentTree.css">
 	<section class="Tournament" id="TOURNAMENT">	
 		<div class="TOURNAMENT_list">Tournament<br>Tree
@@ -140,8 +142,9 @@ const TournamentTree_Component = () => {
 const TournamentComponent = () => {
 	return `
 	<link rel="stylesheet" href="tournament.css">
-	<section class="Tournament" id="TOURNAMENT">	
-		<div class="TOURNAMENT_list">Tournament<br>List
+	
+	<div class="Tournament" id="TOURNAMENT" >	
+		<div class="TOURNAMENT_list">${tournamentListClass}
 			<div class="tables">
 				<div class="table-row">
 					<table>
@@ -162,7 +165,7 @@ const TournamentComponent = () => {
 										<img src="/imgs/Screen Shot 2024-10-02 at 2.04.41 AM.png" alt="Midnight Sons Image">
 										<div class="text-content">
 											Midnight Sons<br>
-											<span class="level">LvL 15</span>
+										<span class="level">LvL 15</span>
 										</div>
 									</div>
 								</th>
@@ -265,15 +268,17 @@ const TournamentComponent = () => {
 							</div>
 						</div>
 					</div>
-				<div class="TournamentPrizes">Tournament Prizes :</div>
-					<div class="prizes">
-						<div class="TournamentChampion">Tournament Champion : 1500 pts</div>
-						<div class="PongClub">Pong Club Reward : 500 pts</div>
-						<div class="TournamentParticipation">Tournament Participation : 300 pts</div>
+					<div class="TournamentPrizes">Tournament Prizes :
+						<div class="prizes">
+							<div class="TournamentChampion">Tournament Champion : 1500 pts</div>
+							<div class="PongClub">Pong Club Reward : 500 pts</div>
+							<div class="TournamentParticipation">Tournament Participation : 300 pts</div>
+						</div>
 					</div>
+				</div>
 			</div>
 		</div>
-	</section>
+	</div>
 	`;
 };
   
@@ -282,15 +287,19 @@ const TournamentComponent = () => {
   
 // App Rendering
 const render = (com) => {
-document.getElementById('app').innerHTML = com();
+	document.getElementById('app').innerHTML = com();
 };
 
 // Navigation
-document.getElementById('index-link').addEventListener('click', () => render(HomeComponent));
+document.getElementById('chat').addEventListener('click', () => render(HomeComponent));
 document.getElementById('tournaments').addEventListener('click', () =>  render(TournamentComponent));
 document.getElementById('TournamentTree').addEventListener('click', () => render(TournamentTree_Component));
 
-  
+// document.getElementById('change-class-btn').addEventListener('click', () => {
+//     updateClassName('NEW_TOURNAMENT_'); // Example: change to a new class name
+// });
+
+
   // Initial render
-  render(HomeComponent);
+render(HomeComponent);
   
