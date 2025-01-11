@@ -1,3 +1,8 @@
+*{
+	/* overflow: auto; */
+	scroll-behavior: smooth;
+
+}
 
 .Tournament {
 	padding-top: 1%;
@@ -6,20 +11,25 @@
 	justify-content: space-between;
     position: relative;
 	flex-wrap: wrap;
+	overflow: auto;
+	scroll-behavior: smooth;
+	/* height: 100vh; */
+	/* width: 100%; */
 }
 
 .TOURNAMENT_list, .TOURNAMENT_details {
+	display: flex;
 	font-style: oblique;
 	font-weight: bold;
 	font-size: 500%;
 	position: relative;
-	display: flex;
 	flex-direction: column;
-
+	
 }
 
 
 .TOURNAMENT_list{
+	display: flex;
 	flex-basis: 51%;
 	background-color: #EFF3DD;
 	border-radius: 70px;
@@ -43,16 +53,23 @@
 }
 
 
-.table {
-	padding: 7% 0%;
+.tables {
+	display: flex;
+	width: 100%;
+
 	color: black;	
 	font-size: 33%;
 }
 
+.table-row {
+	display: flex;
+	width: 100%;
+	font-size: 70%;
+}
 
 th {
 	text-align: start;
-	padding: 20% 6px; 
+	/* padding: 20% 6px;  */
 }
 
 .col-tournaments {
@@ -68,6 +85,8 @@ th {
 }
 
 table,th,td {
+	display: flex;
+	flex-direction: column;
 	width: 100%;
 	
 	padding-top: 3%;

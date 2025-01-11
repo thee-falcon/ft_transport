@@ -1,89 +1,9 @@
-* {
-	margin : 0;
-	padding: 0;
-	border: none;
-	box-sizing: border-box;
-	scroll-behavior: smooth;
-	outline: none;
-	text-decoration: none;
-	font-family: 'Poppins', sans-serif;
-
-}
-
-
-
-body {
-
-	background: #1B3E46;
-
-    margin: 0;
-    padding: 0;
-	width: 100%;
-	height: 100%;
-}
-
-.logo {
-	display: flex;
-	margin-left: 4%;
-	margin-right: 7%;
-
-}
-
-.header {
-	display: flex;
-	
-}
-
-.navbar {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	padding: 3rem;
-	margin-top: 3rem;
-	justify-content: space-between;
-	width: 100%;
-	align-items: center;
-	font-family: Bai Jamjuree;
-	font-size: 230%;
-	font-weight: 600;
-	line-height: 25px;
-	text-align: left;
-	text-underline-position: from-font;
-	text-decoration-skip-ink: none;
-}
-
-
-.navbar a {
-	color: #E5F690;	
-	margin-bottom: 2%;
-}
-
-.logo img {
-	width: 220px;
-}
-
-
-.login {
-	background-color: #1B3E41;
-	border: 3px solid #E5F690;
-	border-radius: 50px ;
-	padding-right: 2.7%;
-	padding-left: 2.7%;
-	padding-top: 0.6%;
-	padding-bottom: 0.6%;
-	margin-right: 4%;
-	margin-left: 7%;
-}
-
-
-
-
 .Tournament {
 	padding-top: 1%;
 	color: #1B3E41;
 	display: flex;
 	justify-content: space-between;
-    /* position: relative; */
+	width: 100%;
 	flex-wrap: wrap;
 }
 
@@ -91,7 +11,6 @@ body {
 	font-style: oblique;
 	font-weight: bold;
 	font-size: 500%;
-	/* position: relative; */
 	display: flex;
 	flex-direction: column;
 
@@ -106,31 +25,36 @@ body {
 	margin-right: -3%; 
 	margin-left: 8%;
 	z-index: 1;
+	width: 100%;
 }
 
+.ChampionTouranament, .line, .Player {
+	display: flex;
+	/* padding: 1%; */
+	height: 100%;
+	box-sizing: border-box;
+}
 
 
 
 .Champion {
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 }
 
 .ChampionTouranament  .verticalLine {
 	display: flex;
 	align-self: end;
-
 }
 
 
- .verticalLine {
+.verticalLine {
 	display: flex;
 	background-color: black;
 	height: 52%;
-	width: 0.4%;
+	width: 6px;
 	content: "";
-	align-items: end;
-
 }
 
 .ChampionTouranament {
@@ -163,13 +87,8 @@ body {
 .FinalMatch .Championfinal {
 	display: flex;
 	align-items: start;
-	/* width: 10%; */
-	/* height: -500px; */
-	/* align-items: start; */
+
 	justify-content: center;
-	/* width: 4%;
-	content: ""; */
-	/* height: 3150%; */
 	background-color: black;
 	
 }
@@ -184,7 +103,7 @@ body {
 }
 
 
-.Championfinal  img {
+.TOURNAMENT_list img {
 	display: flex;
 	width: 150px;
 	height: 150px;
@@ -192,44 +111,50 @@ body {
 	border: 7px  #F27E20 solid;
 }
 
+
+
 .Player {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
-	width: 100%;
+	/* background-color: red; */
 }
 
 .Players {
 	display: flex;
 	flex-direction: row;
+	width: 30%;
+	justify-content: space-around;
 	align-items: center;
-	width: 35%;
-
+	/* width: 53%; */
 }
 
 
 .Championfinal {
 	display: flex;
-	/* padding-bottom: 5%; */
-	position: relative;
+	justify-content: space-around;
+	/* position: relative; */
 }
 
 
 .vs {
 	display: flex;
-	width: 50%;
+	width: 100%;
+	/* width: 150%; */
 	content: "";
 	height: 4%;
+	justify-content: space-around;
 	background-color: black;
 }
 
 
 .FinalMatch .Championfinal {
 	display: flex;
-	justify-content: center;
-	width: 0.4%;
-	content: "";
-	height: 150%;
+	justify-content: space-around;
+	width: 6px;
+	/* content: ""; */
+	height: 150%; /* Subtract padding */
+  	/* padding: 2px; */
 	background-color: black;
 }
 
@@ -270,6 +195,7 @@ body {
 	font-family: Bai Jamjuree;
 	font-size: 130%;
 	text-align: left;
+
 }
 
 .vs-text {

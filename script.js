@@ -1,3 +1,4 @@
+
 // Components
 const HomeComponent = () => {
 	return `
@@ -9,7 +10,8 @@ const HomeComponent = () => {
 
 const TournamentTree_Component = () => {
 	return `
-	<link rel="stylesheet" href="./TOURNAMENTS/Tournament.css">
+
+	<link rel="stylesheet" href="./TOURNAMENTS/TournamentTree.css">
 	<section class="Tournament" id="TOURNAMENT">	
 		<div class="TOURNAMENT_list">Tournament<br>Tree
 			<div class="Champion">
@@ -20,7 +22,6 @@ const TournamentTree_Component = () => {
 					</div>
 					<div class="verticalLine"></div>
 				</div>
-				<!-- <div class="vs1"></div> -->
 				<div class="line">
 					<div class="FinalMatch">
 						<div class="Championfinal">
@@ -141,7 +142,7 @@ const TournamentComponent = () => {
 	<link rel="stylesheet" href="tournament.css">
 	<section class="Tournament" id="TOURNAMENT">	
 		<div class="TOURNAMENT_list">Tournament<br>List
-			<div class="table">
+			<div class="tables">
 				<div class="table-row">
 					<table>
 						<thead class="col1">
@@ -149,7 +150,7 @@ const TournamentComponent = () => {
 								<th scope="col" class="col-tournaments">Tournaments<br>Competitors</th>
 								<th scope="col" class="col-matches">Matches<br>Won</th>
 								<th scope="col" class="col-tournaments-won">Tournaments<br>Won</th>
-								<th scope="col" class="col-success-rate">Success Rate</th>
+								<th scope="col" class="col-success-rate">Success<br>Rate</th>
 								<th scope="col" class="col-points-earned">Points<br>Earned</th>
 							</tr>
 							</tr>
@@ -283,7 +284,7 @@ const TournamentComponent = () => {
 const render = (com) => {
 document.getElementById('app').innerHTML = com();
 };
-  
+
 // Navigation
 document.getElementById('index-link').addEventListener('click', () => render(HomeComponent));
 document.getElementById('tournaments').addEventListener('click', () =>  render(TournamentComponent));
