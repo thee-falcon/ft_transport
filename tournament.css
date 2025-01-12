@@ -5,12 +5,6 @@
 	display: flex;
 	justify-content: space-between;
 	will-change: scroll-position;
-    /* position: relative; */
-	
-	/* scroll-behavior: smooth; */
-
-	/* position: sticky; */
-
 
 }
 
@@ -236,10 +230,15 @@ th, td {
 	flex-direction: column;
 	padding-left: 10%;
 	font-family: Bai Jamjuree;
-	font-size: 100%;
+	padding-top: 5%;
+	font-size: 70%;
 	font-weight: 400;
 }
 
+.TournamentChampion, .PongClub, .TournamentParticipation {
+	display: flex;
+	padding-top: 3%;
+}
 
 
 @media (max-width: 1504px) {
@@ -362,7 +361,7 @@ th, td {
 		flex-direction: column;
 	
 		padding-top: 1%;
-		/* padding-bottom: 1%; */
+		padding-bottom: 1%;
 		font-size: 14px;
 
 	}
@@ -374,5 +373,14 @@ th, td {
 		padding-left: 10%;
 		font-size: 70%;
 		/* padding-bottom: 30%; */
+	}
+	.TournamentChampion, .PongClub, .TournamentParticipation {
+		display: flex;
+		padding-top: 1%;
+	}
+
+	.TOURNAMENT_details {
+		display: flex;
+		padding-bottom: 10%;
 	}
 }
