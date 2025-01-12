@@ -13,7 +13,7 @@ const HomeComponent = () => {
 const TournamentTree_Component = () => {
 	return `
 	
-	<link rel="stylesheet" href="./TOURNAMENTS/TournamentTree.css">
+	<link rel="stylesheet" href="TournamentTree.css">
 	<section class="Tournament" id="TOURNAMENT">	
 		<div class="TOURNAMENT_list">Tournament<br>Tree
 			<div class="Champion">

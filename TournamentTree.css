@@ -28,24 +28,21 @@
 	width: 100%;
 }
 
-.ChampionTouranament, .line, .Player {
-	display: flex;
-	/* padding: 1%; */
-	height: 100%;
-	box-sizing: border-box;
-}
-
-
 
 .Champion {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	padding-top: 10%;
+	/* padding-left: 3%; */
+	/* padding-right: 3%; */
 }
 
 .ChampionTouranament  .verticalLine {
 	display: flex;
+	flex-direction: column;
 	align-self: end;
+
 }
 
 
@@ -62,6 +59,8 @@
 	justify-content: center;
 	align-items: center;
 	width: 100%;
+	flex-direction: row;
+
 }
 
 .ChampionTouranament .Championfinal {
@@ -89,7 +88,7 @@
 	align-items: start;
 
 	justify-content: center;
-	background-color: black;
+	/* background-color: black; */
 	
 }
 
@@ -105,8 +104,8 @@
 
 .TOURNAMENT_list img {
 	display: flex;
-	width: 150px;
-	height: 150px;
+	width: 80px;
+	height: 80px;
 	border-radius: 7%;
 	border: 7px  #F27E20 solid;
 }
@@ -182,7 +181,7 @@
 	flex-direction: column;
 	padding-left: 10%;
 	padding-top: 10%;
-	font-size: 40%;
+	font-size: 25%;
 	line-height: 30px;
 	text-align: left;
 	font-style: normal;
@@ -193,7 +192,7 @@
 	display: flex;
 	flex-direction: column;
 	font-family: Bai Jamjuree;
-	font-size: 130%;
+	font-size: 120%;
 	text-align: left;
 
 }
@@ -209,7 +208,6 @@
 	justify-content: space-between;
 	align-items: center;
 
-	
 }
 
 .tableMatches {
@@ -259,7 +257,7 @@
 	padding-top: 15%;
 	padding-bottom: 3%;
 	font-family: Bai Jamjuree;
-	font-size: 130%;
+	font-size: 120%;
 	font-weight: 700;
 	line-height: 30px;
 	text-align: left;
@@ -286,9 +284,122 @@
 	padding-top: 5%;
 	padding-bottom: 3%;
 	font-family: Bai Jamjuree;
-	font-size: 130%;
+	font-size: 120%;
 	font-weight: 700;
 	line-height: 30px;
 	text-align: left;
 }
 
+@media (max-width: 1504px) {
+	.Tournament {
+		display: flex;
+		max-height: none;
+		flex-direction: column;
+		padding: 5% 2% 2% 0%;
+		width: 100%;
+
+		flex-wrap: wrap;
+		position: sticky;
+		font-size: 80%;
+	}
+
+	.TOURNAMENT_list {
+		display: flex;
+		width: 85%;
+		padding-left: 10%;
+		padding-right: 10%;
+
+	}
+	
+	.TOURNAMENT_list img {
+		width: 60px;
+		height: 60px;
+	}
+
+	.verticalLine {
+		display: flex;
+		height: 40px;
+		width: 0.3%;
+
+	}
+	
+	.ChampionTouranament {
+		display: flex;
+		justify-content: center;
+		align-items: start;
+		width: 100%;
+
+	
+	}
+	
+	.ChampionTouranament .Championfinal {
+		width: 49.5%;
+		height: 2px;
+
+	}
+
+	.TOURNAMENT_details {
+		display: flex;
+		margin-top: 2%;
+		margin-left: 8%;
+		
+	}
+
+	.vs {
+		height: 3%;
+
+	}
+
+	.FinalMatch .Championfinal {
+		width: 3px;
+	}
+	
+	.TOURNAMENT_list img {
+		display: flex;
+
+		border-radius: 7%;
+		border: 4px  #F27E20 solid;
+	}
+
+	.Player {
+		display: flex;
+		padding-bottom: 10%;
+	}
+
+}
+
+@media (max-width: 500px) {
+	
+	.Tournament {
+		display: flex;
+		max-height: none;
+		flex-direction: column;
+		padding: 5% 2% 2% 0%;
+		width: 100%;
+
+		flex-wrap: wrap;
+		position: sticky;
+		font-size: 50%;
+	}
+
+	.TOURNAMENT_list img {
+		width: 30px;
+		height: 30px;
+	}
+
+	.verticalLine {
+		display: flex;
+		height: 20px;
+		width: 0.3%;
+
+	}
+	
+	.TOURNAMENT_list img {
+		display: flex;
+
+		border-radius: 7%;
+		border: 2px  #F27E20 solid;
+	}
+	
+
+}
