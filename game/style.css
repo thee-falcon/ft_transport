@@ -1,0 +1,178 @@
+/* Base Styles */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    body {
+    font-family: 'Bai Jamjuree', sans-serif;
+}
+}
+
+/* Desktop - Container */
+.container {
+    position: relative;
+    width: 100%; /* Use percentage for responsiveness */
+    max-width: 1440px;
+    height: 1024px;
+    background: #10292F;
+    margin: auto; /* Centering the container */
+}
+
+/* Main Content Area */
+.main-content {
+    position: absolute;
+    width: 1262px;
+    height: 808px;
+    left: 101px;
+    top: 144px;
+    background: #EFF3DD;
+    border: 4px solid #EFF3DD;
+    border-radius: 49px;
+}
+
+/* Group Styles */
+.group {
+    position: absolute;
+}
+
+/* Group 109 */
+.group-109 {
+    width: 311.57px;
+    height: 86.98px;
+    left: 222.45px;
+    top: 196px;
+}
+
+/* Midnight Sons */
+.midnight-sons {
+    position: absolute;
+    width: 220.48px;
+    height: 40.45px;
+    left: 222.45px;
+    top: 196px;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 40px;
+    color: #000000;
+}
+
+/* Level Indicator */
+.level {
+    position: absolute;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 30px;
+    color: #000000;
+}
+.level-15 {
+    width: 78.89px;
+    height: 36.41px;
+    left: 364.45px;
+    top: 246.57px;
+}
+
+/* Screenshot */
+.screenshot {
+    position: absolute;
+    width: 91.02px;
+    height: 82.93px;
+    border-radius: 40px;
+    background: url('Screen Shot 2024-10-02 at 2.05.14 AM') no-repeat center center;
+    background-size: cover; /* Ensure the image covers the area */
+}
+
+/* Match Score */
+.match-score {
+    position: absolute;
+    width: 324px;
+    height: 138px;
+    left: 600px;
+    top: 802px;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 48px;
+    color: #1B3E46;
+}
+
+/* VS Text */
+.vs {
+    position: absolute;
+    width: 69px;
+    height: 57px;
+    left: 710px;
+    top: 222px;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 48px;
+    color: #1B3E46;
+}
+
+/* Score Numbers */
+.score-number {
+    position: absolute;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-weight: 800;
+    font-size: 55px;
+    line-height: 67px;
+    color: #1B3E46;
+}
+
+.score-6 { left: 379px; top: 837px; }
+.score-minus { left: 719px; top: 837px; }
+.score-3 { left: 1070px; top: 837px; }
+
+/* Header */
+.header {
+    position: absolute;
+    width: 100%; /* Use full width */
+    height: 62px;
+    top: 49px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Button Styles */
+.button {
+    background: #1B3E46;
+    border: 2px solid #E5F690;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #E5F690;
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-weight: 600;
+}
+
+/* Navigation Links */
+.nav-link {
+    color: #E5F690;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 15px;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    width: 98.57px;
+    height: 59.89px;
+    left: 102.08px;
+    top: 49px;
+}
+
+/* Logo Elements */
+.logo-rectangle {
+    width: 46.86px;
+    height: 45.05px;
+    background: #1B3E46;
+    border: 2px solid #E5F690;
+    border-radius: 10px;
+}

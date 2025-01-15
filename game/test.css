@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000000;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.game-area {
+    border: 11px solid #e5f690;
+    border-radius: 30px;
+    width: 1072px;
+    height: 480px;
+    background-color: #1B3E46;
+    position: relative; /* Enable positioning for the dotted line */
+    overflow: hidden; /* Ensure the dotted line doesn't overflow */
+}
+
+.game-area::after {
+    content: '';
+    position: absolute;
+    top: 0; /* Start at the top */
+    left: 50%; /* Center it horizontally */
+    width: 2px; /* Thickness of the dotted line */
+    height: 100%; /* Full height of the element */
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 3px,
+        #e5f690 3px,
+        #e5f690 11px
+    ); /* Dotted line effect */
+    transform: translateX(-50%); /* Center the line horizontally */
+}
