@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+psycopg2-binary = "==2.9.7"
+python-dotenv = "*"
+social-auth-app-django = "*"
+django-otp = "*"
+qrcode = "*"
+django = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
