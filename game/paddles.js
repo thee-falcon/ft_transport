@@ -1,3 +1,8 @@
+
+
+
+
+
 export function drawRoundedRect(ctx, x, y, width, height, borderRadius) {
     ctx.beginPath();
     ctx.moveTo(x + borderRadius, y); // Start at the top-left corner
