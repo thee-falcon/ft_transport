@@ -29,7 +29,23 @@ nav a:hover {
     text-decoration: underline;
 }
 
+.board
+{
+    display: flex;
+    justify-content: center;  /* horizontal center */
+    align-items: center;      /* vertical center */
+    border: #EFF3DD;
+    border-radius: 30px;
+    width: 1272px;
+    height: 680px;
+    background-color: #EFF3DD;
+
+}
+
 .game-area {
+    display: flex;
+    justify-content: center;  /* horizontal center */
+    align-items: center;      /* vertical center */
     border: 11px solid #e5f690;
     border-radius: 30px;
     width: 1072px;

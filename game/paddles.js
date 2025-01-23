@@ -1,7 +1,22 @@
 
 
 
+// export function updatePaddles() {
+//     const paddleSpeed = 10;
 
+//     if (isRightUp) {
+//         right_paddleY = Math.max(paddle_height / 2, right_paddleY - paddleSpeed);
+//     }
+//     if (isRightDown) {
+//         right_paddleY = Math.min(canvas.height - paddle_height / 2, right_paddleY + paddleSpeed);
+//     }
+//     if (isLeftW) {
+//         left_paddleY = Math.max(paddle_height / 2, left_paddleY - paddleSpeed);
+//     }
+//     if (isLeftS) {
+//         left_paddleY = Math.min(canvas.height - paddle_height / 2, left_paddleY + paddleSpeed);
+//     }
+// }
 
 export function drawRoundedRect(ctx, x, y, width, height, borderRadius) {
     ctx.beginPath();
