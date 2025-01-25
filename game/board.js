@@ -9,7 +9,9 @@ const cont = canvas.getContext('2d');
 
 function drawing()
 {
-    canvas.height = 80;
-    canvas.width = 1272;
-    update_score();
+    cont.font = "500px serif";
+    cont.fillText("Hello world", 50, 90);
+    // update_score();
 }
+
+drawing(); 
