@@ -57,8 +57,8 @@ const scrs = new scores();
 let ballx = (canvas.width / 2);
 let bally = (canvas.height / 2) + 90;
 // let afterImages = [];
-let ballspeedX = 30; // Horizontal speed of the ball
-let ballspeedY = 40; // Vertical speed of the ball
+let ballspeedX = 5; // Horizontal speed of the ball
+let ballspeedY = 5; // Vertical speed of the ball
 let ballspeed = 8;
 let radius = 10;
 let isRightUp = false;
@@ -67,6 +67,7 @@ let isLeftW = false;
 let isLeftS = false;
 // console.log(right_paddleY)
 
+
 function reset_ball() {
     ballx = canvas.width / 2;
     bally = canvas.height / 2;
@@ -74,11 +75,8 @@ function reset_ball() {
     left_paddleY = canvas.height / 2;
     right_paddleY = canvas.height / 2;
     paddle_height = 200;
-    // right_paddleX
-    // Generate a random angle between 30 and 120 degrees
-    let randomAngleDegrees = Math.random() < 0.5 ? Math.random() * 30 - 30 : Math.random() * 30; // Random angle from -45 to 45
-    // let randomAngleDegrees = Math.random() * 90 - 225 // Random angle from -225 to -135
-    let randomAngleRadians = randomAngleDegrees * (Math.PI / 180); // Convert degrees to radians
+    let randomAngleDegrees = Math.random() < 0.5 ? Math.random() * 30 - 30 : Math.random() * 30; 
+    let randomAngleRadians = randomAngleDegrees * (Math.PI / 180);
 
     const direction = round_winner * -1; 
 
@@ -98,13 +96,14 @@ function draw_board()
     
     // Center the text horizontally
     const x = (board.width - textWidth) / 2; // Calculate the x position
-    const y = board.height - 150; // y position from the bottom
+    const y = board.height - 90; // y position from the bottom
 
     ctx.fillText(text, x, y); // Draw the text
-    ctx.fillText(left_scorestring, left_paddleX, y); // Draw the text
-    ctx.fillText(right_scorestring, 150, 150); // Draw the text
+    ctx.fillText(left_scorestring, (board.width)/4, y); // Draw the text
+    ctx.fillText(right_scorestring, (board.width-(board.width)/4), y); // Draw the text
+    ctx.fillText("VS", (board.width - ctx.measureText("VS").width)/2, 150); // Draw the text
 
-    
+    // add the new is and img! 
 
 }
 function draw() {
@@ -191,13 +190,15 @@ function update() {
         reset_ball();
         return;
     }
+    // right_paddleY = bally;
+
     if (bally + 1.5*radius >= canvas.height || bally - 1.5*radius <= 0) // deppanage
     {
         // bally += radius; 
         ballspeedY *= -1
-        if (Math.abs(ballspeedY) < 1) {
-            ballspeedY = Math.sign(ballspeedY) * 1; // Ensure a minimum speed
-        }
+        // if (Math.abs(ballspeedY) < 1) {
+        //     ballspeedY = Math.sign(ballspeedY) * 1; // Ensure a minimum speed
+        // }
         // if(ballspeedY < 0.1 )
         // {
         //     // Math.sign(ballspeedY)
@@ -246,11 +247,10 @@ function update() {
             }
             else
             {
-                paddle_height -= 10
+                paddle_height -= 10;
             }
         }
     }
-
 
 }
 
