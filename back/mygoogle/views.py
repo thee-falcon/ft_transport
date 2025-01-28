@@ -253,37 +253,103 @@ class google_login(APIView):
 
 from rest_framework.views import APIView
 import requests
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from rest_framework.exceptions import AuthenticationFailed
+
+from django.contrib.auth import login
+from allauth.socialaccount.models import SocialAccount, SocialLogin
+from allauth.socialaccount.helpers import complete_social_login
+from allauth.account.models import EmailAddress
+from django.http import HttpResponseRedirect
+
+from django.http import JsonResponse
+from django.contrib.auth import login
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+import requests
+from django.conf import settings
+from allauth.account.models import EmailAddress
+from django.contrib.auth.models import User
+
 class GoogleCallback(APIView):
-	permission_classes = [AllowAny]
-	def get(self, request):
-		code = request.GET.get('code')
-		token_url = "https://oauth2.googleapis.com/token"
-		token_data = {
-    	        'code': code,
-    	        'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
-    	        'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
-    	        'redirect_uri': "http://localhost:8000/api/google_callback/",
-    	        'grant_type': 'authorization_code',
-		}
+    permission_classes = [AllowAny]
 
-		token_response = requests.post(token_url, data=token_data)
-		token_info = token_response.json()
-		access_token = token_info.get('access_token')
+    def get(self, request):
+        code = request.GET.get('code')
+        token_url = "https://oauth2.googleapis.com/token"
+        token_data = {
+            'code': code,
+            'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+            'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+            'redirect_uri': "http://127.0.0.1:8000/accounts/google/login/callback/",
+            'grant_type': 'authorization_code',
+        }
+        print(f"Received authorization code: {code}")
+        
+        # Exchange the authorization code for an access token
+        token_response = requests.post(token_url, data=token_data)
+        token_info = token_response.json()
+        access_token = token_info.get('access_token')
 
-		user_info_url = "https://www.googleapis.com/oauth2/v2/userinfo"
-		user_info_response = requests.get(user_info_url, headers={
-    	        'Authorization': f"Bearer {access_token}"
-		})
-		user_info = user_info_response.json()
+        if not access_token:
+            return JsonResponse({"detail": "Failed to fetch access token."}, status=401)
 
-		user_data = {
-			'email': user_info.get('email'),
-			'username' : user_info.get('name'),
-			'external_avatar': user_info.get('picture'),
-		}
-		user = User.objects.filter(email=user_data['email']).first()
+        # Fetch user info from Google using the access token
+        user_info_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+        user_info_response = requests.get(user_info_url, headers={
+            'Authorization': f"Bearer {access_token}"
+        })
+        user_info = user_info_response.json()
 
-		# if not user is None:
-		# 	# refresh = RefreshTokens.objects.filter(user=user).first()
-		# 	token = refresh.get_access_token()
-		# 	refresh.save()   
+        email = user_info.get('email')
+        username = user_info.get('name')
+        picture = user_info.get('picture')
+
+        if not email:
+            return JsonResponse({"detail": "Email is required for authentication."}, status=400)
+
+        # Check if the user already exists
+        user = User.objects.filter(email=email).first()
+
+        if not user:
+            # Create a new user if not found
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=None  # Leave the password blank for OAuth users
+            )
+
+            # Optional: Verify email immediately
+            EmailAddress.objects.create(
+                user=user, email=email, verified=True, primary=True
+            )
+
+        # Log the user in
+        user.backend = 'allauth.account.auth_backends.AuthenticationBackend'
+        login(request, user)
+
+        # Prepare the response data
+        response_data = {
+            'message': 'Login successful!',
+            'status': 'success',
+            'user': {
+                'username': user.username,
+                'email': user.email,
+                'avatar': picture  # Include the user's profile picture
+            }
+        }
+
+        return JsonResponse(response_data)
+
+
+
+def success_view(request):
+    if request.user.is_authenticated:
+        return HttpResponse(f"Welcome, {request.user.username}! You are logged in.")
+    else:
+        return HttpResponse("Login failed or user not authenticated.")
+    

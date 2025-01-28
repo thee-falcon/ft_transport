@@ -30,6 +30,8 @@ path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / '/front/in
      path('google_login/',google_login.as_view(), name='khit'),
         path('accounts/google/login/callback/', GoogleCallbackView.as_view(), name='google_callback'),
      path('admin/', admin.site.urls),
+   
+    path('success/', success_view, name='success'),
  path('protected-api/', protected_api_view, name='protected-api'),
  path('simple-view/', simple_view,name='simpleview'),
 ]
