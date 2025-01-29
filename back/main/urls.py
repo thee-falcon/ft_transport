@@ -6,8 +6,6 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
  
 from mygoogle import views  
-from mygoogle.views import google_login
-from mygoogle.views import GoogleCallback
 from django.conf.urls.static import static
 from django.urls import path
 from django.http import HttpResponse
@@ -33,18 +31,12 @@ urlpatterns = [
         open(settings.BASE_DIR.parent / 'front/index.html').read(), 
         content_type='text/html'
     )),
-        path('admin/', admin.site.urls),   
-
-     path('button-action/', views.button_action, name='button-action'),
-   path('register-action/', views.register_action, name='register-action'),
-   path('login-action/',views.login_action, name='login-action'),     
-     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-   path('google_login/',google_login.as_view(), name='khit'),
-    path('success/', views.success_view, name='success'),
-           path('accounts/google/login/callback/', GoogleCallback.as_view(), name='google_callback'),
-path('protected-api/', views.protected_api_view, name='protected-api'),
- 
+    # path('admin/', admin.site.urls),   
+    # path('login/', views.login),
+    # path('logout/', views.logout),
+    # path('signup/', views.signup),
+    path('', include("mygoogle.urls")),
+    
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
