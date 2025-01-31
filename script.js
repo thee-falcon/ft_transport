@@ -275,21 +275,51 @@ const TournamentComponent = () => {
 	</section>
 	`;
 };
-  
-  
 
+
+const game_Component = () => {
+	// Create container elements
+	const container = document.createElement('div');
   
+	// Add stylesheet
+	const styleLink = document.createElement('link');
+	styleLink.rel = 'stylesheet';
+	styleLink.href = './game/test.css';
+	container.appendChild(styleLink); // Append the stylesheet to the container
+  
+	// Set up HTML structure
+	container.innerHTML += `
+	  <div class="board" id="boardd">
+		<canvas id="boardcanva"></canvas>
+		<div class="game-area" id="game">
+		  <canvas id="gamecanvas"></canvas>
+		</div>
+	  </div>
+	`;
+  
+	// Create and load the game script
+	const gameScript = document.createElement('script');
+	gameScript.type = 'module';
+	gameScript.src = './game/game.js';
+	container.appendChild(gameScript); // Append the script to the container
+  
+	return container;
+  };
+
+
 // App Rendering
 const render = (com) => {
-document.getElementById('app').innerHTML = com();
+	document.getElementById('app').innerHTML = com();
+	const content = com(); // Call the component function to get the new content
+	document.getElementById('app').appendChild(content);
 };
-  
+
 // Navigation
 document.getElementById('index-link').addEventListener('click', () => render(HomeComponent));
-document.getElementById('tournaments').addEventListener('click', () =>  render(TournamentComponent));
+document.getElementById('tournaments').addEventListener('click', () => render(TournamentComponent));
 document.getElementById('TournamentTree').addEventListener('click', () => render(TournamentTree_Component));
+document.getElementById('game').addEventListener('click', () => render(game_Component));
 
-  
-  // Initial render
-  render(HomeComponent);
-  
+
+// Initial render
+render(HomeComponent);

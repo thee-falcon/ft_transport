@@ -18,7 +18,7 @@
 //     }
 // }
 
-export function drawRoundedRect(ctx, x, y, width, height, borderRadius) {
+function drawRoundedRect(ctx, x, y, width, height, borderRadius) {
     ctx.beginPath();
     ctx.moveTo(x + borderRadius, y); // Start at the top-left corner
     ctx.lineTo(x + width - borderRadius, y); // Draw top edge

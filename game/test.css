@@ -9,31 +9,34 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #000000;
+    background-color: #10292F;
 }
 
-nav {
-    background-color: #333;
-    color: white;
-    padding: 1em;
-    text-align: center;
-    position: absolute;
-    top: 0;
-    width: 100%;
+.customization
+{
+   display: flex;
+   z-index: 3;
+   /* display: none; */
+   position: fixed;
+   background-color: rgb(255, 255, 255,0.3);
+   width: 25%; 
+   height: 350px; 
+   top: 420px;
+   justify-content: center;
+   align-items: center;
+   /* background-color: transparent; */
+    /* tranp */
 }
+#custos
+{
+    position: fixed;
 
-nav a {
-    color: white;
-    margin: 0 15px;
-    text-decoration: none;
-}
-
-nav a:hover {
-    text-decoration: underline;
 }
 
 .board {
     display: flex; /* Enable flexbox */
+   z-index: 1;
+
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     border: #EFF3DD;
@@ -46,6 +49,8 @@ nav a:hover {
 
 .game-area {
     display: flex; /* Enable flexbox for centering */
+   z-index: 2;
+
     justify-content: center; /* Center content inside */
     align-items: center; /* Center content vertically */
     border: 11px solid #e5f690; /* Border around the game area */
@@ -81,3 +86,4 @@ nav a:hover {
     width: 100%;
     height: 100%;
 }
+
