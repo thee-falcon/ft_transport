@@ -74,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # CSRF check should come after session middleware
+     'django.middleware.csrf.CsrfViewMiddleware',  # CSRF check should come after session middleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Keep only one instance
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

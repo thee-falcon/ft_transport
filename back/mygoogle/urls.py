@@ -27,7 +27,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
-
 urlpatterns = [
 path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / '/front/index.html').read(), content_type='text/html')),
    #  path('button-action/', button_action, name='button-action'),
@@ -36,5 +35,6 @@ path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / '/front/in
    path('login/',  views.login),
    path('logout/',  views.logout),
    path('signup/',  views.signup),
+       path('token-refresh/', TokenRefreshView.as_view(), name='token-refresh'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

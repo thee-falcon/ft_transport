@@ -62,7 +62,6 @@ def login(req):
         "refresh": str(refresh),
         "username":req.data['username'],
 
-        # "2fa": user.twofa,
     }, status=status.HTTP_200_OK)
     set_token_cookies(response, str(refresh), str(refresh.access_token))
     return response

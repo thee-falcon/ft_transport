@@ -1,117 +1,109 @@
 
-function initializeGoogle() {
-    if (!window.google || !window.google.accounts) {
-        console.error("Google API not loaded.");
-        return;
-    }
-
-
-    window.google.accounts.id.initialize({
-        client_id: '598064932608-hf8f5bd6aehru3fjegblkhqpge7fnubr.apps.googleusercontent.com',  // Replace with your actual client ID
-        callback: handleGoogleLogin
-    });
-
-    window.google.accounts.id.renderButton(
-        document.getElementById('gmail-btn'),
-        { theme: "outline", size: "Big" }            // Customize button appearance
-    );
-
-    window.google.accounts.id.prompt();
+ 
+function renderView(viewFunction, viewName) {
+    const container = document.getElementById('view-container');
+    container.innerHTML = viewFunction();
+    container.classList.add('active');
+    window.location.hash = viewName;   
 }
 
 
-function fetchSomeProtectedAPI(jwtToken) {
-    console.log('token nnnn', jwtToken);  // Logs the token to the console for debugging
-    const jwt = localStorage.getItem('jwtToken');
+ function isTokenExpired(token) {
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        return payload.exp * 1000 < Date.now();
+    } catch (e) {
+        return true;  // If token is invalid, treat it as expired
+    }
+}
 
-    fetch('http://localhost:8000/protected-api/', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${jwt}`  // Sends the token in the Authorization header
+
+function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split("=");
+        if (cookieName === name) {
+            return cookieValue;
         }
-    })
-        .then(response => response.json())  // Parse the JSON response from the backend
-        .then(data => console.log('Response from API:', data))  // Log the data from the API
-        .catch(error => console.error("Error fetching protected API:", error));  // Handle errors
+    }
+    return null;
 }
 
-
-
-function handleGoogleLogin(response) {
-    const id_token = response.credential;
-
-    if (!id_token) {
-        console.error('Google Auth error: Token not found');
-        return;
+function refreshToken() {
+    const refresh_token = getCookie("refresh"); // Get refresh token from cookies
+    if (!refresh_token) {
+        console.log("No refresh token found, user needs to log in.");
+        return Promise.resolve(null);
     }
 
-    fetch('http://localhost:8000/accounts/google/login/callback/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ token: id_token }) // Send the token
+    return fetch("http://localhost:8000/token-refresh/", {
+        method: "POST",
+        credentials: "include", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh: refresh_token }) // Send refresh token
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === "Loginn successful!") {
-                console.log('fata', data); //data container the returned Json
-                const user = data.user;
-                const jwtToken = data.token;
-                // console.log('hahowa token ' , jwtToken); // for token jwt
-                const userName = user.name;
-                const userEmail = user.email;
-                const userPicture = user.picture;
-                localStorage.setItem('jwtToken', jwtToken);
-                console.log('HEHEHEEH', user);
-                console.log('jwt token hhh', jwtToken);
-
-
-                renderView(renderMainView);
-                alert(`Welcome, ${userName}! Successfully logged in with Google!`);
-                const profilePicElement = document.getElementById('profile-pic');
-                if (profilePicElement && userPicture) {
-                    profilePicElement.src = userPicture;
-                }
-                const userInfoElement = document.getElementById('user-info');
-                fetchSomeProtectedAPI(jwtToken);
-                userInfoElement.innerHTML = `Welcome Merhba , ${userName}`;
-
-            } else {
-                console.error("Login failed:", data);
-                alert('Login failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error("Error during Google login:", error);
-            alert('An error occurred during login. Please try again.');
-        });
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                console.error("Failed to refresh token:", errorData);
+                return null;
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.access) {
+            // Store the new access token in cookies
+            document.cookie = `access=${data.access}; path=/; SameSite=None; Secure`;
+            console.log("Token refreshed:", data.access);
+            return data.access;
+        }
+        return null;
+    })
+    .catch(error => {
+        console.error("Error refreshing token:", error);
+        return null;
+    });
 }
+
+window.addEventListener("hashchange", function () {
+    handleRouteChange();
+});
+
+function handleRouteChange() {
+    const route = window.location.hash.slice(1); // Remove "#"
+    
+    const routes = {
+        "dashboard": renderMainView,
+        "login": renderLoginView,
+        "signup":renderSignupView,
+
+    };
+
+    if (routes[route]) {
+        renderView(routes[route], route);
+    } else {
+        renderView(renderLoginView, "login"); // Default to login
+    }
+}
+
+// Ensure the correct view loads when the page is refreshed
+window.onload = function () {
+    handleRouteChange();
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-    initializeGoogle();
+    // initializeGoogle();
 });
 
 renderMainView();
 renderLoginView();
 renderSignupView();
-
-const dataToSend = {
-
-
-    name: "John Doe",
-    email: "john.doe@example.com",
-    message: "Hello from the frontend!"
-};
-function renderView(viewFunction) {
-    const container = document.getElementById('view-container');
-    container.innerHTML = viewFunction();
-    container.classList.add('active');
-}
+ 
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderView(renderLoginView);
+    renderView(renderLoginView,"login");
     document.addEventListener('click', async (event) => {
 
 
@@ -123,23 +115,29 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (target.id === 'register') {
             console.log("'register button clicked!'");
             const data = {
-                username: document.getElementById('signup-username').value,
-                email: document.getElementById('signup-email').value,
-                password: document.getElementById('password').value,
-                password2: document.getElementById('confirm-password').value,
+                 
+                    username: document.getElementById('signup-username').value,
+                    email: document.getElementById('signup-email').value,
+                    password: document.getElementById('password').value,
+               
+                // password2: document.getElementById('confirm-password'),
             };
+     
+                // check for fields password wkda !!!!!
+
 
             // Send the data directly without nesting
             try {
-                const response = await fetch('http://localhost:8000/register-action/', {
+                const response = await fetch('http://localhost:8000/signup/', {
                     method: 'POST',
+                    mode: "cors",
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     credentials: 'include',
-                    body: JSON.stringify(data),  // Send data directly
+                    body: JSON.stringify(data),   // Send data directly
                 });
-
+                console.log(data.email, data.password, data.username);
                 if (response.ok) {
                     const responseData = await response.json();
                     console.log('Server response', responseData.message);
@@ -159,37 +157,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
         else if (target.id === 'login-btn') {
             const data = {
-                user: document.getElementById('login-user').value,
+                username: document.getElementById('login-user').value,
                 password: document.getElementById('login-password').value,
             };
-
+            const csrfToken = getCookie('csrftoken');  
             try {
-                const response = await fetch('http://localhost:8000/login-action/', {
+                const response = await fetch('http://localhost:8000/login/', {
                     method: 'POST',
+                    mode: "cors",
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken  // Send CSRF token with the request
                     },
-                    body: JSON.stringify(data), // Send data directly
+                    body: JSON.stringify(data),
                 });
-
+        
                 if (response.ok) {
                     const responseData = await response.json();
-
-                    console.log('Server response:', responseData.message);
+                    console.log("Server response:", responseData);
+        
+                    document.cookie = `username=${data.username}; path=/; SameSite=None; Secure`;
+                    document.cookie = `refresh=${responseData.refresh}; path=/; SameSite=None; Secure`;
+                    document.cookie = `access=${responseData.access}; path=/; SameSite=None; Secure`;
+                    console.log(getCookie("refresh")); 
+                    const accessToken = getCookie("access"); // Or use localStorage/sessionStorage if that's how you're storing them
+                    const refreshTokenn = getCookie("refresh");
+                    if (!accessToken || !refreshTokenn) {
+                        console.log("no token and no refresh token");
+                        window.location.hash = "login"; 
+                    }else{
+                    refreshToken().then(newAccessToken => {
+                        if (newAccessToken && !isTokenExpired(newAccessToken)) {
+                            renderView(renderMainView, "dashboard");
+                        } else {
+                            alert("User needs to log in again.");
+                            window.location.hash = "login";
+                        }
+                    });
+                }
+                    // renderView(renderMainView, "dashboard");
                     alert('Account logged in successfully!');
-
+        
                     // Handle superuser redirect
                     if (responseData.redirect_url) {
                         alert('Redirecting to admin panel...');
                         window.location.href = responseData.redirect_url; // Redirect superuser to admin panel
                     } else {
                         // For regular users
-                        alert(`Welcome, ${responseData.user.username}!`);
-                        renderView(renderMainView);
-
-                        const userInfoElement = document.getElementById('user-info');
-                        if (userInfoElement) {
-                            userInfoElement.innerHTML = `Welcome, ${responseData.user.username}`;
+                        if (responseData.user || responseData.username) {
+                            alert(`Welcome, ${responseData.username}!`);                            
+                            const userInfoElement = document.getElementById('user-info');
+                            if (userInfoElement) {
+                                userInfoElement.innerHTML = `Welcome, ${responseData.username}`;                                 
+                                }
+                        } else {
+                            alert('User information is missing in the response.');
                         }
                     }
                 } else {
@@ -200,11 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.log('Error:', error);
             }
-
+        
             console.log("'Login button clicked!'");
 
 
-        } else if (target.id === 'go-to-login') {
+        }else if (target.id === 'go-to-login') {
             renderView(renderLoginView);
         } else if (target.id === 'logout') {
             renderView(renderLoginView);
@@ -212,24 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('login-email').value;
             alert('Intra login');
         } else if (target.id === 'gmail-btn') {
-            try {
-                const response = await fetch('http://127.0.0.1:8000/google_login/',
-                    {
-                        method: 'GET',
-                    });
-                const data = await response.json();
-                if (response.ok) {
-                    const uri = data.url;
-                    window.location.href = uri;
-                }
-                else {
-                    console.log(data.error , 'failed to google login url');
-                }
-            }
-            catch (error) {
-                console.log(error, 'somtg wrong');
-                console.error('error during fetch', error);
-            }
+                console.log("google");
 
         }
     });

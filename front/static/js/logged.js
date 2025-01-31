@@ -6,5 +6,7 @@ function renderMainView() {
         <div id="user-info"></div>
         <img id="profile-pic" src="" alt="Profile Picture" />
     `;
+
+    
 }
 window.renderMainView = renderMainView;
