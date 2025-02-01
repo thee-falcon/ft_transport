@@ -1,12 +1,16 @@
-function renderMainView() {
-    return `
-        <h2 id="user-info">Welcome</h2> 
+class dashboard extends HTMLElement {
+    async connectedCallback() {
+        this.innerHTML = `
+        <h2>Welcome!</h2> 
         <p>You are logged in!</p>
         <button id="logout">Logout</button>
-        <div id="user-info"></div>
-        <img id="profile-pic" src="" alt="Profile Picture" />
-    `;
+        `;
 
-    
+        document.getElementById("logout").addEventListener("click", function() {
+            localStorage.removeItem("access_token");
+            window.location.hash = "signin";
+        });
+    } 
 }
-window.renderMainView = renderMainView;
+
+customElements.define('dashboard-component', dashboard);

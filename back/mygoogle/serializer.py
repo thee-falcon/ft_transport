@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User
         fields = ['id', 'username', 'password', 'email']
-
+        # nickname - profile picture - lost matchs - won matches -  matches count - lost tournaments - won tournaments - tournaments count 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("This email is already in use.")
