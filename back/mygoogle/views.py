@@ -86,19 +86,36 @@ def signup(req):
 @api_view(['POST'])
 def logout(req):
     try:
+        print("logout!!")
         refresh_token = req.COOKIES.get('refresh_token')
-        response = Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+        print("Refresh Token:", refresh_token)
+
+        response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+
         if refresh_token:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+                print("Token blacklisted successfully")
+            except Exception as e:
+                print("Error blacklisting token:", e)
+
+        # Delete cookies
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         response.delete_cookie('username')
+
         for cookie in req.COOKIES.keys():
+            print(f"Deleting cookie: {cookie}")
             response.delete_cookie(cookie)
+
+        print("Returning response:", response.data)  # Debugging log
         return response
+
     except Exception as e:
+        print("Error:", str(e))
         return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     
     
     

@@ -42,12 +42,10 @@ class signin extends HTMLElement {
 
       const data = await response.json();
       if (response.ok) {
-          // localStorage.setItem("access_token", data.access);
-          // localStorage.setItem("refresh_token", data.refresh);
-          // localStorage.setItem("username", username);
-                   document.cookie = `username=${data.username}; path=/; SameSite=None; Secure`;
-                    document.cookie = `refresh=${data.access}; path=/; SameSite=None; Secure`;
-                    document.cookie = `access=${data.refresh}; path=/; SameSite=None; Secure`;
+          localStorage.setItem("access_token", data.access);
+          localStorage.setItem("refresh_token", data.refresh);
+          localStorage.setItem("username", username);
+          alert(`Welcome, ${data.username}!`);   
           window.location.hash = "dashboard";
       } else {
           alert("Login failed. Check your credentials.");

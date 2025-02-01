@@ -102,6 +102,65 @@ renderSignupView();
  
 
 
+
+    document.getElementById("go-to-signup").addEventListener("click", () => {
+      window.location.hash = "signup";
+    });
+
+    document.getElementById("login-form").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      
+      // const username = document.getElementById("user").value;
+      // const password = document.getElementById("login-password").value;
+      const dataa = {
+        username: document.getElementById('user').value,
+        password: document.getElementById('login-password').value,
+    };
+      const response = await fetch('http://localhost:8000/login/', {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken")
+          },
+          body: JSON.stringify(dataa),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+          // localStorage.setItem("access_token", data.access);
+          // localStorage.setItem("refresh_token", data.refresh);
+          // localStorage.setItem("username", username);
+                   document.cookie = `username=${data.username}; path=/; SameSite=None; Secure`;
+                    document.cookie = `refresh=${data.access}; path=/; SameSite=None; Secure`;
+                    document.cookie = `access=${data.refresh}; path=/; SameSite=None; Secure`;
+          window.location.hash = "dashboard";
+      } else {
+          alert("Login failed. Check your credentials.");
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     renderView(renderLoginView,"login");
     document.addEventListener('click', async (event) => {
