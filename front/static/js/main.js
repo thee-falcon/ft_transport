@@ -10,7 +10,10 @@ function getCookie(name) {
 }
 
 function isAuthenticated() {
-    return localStorage.getItem("access_token") !== null;
+    // Check if an access token is available in localStorage
+    const token = localStorage.getItem("access_token");
+    
+    return token !== null; // Returns true if the token is present
 }
 
 async function navigate() {
@@ -28,7 +31,7 @@ async function navigate() {
         window.location.hash = "signin";
         return;
     }
-
+    
     container.innerHTML = `<${page}></${page}>`;
     container.classList.add("active");
 }

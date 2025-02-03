@@ -18,15 +18,21 @@ class signin extends HTMLElement {
         <div class="btn-field">
           <button type="button" id="go-to-signup">Don't have an account?</button>
         </div>
+        </div>
+        <div class="btn-field">
+          <button type="button" id="intra-btn">Login with 42</button>
+        </div>
+
       </form>
     `;
-
     document.getElementById("go-to-signup").addEventListener("click", () => {
       window.location.hash = "signup";
     });
+    let intraBtn = document.getElementById("intra-btn");
+    let log = document.getElementById("login-btn");
 
-    document.getElementById("login-form").addEventListener("submit", async function(event) {
-      event.preventDefault();
+    log.addEventListener('click', async function(event){ 
+       event.preventDefault();
       
       const username = document.getElementById("user").value;
       const password = document.getElementById("login-password").value;
@@ -50,7 +56,35 @@ class signin extends HTMLElement {
       } else {
           alert("Login failed. Check your credentials.");
       }
+    })
+    intraBtn.addEventListener('click', async function(event) {
+      event.preventDefault();
+      // Redirect to login42 URL for OAuth or SSO
+      window.location.href = "http://localhost:8000/login42/";
     });
+  
+    // After redirection, check for the access and refresh tokens
+    window.addEventListener('load', async function() {
+      try {
+          const accessToken = getCookie('access');
+          const refreshToken = getCookie('refresh');
+  
+          if (accessToken && refreshToken) {
+              localStorage.setItem("access_token", accessToken);
+              localStorage.setItem("refresh_token", refreshToken);
+              // localStorage.setItem("username", username);
+              // const user = getCookie('username');  // Assuming username is set in the cookie
+              // localStorage.setItem("username", user);
+              // alert(`Welcome, ${username}!`);
+  
+              // Redirect to dashboard or desired page
+              window.location.hash = "#dashboard";
+          }
+      } catch (error) {
+          console.error('Error during login42 authentication:', error);
+      }
+    });
+  
   }
 }
 

@@ -24,7 +24,7 @@ class signup extends HTMLElement {
 
     document.getElementById("register-form").addEventListener("submit", async function(event) {
       event.preventDefault();
-      
+      console.log("hahahahahahahahah")
       const username = document.getElementById("signup-username").value;
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("password").value;
