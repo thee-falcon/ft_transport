@@ -17,6 +17,7 @@ REDIRECT_URI = 'http://localhost:8000/login42_redir'
 def set_token_cookies(response, refresh_token, access_token):
     response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='None')
     response.set_cookie('access_token', access_token, samesite='None')
+    # response.set_cookies('username' , username,samesite='None')
 
 @api_view(['POST'])
 def login(req):
@@ -105,7 +106,7 @@ def get_42_user_info(access_token: str):
 
 @api_view(['GET'])
 def login42_redir(request):
-    code = request.GET.get('code')
+    code = request.GET.get('code') # ara dak code AUTH_CODE
     if not code:
         return JsonResponse({"error": "Authorization code not provided"}, status=400)
 
@@ -116,12 +117,15 @@ def login42_redir(request):
     user_info = get_42_user_info(access_token)
     if not user_info:
         return JsonResponse({"error": "Failed to retrieve user information"}, status=400)
-
     username = user_info.get('login')
+    email = user_info.get('email')
+    first_name = user_info.get('first_name')
+    last_name = user_info.get('last_name')
+    profile_picture = user_info.get('image', {}).get('link')  # Intra returns profile picture inside `image`
     try:
         user, created = User.objects.get_or_create(
             username=username,
-            defaults={'email': user_info.get('email')}
+            defaults={'email': email, 'first_name': first_name, 'last_name': last_name}
         )
         if created:
             print(f"New user {username} created.")
@@ -136,6 +140,11 @@ def login42_redir(request):
             "access": access_token,
             "refresh": refresh_token,
             "username": username,
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name,
+            "profile_picture": profile_picture,
+            
         }, status=302)
 
         response.set_cookie(key='access', value=access_token)
