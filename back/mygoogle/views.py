@@ -78,6 +78,8 @@ def check_token(req):
 def login42(request: HttpRequest):
     return redirect(AUTH_URL)
 
+#exchange token with code  ||  send code  to /api.intra.42.fr/oauth/token
+# and 42 respond with acces token allows the app to authorize req 
 def exchange_code_for_token(code: str):
     token_url = "https://api.intra.42.fr/oauth/token"
     data = {
@@ -108,9 +110,9 @@ def get_42_user_info(access_token: str):
 def login42_redir(request):
     code = request.GET.get('code') # ara dak code AUTH_CODE
     if not code:
-        return JsonResponse({"error": "Authorization code not provided"}, status=400)
+        return JsonResponse({"error": "code not provided"}, status=400)
 
-    access_token = exchange_code_for_token(code)
+    access_token = exchange_code_for_token(code) # send code and get the token 
     if not access_token:
         return JsonResponse({"error": "Failed to retrieve access token"}, status=400)
 
