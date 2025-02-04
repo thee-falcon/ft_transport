@@ -1,13 +1,20 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
-        const username = localStorage.getItem("username") || "Guest"; // Default to "Guest" if not found
-
-        this.innerHTML = `
-        <h2>Welcome, ${username}!</h2> 
-        <p>You are logged in!</p>
-        <button id="logout">Logout</button>
+        const username = localStorage.getItem("username");
+        const profilePicture = localStorage.getItem("profile_picture");
+            console.log("profileeeeeeeee " , profilePicture);
+   
+            this.innerHTML = `
+            <div>
+                <img 
+                    src=${profilePicture} 
+                     style="width: 100px; height: 100px; border-radius: 50%;"
+                >
+            </div>
+            <button id="logout">Logout</button> 
+            <h2>Welcome, ${username}!</h2> 
+            <p>You are logged in!</p>
         `;
-
    
 
         document.getElementById("logout").addEventListener('click', async function(event) {

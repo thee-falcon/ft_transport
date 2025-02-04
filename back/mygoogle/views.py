@@ -131,8 +131,8 @@ def login42_redir(request):
         )
         if created:
             print(f"New user {username} created.")
-        else:
-            print(f"User {username} already exists.")
+        # else:
+        #     print(f"User {username} already exists.")
     
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -152,6 +152,10 @@ def login42_redir(request):
         response.set_cookie(key='access', value=access_token)
         response.set_cookie(key='refresh', value=refresh_token)
         response.set_cookie(key='username', value=username)
+        response.set_cookie(key='email', value=email)
+        response.set_cookie(key='first_name', value=first_name)
+        response.set_cookie(key='last_name', value=last_name)
+        response.set_cookie(key='profile_picture', value=profile_picture)
 
         response['Location'] = "http://localhost:8000/#dashboard"
         

@@ -35,6 +35,7 @@ class signin extends HTMLElement {
        event.preventDefault();
       
       const username = document.getElementById("user").value;
+      // const username = getCookie('user');
       const password = document.getElementById("login-password").value;
       
       const response = await fetch('http://localhost:8000/login/', {
@@ -66,18 +67,29 @@ class signin extends HTMLElement {
     // After redirection, check for the access and refresh tokens
     window.addEventListener('load', async function() {
       try {
-          const accessToken = getCookie('access');
-          const refreshToken = getCookie('refresh');
-  
-          if (accessToken && refreshToken) {
-              localStorage.setItem("access_token", accessToken);
-              localStorage.setItem("refresh_token", refreshToken);
-              // localStorage.setItem("username", username);
-              // const user = getCookie('username');  // Assuming username is set in the cookie
-              // localStorage.setItem("username", user);
-              // alert(`Welcome, ${username}!`);
-  
-              // Redirect to dashboard or desired page
+        const accessToken = getCookie('access');
+        const refreshToken = getCookie('refresh');
+        const username = getCookie('username').trim()
+        const profilePicture = getCookie('profile_picture');
+        
+        // console.log(`>>>>>>>>> ${profilePicture} <<<<<<<<<<`)
+        const email = getCookie('email');
+        const firstName = getCookie('first_name');
+        const lastName = getCookie('last_name');
+        
+          if (accessToken && refreshToken  ) {
+            localStorage.setItem("username",username);
+            localStorage.setItem("access_token", accessToken);
+            localStorage.setItem("refresh_token", refreshToken);
+            localStorage.setItem("profile_picture", profilePicture);
+
+            // Print user data to console
+            console.log("User Data:");
+            console.log("Username:", username);
+            console.log("Email:", email);
+            console.log("First Name:", firstName);
+            console.log("Last Name:", lastName);
+            console.log("Profile Picture:", profilePicture);
               window.location.hash = "#dashboard";
           }
       } catch (error) {
@@ -89,3 +101,7 @@ class signin extends HTMLElement {
 }
 
 customElements.define('signin-component', signin);
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+}
