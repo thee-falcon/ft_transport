@@ -1,9 +1,9 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
         const username = localStorage.getItem("username");
-        const profilePicture = localStorage.getItem("profile_picture");
+        const profilePicture = localStorage.getItem("profile_picture") || "front/static/js/dd.jpg";
+      
             console.log("profileeeeeeeee " , profilePicture);
-   
             this.innerHTML = `
             <div>
                 <img 
