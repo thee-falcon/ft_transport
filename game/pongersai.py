@@ -7,6 +7,7 @@ import time
 import queue
 import threading
 import pickle
+import math
 
 class PongAI:
     def __init__(self):
@@ -48,6 +49,44 @@ class PongAI:
         
         # Training history
         self.training_history = self.load_training_history()
+    def get_action(self, game_state):
+        """
+        Determines the paddle's next action based on the current game state.
+        Returns: 
+            -1 for move up
+             0 for stay in place
+             1 for move down
+        """
+        if self.current_net is None:
+            return 0
+            
+        try:
+            # Normalize inputs between 0 and 1
+            inputs = (
+                game_state['ballY'] / game_state['canvasHeight'],    # Ball Y position
+                game_state['ballX'] / game_state['canvasWidth'],     # Ball X position
+                game_state['paddleY'] / game_state['canvasHeight'],  # Paddle Y position
+                game_state['ballSpeedX'] / 15,                       # Ball X speed (normalized by max speed)
+                game_state['ballSpeedY'] / 15                        # Ball Y speed (normalized by max speed)
+            )
+            
+            # Get network outputs
+            outputs = self.current_net.activate(inputs)
+            
+            # Find which action has the highest activation
+            decision = outputs.index(max(outputs))
+            
+            # Convert network output to paddle movement
+            if decision == 0:    # First output highest - move up
+                return -1
+            elif decision == 1:  # Second output highest - stay
+                return 0
+            else:               # Third output highest - move down
+                return 1
+                
+        except Exception as e:
+            print(f"Error in get_action: {e}")
+            return 0  # Default to no movement on error
 
     def load_training_history(self):
         try:
@@ -75,71 +114,82 @@ class PongAI:
         except Exception as e:
             print(f"Error saving checkpoint: {e}")
 
+    def check_stagnation(self, new_fitness):
+        self.fitness_history.append(new_fitness)
+        if len(self.fitness_history) > 10:
+            avg_recent = sum(self.fitness_history[-10:]) / 10
+            avg_previous = sum(self.fitness_history[-20:-10]) / 10
+            if abs(avg_recent - avg_previous) < 0.1:
+                return True  # Stagnated
+        return False
+    
     def calculate_fitness(self, game_data):
         if not game_data:
             return 0.0
 
         total_fitness = 0.0
-        
+
+        # Weights for different aspects
+        STREAK_WEIGHT = 3.0
+        SPEED_WEIGHT = 1.5
+        PADDLE_WEIGHT = 1.2
+        TIME_WEIGHT = 2.0
+        EFFICIENCY_WEIGHT = 1.3
+        POSITION_WEIGHT = 1.4
+
         for game in game_data:
             game_fitness = 0.0
-            
+
             # Base fitness from successfully hitting the ball
-            game_fitness += game['streak'] * 2.0
-            
-            # Bonus for ball speed handling
-            speed_bonus = min(game['ballSpeed'], 20.0) / 20.0
-            game_fitness *= (1.0 + speed_bonus)
-            
-            # Bonus for handling smaller paddle
-            paddle_bonus = 1.0 + (1.0 - (game['paddleHeight'] / 200.0))
+            # Exponential reward for longer streaks
+            streak = game['streak']
+            game_fitness += STREAK_WEIGHT * (streak ** 1.5)
+
+            # Progressive ball speed handling bonus
+            # More reward for handling higher speeds
+            speed = min(game['ballSpeed'], 20.0)
+            speed_bonus = (speed / 20.0) ** 2  # Quadratic scaling
+            game_fitness *= (1.0 + (speed_bonus * SPEED_WEIGHT))
+
+            # Smaller paddle bonus with exponential scaling
+            paddle_size_ratio = game['paddleHeight'] / 200.0
+            paddle_bonus = (1.0 + (1.0 - paddle_size_ratio) ** 2) * PADDLE_WEIGHT
             game_fitness *= paddle_bonus
-            
-            # Time survival bonus (even if eventually lost)
-            time_bonus = min(game.get('survivalTime', 0), 30) / 30.0  # Cap at 30 seconds
-            game_fitness += time_bonus * 5.0
-            
+
+            # Survival time bonus with diminishing returns
+            time_alive = min(game.get('survivalTime', 0), 30)
+            time_bonus = (1 - math.exp(-time_alive / 15)) * TIME_WEIGHT * 10.0
+            game_fitness += time_bonus
+
+            # Movement efficiency with improved scaling
+            if 'moves' in game and game['streak'] > 0:
+                moves_per_hit = game['moves'] / game['streak']
+                # Penalize excessive movement more strongly
+                efficiency_bonus = math.exp(-moves_per_hit / 5) * EFFICIENCY_WEIGHT
+                game_fitness *= (1.0 + efficiency_bonus)
+
+            # New: Positioning bonus
+            if 'paddleY' in game and 'ballY' in game:
+                # Reward keeping the paddle closer to the ball's Y position
+                position_diff = abs(game['paddleY'] - game['ballY'])
+                position_bonus = math.exp(-position_diff / 100) * POSITION_WEIGHT
+                game_fitness *= (1.0 + position_bonus)
+
             total_fitness += game_fitness
 
-        # Calculate average fitness across all games
         avg_fitness = total_fitness / len(game_data)
-        
-        # If the last game was lost, apply a penalty but don't completely negate good performance
+
+        # Progressive penalty for losing
         if game_data[-1].get('lost', False):
-            final_fitness = max(0.1, avg_fitness - 5.0)  # Ensure minimum positive fitness
+            # Penalty scales with how well they were doing
+            penalty_factor = 0.7  # Lose 30% of fitness
+            final_fitness = max(0.1, avg_fitness * penalty_factor)
         else:
-            final_fitness = avg_fitness + 2.0  # Bonus for not losing
-            
+            # Bonus for surviving
+            final_fitness = avg_fitness * 1.3  # 30% bonus for not losing
+
         print(f"Fitness breakdown - Avg: {avg_fitness:.2f}, Final: {final_fitness:.2f}, Games: {len(game_data)}")
         return final_fitness
-
-    def get_action(self, game_state):
-        if self.current_net is None:
-            return 0
-        try:
-            inputs = (
-                game_state['ballY'] / game_state['canvasHeight'],
-                game_state['ballX'] / game_state['canvasWidth'],
-                game_state['paddleY'] / game_state['canvasHeight'],
-                game_state['ballSpeedX'] / 15,
-                game_state['ballSpeedY'] / 15
-            )
-            # Get three outputs: [stay, up, down]
-            outputs = self.current_net.activate(inputs)
-            # Find which action has the highest value
-            decision = outputs.index(max(outputs))
-            
-            # Convert decision to paddle movement
-            if decision == 1:    # Move up
-                return -1
-            elif decision == 2:  # Move down
-                return 1
-            else:               # Stay in place
-                return 0
-            
-        except Exception as e:
-            print(f"Error in get_action: {e}")
-            return 0
 
     def update_fitness(self, game_data, genome_id, lost=False):
         if self.is_evaluating and genome_id == self.current_genome_id:
@@ -155,8 +205,12 @@ class PongAI:
         best_fitness = -float('inf')
         best_genome = None
         generation_stats = {'generation': len(self.training_history['generations']), 'genomes': []}
-
-        for genome_id, genome in genomes:
+    
+        # Sort genomes by fitness first
+        genome_list = list(genomes)
+        genome_list.sort(key=lambda x: x[1].fitness if x[1].fitness is not None else -float('inf'), reverse=True)
+    
+        for genome_id, genome in genome_list:
             self.is_evaluating = True
             self.current_genome = genome
             self.current_net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -177,21 +231,21 @@ class PongAI:
                 except Exception as e:
                     print(f"Error processing fitness: {e}")
                 time.sleep(0.1)
-
+    
             if not received_fitness:
                 genome.fitness = 0.0
-
+    
             generation_stats['genomes'].append({
                 'id': genome_id,
                 'fitness': genome.fitness
             })
-
-            if genome.fitness > best_fitness:
+    
+            if genome.fitness is not None and genome.fitness > best_fitness:
                 best_fitness = genome.fitness
                 best_genome = genome
-
+    
             self.is_evaluating = False
-
+    
         # Update training history
         self.training_history['generations'].append(generation_stats)
         self.training_history['best_fitness'].append(best_fitness)
@@ -199,7 +253,7 @@ class PongAI:
         # Save progress
         self.save_training_history()
         self.save_checkpoint()
-
+    
         if best_genome:
             self.best_genome = best_genome
             print(f"Generation complete. Best fitness: {best_fitness:.2f}")
@@ -285,7 +339,13 @@ class PongServer(BaseHTTPRequestHandler):
             self.wfile.write(f"Internal server error: {str(e)}".encode('utf-8'))
 
 def run_neat(ai):
-    ai.population.run(ai.eval_genomes, 100)
+    # Only run if no generations have been completed
+    if len(ai.training_history['generations']) == 0:
+        ai.population.run(ai.eval_genomes, 100)
+    else:
+        # Resume from last generation
+        last_generation = len(ai.training_history['generations'])
+        ai.population.run(ai.eval_genomes, 100 - last_generation)
 
 def run_server():
     server_address = ('', 8000)

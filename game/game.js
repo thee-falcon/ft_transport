@@ -13,7 +13,7 @@ let roundStartTime = performance.now();
 let resetDelay = 10; // Delay in milliseconds
 let lastResetTime = 0; // Track the last reset time
 let isResetting = false;
-
+let moveCounter = 0;
 const LEFT = -1;
 const RIGHT = 1;
 let round_winner = Math.random() < 0.5 ? (Math.random() * -1) : (Math.random() * 1);
@@ -190,6 +190,7 @@ function update() {
             ballspeedY = ballspeed * Math.sin(randomAngleRadians);
             // updateAIFitness();
             streak = 0;
+            moveCounter = 0;
             isResetting = false; // Reset the state
             custoDiv.style.display = 'none';
 
@@ -339,8 +340,11 @@ async function updateAIPaddle() {
         });
 
         const data = await response.json();
-        const aiPaddleSpeed = 10;
-        console.log(data.action)
+        const aiPaddleSpeed = 15;
+        // console.log(data.action)
+        if (data.action !== 0) {  // Only count non-zero movements
+            moveCounter++;
+        }
         const newY = right_paddleY + (data.action * aiPaddleSpeed);
         right_paddleY = Math.max((paddle_height / 2) + 5, 
                       Math.min((canvas.height - paddle_height / 2) - 5, newY));
@@ -363,7 +367,8 @@ async function updateAIFitness(lost = false) {
         ballSpeed: ballspeed,
         paddleHeight: paddle_height,
         lost: lost,
-        survivalTime: survivalTime
+        survivalTime: survivalTime,
+        moves: moveCounter 
     });
 
     if (fitnessData.length >= batchSize || lost) {
