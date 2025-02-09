@@ -8,22 +8,16 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializer import UserSerializer
-from .models import Profile
-from rest_framework.decorators import api_view
-
-
-
- 
 
 SECRET = "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"  
 UID = "u-s4t2ud-ce06a015b3085a9d1b2735ae095fdd353bebe0c3deeb5d67f164a0dfdfbbb144"
 AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=" + UID + "&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
-def set_token_cookies(response, refresh_token, access_token):
-    response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='None')
-    response.set_cookie('access_token', access_token, samesite='None')
-    # response.set_cookies('username' , username,samesite='None')
+def set_token_cookies(response, refresh_token, access_token ):
+    response.set_cookie('refresh_token', refresh_token , samesite='None')
+    response.set_cookie('access_token', access_token, samesite='None' )
+ 
 
 @api_view(['POST'])
 def login(req):
@@ -31,14 +25,11 @@ def login(req):
     if not user.check_password(req.data['password']):
         return Response({"detail": "Wrong Password !"}, status=status.HTTP_406_NOT_ACCEPTABLE)
     
-    profile = Profile.objects.filter(user=user).first()
-    avatar = profile.avatar if profile else 'https://histoire-image.org/sites/default/files/2022-02/hitler-imperatif.jpg'
     refresh = RefreshToken.for_user(user)
     response = Response({
         "access": str(refresh.access_token),
         "refresh": str(refresh),
         "username": req.data['username'],
-        'avatar': avatar
     }, status=status.HTTP_200_OK)
     
     set_token_cookies(response, str(refresh), str(refresh.access_token))
@@ -53,16 +44,12 @@ def signup(req):
 
     serializer = UserSerializer(data=req.data)
     if serializer.is_valid():
-        user = User.objects.create_user(
-            username=req.data['username'],
-            email=req.data['email'],
-            password=req.data['password']  # `create_user` hashes the password correctly
-        )
-        profile, created = Profile.objects.get_or_create(user=user) ##dupp
-        avatar_url = req.data.get('avatar', 'https://i1.sndcdn.com/avatars-000009619178-sorufr-t1080x1080.jpg')
-        profile.avatar = avatar_url
-        profile.save()
-        return Response({"user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
+        serializer.save()
+        user = User.objects.get(username=req.data['username'])
+        user.set_password(req.data['password'])
+        user.save()
+        return Response({"user": serializer.data})
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -83,10 +70,10 @@ def logout(req):
 
     return response
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def check_token(req):
-    return Response({"detail": "You are authenticated!"}, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def check_token(req):
+#     return Response({"detail": "You are authenticated!"}, status=status.HTTP_200_OK)
 
 def login42(request: HttpRequest):
     return redirect(AUTH_URL)
@@ -140,16 +127,13 @@ def login42_redir(request):
     try:
         user, created = User.objects.get_or_create(
             username=username,
-            defaults={'email': email, 'first_name': first_name, 'last_name': last_name ,  }
+            defaults={'email': email, 'first_name': first_name, 'last_name': last_name}
         )
         if created:
-            Profile.objects.create(user=user, avatar=profile_picture)
             print(f"New user {username} created.")
-        else:
-            user.profile.avatar = profile_picture  # Update profile picture if needed
-            user.profile.save()
-
-        print("message" "Login successful",  UserSerializer(user).data)
+        # else:
+        #     print(f"User {username} already exists.")
+    
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
