@@ -27,12 +27,13 @@ def login(req):
     
     refresh = RefreshToken.for_user(user)
     response = Response({
-        "access": str(refresh.access_token),
-        "refresh": str(refresh),
+        "access_token": str(refresh.access_token),
+        "refresh_token": str(refresh),
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
     
     set_token_cookies(response, str(refresh), str(refresh.access_token))
+    
     return response
 
 @api_view(['POST'])
@@ -65,15 +66,17 @@ def logout(req):
             print("Error blacklisting token:", e)
 
     response.delete_cookie('access_token')
+    
     response.delete_cookie('refresh_token')
     response.delete_cookie('username')
-
+    response.delete_cookie( 'email' )
+    response.delete_cookie( 'first_name' )
+    response.delete_cookie( 'last_name' )
+    response.delete_cookie( 'profile_picture' )
+    req.session.flush()
     return response
 
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def check_token(req):
-#     return Response({"detail": "You are authenticated!"}, status=status.HTTP_200_OK)
+
 
 def login42(request: HttpRequest):
     return redirect(AUTH_URL)
@@ -137,10 +140,10 @@ def login42_redir(request):
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
-
+        print(refresh_token)
         response = Response({
-            "access": access_token,
-            "refresh": refresh_token,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
             "username": username,
             "email": email,
             "first_name": first_name,
@@ -149,8 +152,9 @@ def login42_redir(request):
             
         }, status=302)
 
-        response.set_cookie(key='access', value=access_token)
-        response.set_cookie(key='refresh', value=refresh_token)
+        response.set_cookie(key='access_token', value=access_token)
+        response.set_cookie(key='refresh_token', value=refresh_token)
+        print(response.set_cookie(key='refresh_token', value=refresh_token))
         response.set_cookie(key='username', value=username)
         response.set_cookie(key='email', value=email)
         response.set_cookie(key='first_name', value=first_name)
@@ -158,7 +162,6 @@ def login42_redir(request):
         response.set_cookie(key='profile_picture', value=profile_picture)
 
         response['Location'] = "http://localhost:8000/#dashboard"
-        
         return response
     except Exception as e:
         print("Error during user creation:", str(e))
