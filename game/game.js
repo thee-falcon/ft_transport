@@ -23,7 +23,7 @@ canvas.height = 480;
 canvas.width = 1072; 
 board.height = 900;
 board.width = 1400;
-let paddle_height = 200;
+let paddle_height = 140;
 let paddle_width = 15;
 const left_paddleX = 20;
 const right_paddleX = canvas.width - (20 + paddle_width);
@@ -180,7 +180,7 @@ function update() {
             ballspeed = 8;
             left_paddleY = canvas.height / 2;
             right_paddleY = canvas.height / 2;
-            paddle_height = 200;
+            paddle_height = 140;
             
             let randomAngleDegrees = Math.random() < 0.5 ? Math.random() * 30 - 30 : Math.random() * 30;
             let randomAngleRadians = randomAngleDegrees * (Math.PI / 180);
@@ -197,7 +197,13 @@ function update() {
         }
         return;
     }
-    left_paddleY = bally;
+    // left_paddleY = bally+(paddle_height/4);
+    // Calculate the two possible values
+let option1 = bally + (paddle_height / 4);
+let option2 = bally - (paddle_height / 4);
+
+// Randomly select one of the two options
+    left_paddleY = Math.random() < 0.5 ? option1 : option2;
     updateAIPaddle();
     ballx += ballspeedX;
     bally += ballspeedY;
@@ -325,7 +331,9 @@ async function updateAIPaddle() {
             canvasWidth: canvas.width,
             canvasHeight: canvas.height,
             ballSpeedX: ballspeedX,
-            ballSpeedY: ballspeedY
+            ballSpeedY: ballspeedY,
+            LpaddleY: left_paddleY,
+            RpaddleX: right_paddleX
         };
 
         const response = await fetch('http://localhost:8000', {
@@ -340,8 +348,15 @@ async function updateAIPaddle() {
         });
 
         const data = await response.json();
-        const aiPaddleSpeed = 15;
-        // console.log(data.action)
+        const aiPaddleSpeed = 20;
+        // console.log(gameState)
+        // console.log("ballspeedx",ballspeedX/15)
+        // console.log("ballspeedy",ballspeedY/15)
+        // console.log("ballY",bally/canvas.height)
+        // console.log("BallX",ballx/canvas.width)
+        // console.log("PADDLEY ",right_paddleY/canvas.height)
+
+
         if (data.action !== 0) {  // Only count non-zero movements
             moveCounter++;
         }

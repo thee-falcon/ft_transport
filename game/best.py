@@ -64,7 +64,7 @@ if __name__ == "__main__":
         
         # You can now use this network to play Pong
         # Example input: (ballY, ballX, paddleY, ballSpeedX, ballSpeedY)
-        sample_input = (100, 120, 100, 8, 8)  # Center positions
+        sample_input = (100, 120, 100, 8, 8,100)  # Center positions
         output = net.activate(sample_input)
         print(f"\nSample prediction for centered positions:")
         print(f"Stay: {output[0]:.3f}")

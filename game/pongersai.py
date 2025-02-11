@@ -11,7 +11,6 @@ import math
 
 class PongAI:
     def __init__(self):
-        # Create directories if they don't exist
         os.makedirs('checkpoints', exist_ok=True)
         
         self.checkpoint_path = os.path.join('checkpoints', 'checkpoint.pkl')
@@ -61,32 +60,30 @@ class PongAI:
             return 0
             
         try:
-            # Normalize inputs between 0 and 1
+            
             inputs = (
-                game_state['ballY'] / game_state['canvasHeight'],    # Ball Y position
-                game_state['ballX'] / game_state['canvasWidth'],     # Ball X position
-                game_state['paddleY'] / game_state['canvasHeight'],  # Paddle Y position
-                game_state['ballSpeedX'] / 15,                       # Ball X speed (normalized by max speed)
-                game_state['ballSpeedY'] / 15                        # Ball Y speed (normalized by max speed)
+                game_state['ballY'] ,   
+                game_state['ballX'] ,    
+                game_state['paddleY'] , 
+                game_state['ballSpeedX'] ,                      
+                game_state['ballSpeedY']  ,                       
+                abs(game_state['RpaddleX'] - game_state['ballX'] )
             )
-            
-            # Get network outputs
+            # print(inputs[0])
             outputs = self.current_net.activate(inputs)
-            
-            # Find which action has the highest activation
             decision = outputs.index(max(outputs))
             
-            # Convert network output to paddle movement
-            if decision == 0:    # First output highest - move up
+
+            if decision == 0:   
                 return -1
-            elif decision == 1:  # Second output highest - stay
+            elif decision == 1: 
                 return 0
-            else:               # Third output highest - move down
+            else:               
                 return 1
                 
         except Exception as e:
             print(f"Error in get_action: {e}")
-            return 0  # Default to no movement on error
+            return 0
 
     def load_training_history(self):
         try:
@@ -205,8 +202,6 @@ class PongAI:
         best_fitness = -float('inf')
         best_genome = None
         generation_stats = {'generation': len(self.training_history['generations']), 'genomes': []}
-    
-        # Sort genomes by fitness first
         genome_list = list(genomes)
         genome_list.sort(key=lambda x: x[1].fitness if x[1].fitness is not None else -float('inf'), reverse=True)
     
@@ -246,11 +241,8 @@ class PongAI:
     
             self.is_evaluating = False
     
-        # Update training history
         self.training_history['generations'].append(generation_stats)
         self.training_history['best_fitness'].append(best_fitness)
-        
-        # Save progress
         self.save_training_history()
         self.save_checkpoint()
     
@@ -280,6 +272,7 @@ class PongServer(BaseHTTPRequestHandler):
         response = {}
 
         if data['type'] == 'get_action':
+            # print(data['state'])
             action = self.ai.get_action(data['state'])
             response = {
                 'action': action,
@@ -287,7 +280,7 @@ class PongServer(BaseHTTPRequestHandler):
             }
         elif data['type'] == 'update_fitness':
             genome_id = data.get('genomeId', self.ai.current_genome_id)
-            lost = data.get('lost', False)  # New flag to indicate if the genome lost
+            lost = data.get('lost', False)
             self.ai.update_fitness(data['fitness'], genome_id, lost)
             response = {
                 'status': 'ok',
@@ -341,11 +334,11 @@ class PongServer(BaseHTTPRequestHandler):
 def run_neat(ai):
     # Only run if no generations have been completed
     if len(ai.training_history['generations']) == 0:
-        ai.population.run(ai.eval_genomes, 100)
+        ai.population.run(ai.eval_genomes, 200)
     else:
         # Resume from last generation
         last_generation = len(ai.training_history['generations'])
-        ai.population.run(ai.eval_genomes, 100 - last_generation)
+        ai.population.run(ai.eval_genomes, 200 - last_generation)
 
 def run_server():
     server_address = ('', 8000)
