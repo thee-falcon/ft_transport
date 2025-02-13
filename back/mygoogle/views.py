@@ -14,10 +14,11 @@ UID = "u-s4t2ud-ce06a015b3085a9d1b2735ae095fdd353bebe0c3deeb5d67f164a0dfdfbbb144
 AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=" + UID + "&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
-def set_token_cookies(response, refresh_token, access_token ):
-    response.set_cookie('refresh_token', refresh_token , samesite='None')
-    response.set_cookie('access_token', access_token, samesite='None' )
- 
+def set_token_cookies(response, refresh_token, access_token, username):
+    response.set_cookie('refresh_token', refresh_token, samesite='None', httponly=False)
+    response.set_cookie('access_token', access_token, samesite='None', httponly=False)
+    response.set_cookie('username', username, samesite='None', httponly=False)  # Allow frontend access
+
 
 @api_view(['POST'])
 def login(req):
@@ -32,9 +33,16 @@ def login(req):
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
     
-    set_token_cookies(response, str(refresh), str(refresh.access_token))
-    
+    # Pass the username to the function
+    set_token_cookies(response, str(refresh), str(refresh.access_token), req.data['username'])
+    print(response, str(refresh) ,str(refresh.access_token) ,req.data['username'])
     return response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_token(req):
+    return Response({"detail": "You are authenticated !"}, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def signup(req):
@@ -108,20 +116,25 @@ def get_42_user_info(access_token: str):
         return None
     
     return response.json()
-
+## check if authrnticated else redirect to signin     
 @api_view(['GET'])
 def login42_redir(request):
     code = request.GET.get('code') # ara dak code AUTH_CODE
     if not code:
-        return JsonResponse({"error": "code not provided"}, status=400)
+        print("-------intra-------->error :", "code not provided")
+        return redirect("http://localhost:8000/#signin")
+        # return JsonResponse({"error": "code not provided"}, status=409)
 
     access_token = exchange_code_for_token(code) # send code and get the token 
     if not access_token:
-        return JsonResponse({"error": "Failed to retrieve access token"}, status=400)
+        print("-------intra-------->error:" , "Failed to retrieve access token")
+        return redirect("http://localhost:8000/#signin")
 
     user_info = get_42_user_info(access_token)
     if not user_info:
-        return JsonResponse({"error": "Failed to retrieve user information"}, status=400)
+        print("--------intra------->error:" , "Failed to retrieve user information")
+        return redirect("http://localhost:8000/#signin")
+
     username = user_info.get('login')
     email = user_info.get('email')
     first_name = user_info.get('first_name')

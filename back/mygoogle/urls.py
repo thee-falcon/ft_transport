@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.login),
     path('logout/', views.logout),
+    path('check/', views.check_token),
     path('signup/', views.signup),
     path('token-refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('login42/', views.login42, name='login42'),
