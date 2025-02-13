@@ -1,3 +1,6 @@
+ 
+
+
 class signin extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -35,7 +38,6 @@ class signin extends HTMLElement {
        event.preventDefault();
       
       const username = document.getElementById("user").value;
-      // const username = getCookie('user');
       const password = document.getElementById("login-password").value;
       
       const response = await fetch('http://localhost:8000/login/', {
@@ -48,16 +50,29 @@ class signin extends HTMLElement {
       });
 
       const data = await response.json();
+      try{
       if (response.ok) {
-          localStorage.setItem("access_token", data.access);
-          localStorage.setItem("refresh_token", data.refresh);
-          localStorage.setItem("username", username);
-          alert(`Welcome, ${data.username}!`);   
-          window.location.hash = "dashboard";
+        console.log("data", data);
+        const accessToken = getCookie('access_token');
+        const refreshToken = getCookie('refresh_token');
+        const username = getCookie('username');
+        console.log('Access Token:', accessToken);
+        console.log('Refresh Token:', refreshToken);
+        console.log('Username:', username);
+ 
+ 
+ 
+       window.location.hash = "dashboard";
       } else {
           alert("Login failed. Check your credentials.");
       }
+    }
+    catch{
+      console.error('error while logiing');
+    }
     })
+
+
     intraBtn.addEventListener('click', async function(event) {
       event.preventDefault();
       // Redirect to login42 URL for OAuth or SSO
@@ -67,38 +82,20 @@ class signin extends HTMLElement {
     // After redirection, check for the access and refresh tokens
     window.addEventListener('load', async function() {
       try {
-        const accessToken = getCookie('access');
-        const refreshToken = getCookie('refresh');
-        const username = getCookie('username').trim()
-        const profilePicture = getCookie('profile_picture');
-        
-        // console.log(`>>>>>>>>> ${profilePicture} <<<<<<<<<<`)
-        const email = getCookie('email');
-        const firstName = getCookie('first_name');
-        const lastName = getCookie('last_name');
-        
-          if (accessToken && refreshToken  ) {
-            localStorage.setItem("username",username);
-            localStorage.setItem("access_token", accessToken);
-            localStorage.setItem("refresh_token", refreshToken);
-            localStorage.setItem("profile_picture", profilePicture);
-
-            // Print user data to console
-            console.log("User Data:");
-            console.log("Username:", username);
-            console.log("Email:", email);
-            console.log("First Name:", firstName);
-            console.log("Last Name:", lastName);
-            console.log("Profile Picture:", profilePicture);
+          const accessToken = getCookie('access_token');
+          const refreshToken = getCookie('refresh_token');
+          const username = getCookie('username');
+            console.log('intra acces Token  and refreshtoken ',accessToken  ,"refreshtoken",refreshToken   , 'username' , username);
               window.location.hash = "#dashboard";
-          }
       } catch (error) {
           console.error('Error during login42 authentication:', error);
       }
     });
-  
+ 
+
   }
 }
+ 
 
 customElements.define('signin-component', signin);
 function getCookie(name) {

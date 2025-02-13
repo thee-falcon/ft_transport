@@ -38,7 +38,7 @@ function refreshToken() {
 
     return fetch("http://localhost:8000/token-refresh/", {
         method: "POST",
-        credentials: "include", 
+        credentials: "include",  
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh: refresh_token }) // Send refresh token
     })

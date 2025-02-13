@@ -1,9 +1,10 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
-        const username = localStorage.getItem("username");
-        const profilePicture = localStorage.getItem("profile_picture") || "front/static/js/dd.jpg";
-      
-            console.log("profileeeeeeeee " , profilePicture);
+       const username =getCookie('username');
+        // const profilename = getCookie('username');
+        const profilePicture = getCookie("profile_picture")  ;
+        
+            console.log("profilePicture  " , profilePicture );
             this.innerHTML = `
             <div>
                 <img 
@@ -12,7 +13,7 @@ class dashboard extends HTMLElement {
                 >
             </div>
             <button id="logout">Logout</button> 
-            <h2>Welcome, ${username}!</h2> 
+              <h2>Welcome, ${username }!</h2> 
             <p>You are logged in!</p>
         `;
    
@@ -30,11 +31,11 @@ class dashboard extends HTMLElement {
                 console.log("Logout response:", responseData); // Debugging log
         
                 if (response.ok) {
-                    localStorage.removeItem("access_token");
-                    localStorage.removeItem("refresh_token");
-                    localStorage.removeItem("username");
-                    localStorage.clear();
-        
+                    localStorage.clear();   
+                    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "profile_picture=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     window.location.hash = "#signin"; 
                 } else {
                     console.error("Logout failed:", responseData);
@@ -49,5 +50,3 @@ class dashboard extends HTMLElement {
 }
 
 customElements.define('dashboard-component', dashboard);
-
-
