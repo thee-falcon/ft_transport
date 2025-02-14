@@ -1,119 +1,152 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: system-ui;
+    font-family: system-ui, sans-serif;
     box-sizing: border-box;
 }
 
-.app {
+body {
+    background-color: #10292F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.contonair {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(rgba(32, 13, 95, 0.8), rgba(168, 168, 190, 0.8)), url(../image/miaw.jpg);
-    background-position: center;
-    background-size: cover;
-    position: relative;
-    
+    max-width: 480px;
+    padding: 60px;
+    background-color: #EFF3DD;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border: 2px solid #0F1E26;
 }
-/* // box */
-.form-box {
-    width: 90%;
-    max-width: 450px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 50px 60px 120px;
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 28px;
+    color: #10292F;
+    margin-bottom: 16px;
     text-align: center;
-    border-radius: 10px;
-
-   opacity:  0.7;
-}
-
-.form-box h1 {
-
-    font-size: 30px;
-    margin-bottom: 60px;
-    color: #3c00a0;
     position: relative;
 }
 
-.form-box h1::after {
+h1::after {
     content: '';
-    width: 30px;
-    height: 4px;
+    width: 50px;
+    height: 3px;
     border-radius: 3px;
-    background: #3c00a0;
+    background: #0F1E26;
     position: absolute;
-    bottom: -12px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
 }
 
+p {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
 .input-field {
-    background: #eaeaea;
-    margin: 15px 0;
-    border-radius: 3px;
+    position: relative;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.input-field i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0F1E26;
+}
+
+input {
+    background-color: #eaeaea;
+    padding: 12px 40px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #0F1E26;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #0F1E26;
+    box-shadow: 0 0 8px rgba(15, 30, 38, 0.3);
+}
+
+input::placeholder {
+    color: #666;
+}
+
+button {
+    color: white;
+    background-color: #0F1E26;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #09141A;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.btn-field {
     display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+}
+
+.social-container {
+    display: flex;
+    justify-content: center;
     align-items: center;
-    max-height:  65%;
-    transition: max-height 0.5s;
-    overflow:  hidden;
+    margin-top: 10px;
 }
 
-input{
-    width:100%;
-    background: transparent;
-    border: 0;
-    outline:  0;
-    padding:18px 15px ;
-
-
-
-}
-.input-field i{
-    margin-left:  50px;
-    color: #999;
+.social-container svg {
+    margin-left: 8px;
 }
 
 form p {
-    text-align:  left;
-    font-size: 13px;
-}
-form p a{
-
-text-decoration:  none;
-color: #3c00a0;
+    font-size: 14px;
+    color: #333;
 }
 
-.btn-field{
-    width:100%;
-    display: flex;
-    justify-content: center;
-    
+form p a {
+    text-decoration: none;
+    color: #0F1E26;
+    font-weight: bold;
 }
 
-.btn-field button{
-
-    flex-basis:  48%;
-    background: #3c00a0;
-   color: #fff;
-    height: 40px;    
-    border-radius: 60px;
-    border: 1;
-    outline: 6;
-    cursor: pointer;
-    transition:  background 1s;
-}
-
-.input-group{
-
-height: 280px;
-
-}
-
-.btn-field button.disable{
-    background:  #eaeaea;
-
-color :#555;
+form p a:hover {
+    text-decoration: underline;
 }

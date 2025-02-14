@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+body {
+    background-color: #10292F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Stack elements vertically */
+    width: 90%;
+    max-width: 1000px;
+    min-height: 800px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #EFF3DD;
+}
+
+.sign_in, .sign_up {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+form {
+    background-color: #EFF3DD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px 50px;
+    height: auto;
+    text-align: center;
+}
+
+h1 {
+    font-weight: bold;
+    margin: 0;
+}
+
+p, a {
+    font-size: 18px;
+    font-weight: 100;
+    line-height: 30px;
+    letter-spacing: 0.5px;
+    margin: 15px 0 20px;
+}
+
+input {
+    background-color: floralwhite;
+    padding: 12px 15px;
+    margin: 8px 15px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #10292F;
+    outline: none;
+}
+
+a {
+    color: black;
+    font-size: 19px;
+    text-decoration: none;
+    margin: 15px 0;
+}
+
+button {
+    color: bisque;
+    background-color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 55px;
+    margin: 20px;
+    border-radius: 20px;
+    border: 1px solid #E5F690;
+    outline: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.90);
+}
