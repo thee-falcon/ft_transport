@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, sans-serif;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 body {
@@ -13,7 +13,7 @@ body {
     align-items: center;
 }
 
-#ok
+#ok1
 {
     padding-top: 50px;
     height: 100svh;
@@ -32,32 +32,32 @@ body {
     column-gap: 20px;
     row-gap: 10px;
 }
-.col1{
+.col11{
     position: relative;
     display: flex;
     flex-direction: column;
     border-color: 3px solid gold;
     row-gap: 10px;
 }
-.col2{
+.col22{
     position: relative;
     display: flex;
     flex-direction: column;
     border-color: 3px solid gold;
     row-gap: 10px;
 }
-.col3{
+.col33{
     position: relative;
     display: flex;
     flex-direction: column;
     border-color: 3px solid gold;
     row-gap: 10px;
 }
-.card1 {
+.card11 {
     position: relative;
     background-color: #939c5e;
     border-radius: 20px;
-    background-image: url("../image/Screen_Shot_2025-01-12_at_12.47.51_AM-removebg-preview.png");
+    background-image: url(../image/Screen_Shot_2025-01-12_at_12.47.51_AM-removebg-preview.png);
     background-size: 175px 100px;
     background-repeat: no-repeat;
     background-position: center ;
@@ -67,7 +67,7 @@ body {
     
 }
 
-.card2 {
+.card22 {
     position: relative;
     background-image: url("../image/Screen Shot 2024-10-02 at 3.44.26 AM.png");
     background-size: cover;
@@ -78,7 +78,7 @@ body {
     height: 50%;
 }
 
-.card3 {
+.card33 {
     position: relative;
     background-image: url("../image/Screen Shot 2024-10-02 at 2.10.41 AM.png");
     background-size: cover;
@@ -89,7 +89,7 @@ body {
     height: 70%;
 }
 
-#ko {
+#koo {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -99,14 +99,14 @@ body {
     width: 90%;
     border: 1px solid red;
     /* background-color: blue; */
-    /* background-image: url("pictures/Screen Shot 2024-10-02 at 2.10.41 AM.png"); */
+    /* background-image: url("../image/Screen Shot 2024-10-02 at 2.10.41 AM.png"); */
     /* background-position: center; */
     /* background-size: cover; */
-    mask-image: url(pictures/Exclude\ \(1\).png);
+    mask-image: url(../image/Exclude.png);
     mask-repeat: no-repeat; /* Prevents unwanted repetition */
     mask-size: contain;   
 }
-#lim{
+#limm{
     background-color: #EFF3DD ;
     height: 100px;
     width: 100%;
@@ -123,7 +123,7 @@ body {
     /* mix-blend-mode: screen; */
 }
 
-.card4 {
+.card44 {
     position: relative;
     background-image: url("../image/Screen Shot 2024-10-02 at 3.53.12 AM.png");
     background-size: cover;
@@ -134,7 +134,7 @@ body {
     height: 60%;
 }
 
-.card5 {
+.card55 {
     position: relative;
     background-image: url("../image/Screen Shot 2024-10-02 at 3.57.08 AM.png") ;
     background-size: cover;
@@ -145,7 +145,7 @@ body {
     height: 50%;
 }
 
-.card6 {
+.card66 {
     position: relative;
     background-image: url("../image/Screen Shot 2024-10-02 at 4.18.58 AM.png");
     background-size: cover;
@@ -194,19 +194,19 @@ body {
     .card-container{
         grid-template-columns: repeat(2, 300px);
     }
-    .card1 , .card2 , .card3 , .card4 , .card5, .card6{
+    .card11 , .card22 , .card33 , .card44 , .card55, .card66{
         height: 50%;
     }
-    .col3{
+    .col33{
         flex-direction: row;
         grid-column: 1/3;
         width: 100%;
         column-gap: 20px;
     }
-    .card3, .card6{
+    .card33, .card66{
         width: 50%;
     }
-    #ok{
+    #ok1{
         mask-image:unset;
     }
 }
@@ -219,20 +219,20 @@ body {
         width: 100%;
         grid-template-columns: repeat(1, 1fr);
     }
-    .col3{
+    .col33{
         grid-column: 1/2;
         flex-direction: column;
     }
-    #ok{
+    #ok1{
         width: 90%;
         height: unset;
         mask-image: none;
     }
-    .card3, .card6{
+    .card33, .card66{
         width: 100%;
         /* height: 500px; */
     }
-    .card1 , .card2 , .card3 , .card4 , .card5, .card6{
+    .card11 , .card22 , .card33 , .card44 , .card55, .card66{
         height: 200px;
     }
 }

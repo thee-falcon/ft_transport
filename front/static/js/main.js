@@ -1,7 +1,8 @@
 const route = {
     'signin': 'signin-component',
     'signup': 'signup-component',
-    'home': 'home-component',
+    'home':   'home-component',
+    'dashboard': 'dashboard-component',
 };
 
 function getCookie(name) {
@@ -21,10 +22,7 @@ function isAuthenticated() {
         return false;
     }
 
-    // if (isTokenExpired()) {
-    //     console.log("Access token expired, attempting refresh...");
-    //     return refreshToken();
-    // }
+
 
     console.log('User is authenticated');
     return true;
@@ -36,8 +34,8 @@ function isAuthenticated() {
 
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
-    
-    if (path === "home" && !isAuthenticated()) {
+    console.log('path === ' ,path);
+    if ((path === "home" || path === "dashboard") && !isAuthenticated()) {
         window.location.hash = "signin";
         return;
     }
@@ -55,28 +53,6 @@ async function navigate() {
 }
 
 
-// async function navigate() {
-//     //   await refreshToken();
-//         let refresh_Token = getCookie('refresh_token');
-//   if (refresh_Token)
-//       console.log('refreshtoken is available redirecting to ur sesssion ');
-//     const path = window.location.hash.substring(1) || "signin";
-//      if (path === "home" && !isAuthenticated()) {
-//         window.location.hash = "signin";
-//         return;
-//     }
-
-//     const page = route[path];
-//     const container = document.getElementById("view-container");
-
-//     if (!page) {
-//         window.location.hash = "signin";
-//         return;
-//     }
-    
-//     container.innerHTML = `<${page}></${page}>`;
-//     container.classList.add("active");
-// }
 
 window.addEventListener("hashchange", navigate);
 window.addEventListener("DOMContentLoaded", navigate);

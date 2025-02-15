@@ -75,9 +75,8 @@ class signin extends HTMLElement {
           console.log('Access Token:', accessToken);
           console.log('Refresh Token:', refreshToken);
           console.log('Username:', username);
-
-
-
+          console.log('simple login  Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
+            alert('simple login go to home');
           window.location.hash = "home";
         } else {
           alert("Login failed. Check your credentials.");
@@ -94,15 +93,16 @@ class signin extends HTMLElement {
       // Redirect to login42 URL for OAuth or SSO
       window.location.href = "http://localhost:8000/login42/";
     });
-
-    // After redirection, check for the access and refresh tokens
     window.addEventListener('load', async function () {
       try {
         const accessToken = getCookie('access_token');
         const refreshToken = getCookie('refresh_token');
         const username = getCookie('username');
         console.log('intra acces Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
-        window.location.hash = "#home";
+        if(accessToken &&  refreshToken)
+          alert('intra login go to home');
+
+        window.location.hash = "home";
       } catch (error) {
         console.error('Error during login42 authentication:', error);
       }

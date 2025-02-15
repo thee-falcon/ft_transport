@@ -182,7 +182,7 @@ def login42_redir(request):
         response.set_cookie(key='last_name', value=last_name)
         response.set_cookie(key='profile_picture', value=profile_picture)
 
-        response['Location'] = "http://localhost:8000/#dashboard"
+        response['Location'] = "http://localhost:8000/#home"
         return response
     except Exception as e:
         print("Error during user creation:", str(e))
