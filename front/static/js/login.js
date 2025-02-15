@@ -78,7 +78,7 @@ class signin extends HTMLElement {
 
 
 
-          window.location.hash = "dashboard";
+          window.location.hash = "home";
         } else {
           alert("Login failed. Check your credentials.");
         }
@@ -102,7 +102,7 @@ class signin extends HTMLElement {
         const refreshToken = getCookie('refresh_token');
         const username = getCookie('username');
         console.log('intra acces Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
-        window.location.hash = "#dashboard";
+        window.location.hash = "#home";
       } catch (error) {
         console.error('Error during login42 authentication:', error);
       }

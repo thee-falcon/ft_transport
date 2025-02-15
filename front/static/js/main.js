@@ -1,7 +1,7 @@
 const route = {
     'signin': 'signin-component',
     'signup': 'signup-component',
-    'dashboard': 'dashboard-component',
+    'home': 'home-component',
 };
 
 function getCookie(name) {
@@ -37,7 +37,7 @@ function isAuthenticated() {
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     
-    if (path === "dashboard" && !isAuthenticated()) {
+    if (path === "home" && !isAuthenticated()) {
         window.location.hash = "signin";
         return;
     }
@@ -61,7 +61,7 @@ async function navigate() {
 //   if (refresh_Token)
 //       console.log('refreshtoken is available redirecting to ur sesssion ');
 //     const path = window.location.hash.substring(1) || "signin";
-//      if (path === "dashboard" && !isAuthenticated()) {
+//      if (path === "home" && !isAuthenticated()) {
 //         window.location.hash = "signin";
 //         return;
 //     }
