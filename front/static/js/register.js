@@ -7,28 +7,29 @@ class signup extends HTMLElement {
           <h1>Sign Up</h1>
           <div class="input-field">
           <i class="fa-regular fa-envelope"></i>
-          <input type="text" id="user" placeholder="Username" required />
+          <input type="text" id="signup-Username" placeholder="Username" required />
         </div>
           <div class="input-field">
           <i class="fa-regular fa-envelope"></i>
-          <input type="email" id="signup-email" placeholder="Email" />
+          <input type="email" id="signup-email"placeholder="Email" />
         </div>        
         <div class="input-field">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" />
+        <input type="password" id="signup-password" placeholder="Password" />
       </div>
       <div class="btn-field">
-      <button type="submit" id="register">Register</button>
+      <button type="button" id="register">Register</button>
       <p>Already have an account? <a href="#signin">Sign in</a></p>
         </form>
     
     `;
 
-    document.getElementById("register-form").addEventListener("submit", async function(event) {
+    document.getElementById("register").addEventListener("click", async function(event) {
+      console.log("bitn clicked");
       event.preventDefault();
-      const username = document.getElementById("signup-username").value;
+      const username = document.getElementById("signup-Username").value;
       const email = document.getElementById("signup-email").value;
-      const password = document.getElementById("password").value;
+      const password = document.getElementById("signup-password").value;
       
       const response = await fetch('http://localhost:8000/signup/', {
           method: "POST",

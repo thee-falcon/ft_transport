@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-body3 {
+body {
     background-color: #10292F;
     display: flex;
     justify-content: center;
@@ -18,6 +18,7 @@ body3 {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    /* transform: translateY(299px); */
     width: 100%;
     max-width: 480px;
     padding: 60px;
@@ -54,12 +55,12 @@ h1::after {
     transform: translateX(-50%);
 }
 
-p {
+/* p {
     text-align: center;
     font-size: 14px;
     margin-bottom: 20px;
     color: #444;
-}
+} */
 
 .input-field {
     position: relative;

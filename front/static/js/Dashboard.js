@@ -2,148 +2,148 @@ class dashboard extends HTMLElement {
     async connectedCallback() {
                     this.innerHTML = `
     <div id="lo">
-        <div class="dashboard-container">
-            <div class="col1">
-                    <div class="card1">
-                        <div class="card1-enlign-freinds">
-                            <p>En ligne freinds</p>
-                            <div class="freinds-list">
-                                <div class="friends1">
-                                    <img class="freinds1-Players" alt="" src="../image/defaultprofilepic.png">
-                                    <p class="freinds1-name">Doctor Strange</p>
-                                    <a href="" class="Start"> Send</a>
+        <div class="dash-dashboard-container">
+            <div class="dash-col1">
+                    <div class="dash-card1">
+                        <div class="dash-card1-enlign-friends">
+                            <p>En ligne friends</p>
+                            <div class="dash-friends-list">
+                                <div class="dash-friends1">
+                                    <img class="dash-friends1-Players" alt="" src="/media/defaultprofilepic.png">
+                                    <p class="dash-friends1-name">Doctor Strange</p>
+                                    <a href="" class="dash-Start"> Send</a>
                                 </div>
-                                <div class="friends2">
-                                    <img class="freinds2-Players" alt="" src="../image/Screen Shot 2024-10-02 at 2.05.14 AM.png">
-                                    <p class="freinds2-name">Doctor Strange</p>
-                                    <a href="" class="Start"> Send</a>
+                                <div class="dash-friends2">
+                                    <img class="dash-friends2-Players" alt="" src="/media/Screen Shot 2024-10-02 at 2.05.14 AM.png">
+                                    <p class="dash-friends2-name">Doctor Strange</p>
+                                    <a href="" class="dash-Start"> Send</a>
                                 </div>
-                                <div class="friends3">
-                                    <img class="freinds3-Players" alt="" src="../image/defaultprofilepic.png">
-                                    <p class="freinds3-name">Doctor Strange</p>
-                                    <a href="" class="Start"> Send</a>
+                                <div class="dash-friends3">
+                                    <img class="dash-friends3-Players" alt="" src="/media/defaultprofilepic.png">
+                                    <p class="dash-friends3-name">Doctor Strange</p>
+                                    <a href="" class="dash-Start"> Send</a>
                                 </div>
-                                <div class="friends4">
-                                    <img class="freinds4-Players" alt="" src="../image/Screen Shot 2024-10-02 at 2.05.14 AM.png">
-                                    <p class="freinds4-name">Doctor Strange</p>
-                                    <a href="" class="Start"> Send</a>
+                                <div class="dash-friends4">
+                                    <img class="dash-friends4-Players" alt="" src="/media/Screen Shot 2024-10-02 at 2.05.14 AM.png">
+                                    <p class="dash-friends4-name">Doctor Strange</p>
+                                    <a href="" class="dash-Start"> Send</a>
                                 </div>
-                                <div class="friends5">
-                                    <img class="freinds5-Players" alt="" src="../image/defaultprofilepic.png">
-                                    <p class="freinds5-name">Doctor Strange</p>
-                                    <a href="" class="Start"> Send</a>
+                                <div class="dash-friends5">
+                                    <img class="dash-friends5-Players" alt="" src="/media/defaultprofilepic.png">
+                                    <p class="dash-friends5-name">Doctor Strange</p>
+                                    <a href="" class="dash-Start"> Send</a>
                                 </div>
                             </div> 
                         </div>
-                        <div class="card1-enlign-tournaments">
+                        <div class="dash-card1-enlign-tournaments">
                             <p>Club Badge</p>
-                            <div class="Tournaments-list">
-                                <img src="../image/badge1.png" alt="">
+                            <div class="dash-Tournaments-list">
+                                <img src="/media/badge1.png" alt="">
                             </div>
                         </div>
                     </div>    
             </div>
-            <div class="col2">
+            <div class="dash-col2">
 
-                    <div class="card2">
-                        <div class="card2-col1">
-                            <div class="card2-content">
+                    <div class="dash-card2">
+                        <div class="dash-card2-col1">
+                            <div class="dash-card2-content">
                                 <h1>Sharpen Your Skills with Our Diverse Games</h1>
                                 <h3>"JS-US Pong where Ping Pong skills Flourish"</h3>
                             </div>
-                            <div class="card2-buttons">     
-                                <a href="" class="Start">Start Game</a>
-                                <a href="" class="Start">Start Gym</a>
-                                <a href="" class="Start">Start Tournament</a>
+                            <div class="dash-card2-buttons">     
+                                <a href="" class="dash-Start">Start Game</a>
+                                <a href="" class="dash-Start">Start Gym</a>
+                                <a href="" class="dash-Start">Start Tournament</a>
                             </div>
                         </div>
-                        <div class="card2-image">
-                            <img src="../image/raquets.png" alt="">
+                        <div class="dash-card2-image">
+                            <img src="/media/raquets.png" alt="">
                         </div>
                     </div>
-                    <div class="card3">
-                        <div class="card3-part1">
+                    <div class="dash-card3">
+                        <div class="dash-card3-part1">
                             <h3>Won<br>Matches :</h3>
                             <h1>86</h1>
                         </div>
-                        <div class="card3-part2">
+                        <div class="dash-card3-part2">
                             <h3>Lost<br>Matches :</h3>
                             <h1>86</h1>
                         </div>
-                        <div class="card3-part3">
+                        <div class="dash-card3-part3">
                             <h3>Club<br>Rank :</h3>
                             <h1>86</h1>
                         </div>
-                        <div class="card3-part4">
+                        <div class="dash-card3-part4">
                             <h3>Tornaments<br>Won :</h3>
                             <h1>86</h1>
                         </div>
-                        <div class="card3-part5">
+                        <div class="dash-card3-part5">
                             <h3>Tornaments<br>Lost :</h3>
                             <h1>86</h1>
                         </div>
-                        <div class="card3-part6">
+                        <div class="dash-card3-part6">
                             <h3>Succes<br>Rate (%):</h3>
                             <h1>86</h1>
                         </div>
                     </div>
-                    <div class="card4">
-                        <div class="changing-catalog">
+                    <div class="dash-card4">
+                        <div class="dash-changing-catalog">
                             <p>statistics slider</p>
                         </div>
-                        <div class="statistics-graphs">
+                        <div class="dash-statistics-graphs">
                             <p>statistics</p>
                         </div>
                         <!-- here should be the statistics diagarams of loses and wones -->
                     </div>
             </div>
-            <div class="col3">
+            <div class="dash-col3">
                     
-                    <div class="card5">
-                        <div class="card5-profile-infos">
-                            <div class="card5-profile-infos-part1">
+                    <div class="dash-card5">
+                        <div class="dash-card5-profile-infos">
+                            <div class="dash-card5-profile-infos-part1">
                   
-                                <img src="../image/defaultprofilepic.png" alt="">
+                                <img src="/media/defaultprofilepic.png" alt="">
                             </div>
-                            <div class="card5-profile-infos-part2"> 
-                                <p class="name"> MOHAMED BOUDRIOUA </p>
-                                <p class="nickname"> Excalibur66 </p>
-                                <p class="level"> LvL 15</p>
-                                <p class="description"> "the Conquer of PING-PONG Realm" </p>
-                                <p class="email"> joumanji22@gmail </p>
+                            <div class="dash-card5-profile-infos-part2"> 
+                                <p class="dash-name"> MOHAMED BOUDRIOUA </p>
+                                <p class="dash-nickname"> Excalibur66 </p>
+                                <p class="dash-level"> LvL 15</p>
+                                <p class="dash-description"> "the Conquer of PING-PONG Realm" </p>
+                                <p class="dash-email"> joumanji22@gmail </p>
                             </div>
                         </div>
-                        <div class="card5-settings">
-                            <div class="card5-part1">
+                        <div class="dash-card5-settings">
+                            <div class="dash-card5-part1">
                                 <p>Settings:</p>
                             </div>
-                            <div class="card5-part2">
-                                <div class="input1">
+                            <div class="dash-card5-part2">
+                                <div class="dash-input1">
                                     <p>Edit  Name</p>
-                                    <input type="text" placeholder="   new Name">
+                                    <input type="text" placeholderr="   new Name">
                                 </div>
-                                <div class="input2">
+                                <div class="dash-input2">
                                     <p>Edit NickName</p>
-                                    <input type="text" placeholder="   new Nickname">
+                                    <input type="text" placeholderr="   new Nickname">
                                 </div>
-                                <div class="input3">
+                                <div class="dash-input3">
                                     <p>Edit Description</p>
-                                    <input type="text" placeholder="   new Description">
+                                    <input type="text" placeholderr="   new Description">
                                 </div>
-                                <div class="input4">
+                                <div class="dash-input4">
                                     <p>Edit Avatar</p>
-                                    <input type="text" placeholder="   new profile Picture">
+                                    <input type="text" placeholderr="   new profile Picture">
                                 </div>
-                                <div class="input5">
+                                <div class="dash-input5">
                                     <p>Edit  Email</p>
-                                    <input type="text" placeholder="   new Email">
+                                    <input type="text" placeholderr="   new Email">
                                 </div>
-                                <div class="input6">
+                                <div class="dash-input6">
                                     <p>Edit  Password</p>
-                                    <input type="text" placeholder="   new Password">
+                                    <input type="text" placeholderr="   new Password">
                                 </div>    
-                                <div class="save_changes1">
-                                    <a href="" class="Start">Save Changes</a>
+                                <div class="dash-save_changes1">
+                                    <a href="" class="dash-Start">Save Changes</a>
                                 </div>
                             </div>
                         </div>

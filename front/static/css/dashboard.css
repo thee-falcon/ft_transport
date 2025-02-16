@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, sans-serif;
+    font-family: system-ui, Georgia, Times, 'Times New Roman', serif;
 }
 
 
@@ -19,7 +19,7 @@ body{
     align-items: center;
 }
 
-.dashboard-container{
+.dash-dashboard-container{
     max-height: 900px;
     height: 100svh;
     display: grid;
@@ -29,7 +29,7 @@ body{
     column-gap: 20px;
 }
 
-.col1{
+.dash-col1{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -39,7 +39,7 @@ body{
     background-color: #EFF3DD;
     border-radius: 20px;
 }
-.col2{
+.dash-col2{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -47,7 +47,7 @@ body{
     row-gap: 20px;
     height: 100%;
 }
-.col3{
+.dash-col3{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -55,7 +55,7 @@ body{
     row-gap: 10px;
     height: 100%;
 }
-.card1{
+.dash-card1{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -66,10 +66,10 @@ body{
 }
 
 
-.card1-enlign-freinds p , .card1-enlign-tournaments p{
+.dash-card1-enlign-friends p , .dash-card1-enlign-tournaments p{
     padding: 2%;
 }
-.card1-enlign-freinds{ 
+.dash-card1-enlign-friends{ 
     text-align: center;
     position: relative;
     display: flex;
@@ -80,7 +80,7 @@ body{
     width: 95%;
     align-self: center;
 }
-.freinds-list{
+.dash-friends-list{
     position:relative;
     display: flex;
     flex-direction: column;
@@ -95,22 +95,23 @@ body{
     border-radius: 20px;
 }
 
-.friends1-Players, .friends2-Players, .friends3-Players, .friends4-Players, .friends5-Players
+.dash-friends1-Players, .dash-friends2-Players, .dash-friends3-Players, .dash-friends4-Players, .dash-friends5-Players
 {
+    background-image: url("../image/defaultprofilepic.png"); 
     background-position: center;
     background-size: contain;
 }
-.friends1 img, .friends2 img, .friends3 img, .friends4 img, .friends5 img{
+.dash-friends1 img, .dash-friends2 img, .dash-friends3 img, .dash-friends4 img, .dash-friends5 img{
     width: 40px;
     height: 40px;
     border: 1px solid #E5F690;
     border-radius: 50%;
 }
 
-.friends1 , .friends2 , .friends3, .friends4, .friends5{
+.dash-friends1 , .dash-friends2 , .dash-friends3, .dash-friends4, .dash-friends5{
     position: relative;
     display: flex;
-    background-image: url("../image/Screen Shot 2024-10-02 at 2.05.14 AM.png");
+    background-image: url("../image/defaultprofilepic.png"); 
     flex-direction: row;
     color: #EFF3DD;
     height: 15%;
@@ -120,7 +121,7 @@ body{
     padding: 5%;
 }
 
-.Tournaments-list{
+.dash-Tournaments-list{
     position:relative;
     display: flex;
     flex-direction: column;
@@ -135,7 +136,7 @@ body{
     border-radius: 20px;
 }
 
-.Tournaments-list img{
+.dash-Tournaments-list img{
     position: relative;
     height: 100%;
     width: 100%;
@@ -145,7 +146,7 @@ body{
 
 }
 
-.card1-enlign-tournaments{
+.dash-card1-enlign-tournaments{
     text-align: center;
     position: relative;
     display: flex;
@@ -156,7 +157,7 @@ body{
     width: 95%;
     align-self: center;
 }
-.card2{
+.dash-card2{
     display: flex;
     flex-direction: row;
     background-color: #EFF3DD;
@@ -165,14 +166,14 @@ body{
     border-radius: 20px;
     padding: 1%;
 }
-.card2-col1{
+.dash-card2-col1{
     position: relative;
     display: flex;
     flex-direction: column;
     width: 77%;
     border-radius: 20px;
 }
-.card2-image{
+.dash-card2-image{
     position: relative;
     justify-content: center;
     display: flex;
@@ -182,7 +183,7 @@ body{
     align-content: center;
     border-radius: 20px;
 }
-.card2-content{
+.dash-card2-content{
     position: relative;
     display: flex;
     flex-direction: row;
@@ -193,7 +194,7 @@ body{
     align-content: stretch;
     border-radius: 20px;
 }
-.card2-buttons{
+.dash-card2-buttons{
     position: relative;
     display: flex;
     flex-direction: row;
@@ -202,7 +203,7 @@ body{
     align-items: center;
     align-content: center;
 }
-.card3{ 
+.dash-card3{ 
     position: relative;
     display: flex;
     flex-direction: row;
@@ -216,21 +217,21 @@ body{
     border-radius: 20px;
 }
 
-.card3-part1 h3, .card3-part2 h3, .card3-part3 h3, .card3-part4 h3, .card3-part5 h3, .card3-part6 h3{
+.dash-card3-part1 h3, .dash-card3-part2 h3, .dash-card3-part3 h3, .dash-card3-part4 h3, .dash-card3-part5 h3, .dash-card3-part6 h3{
     position: relative;
     display: flex;
     flex-direction: row;
     padding: 1%;
     width: 60%;
 }
-.card3-part1 h1, .card3-part2 h1, .card3-part3 h1, .card3-part4 h1, .card3-part5 h1, .card3-part6 h1{
+.dash-card3-part1 h1, .dash-card3-part2 h1, .dash-card3-part3 h1, .dash-card3-part4 h1, .dash-card3-part5 h1, .dash-card3-part6 h1{
     position: relative;
     display: flex;
     flex-direction: row;
     padding: 1%;
 }
 
-.card3-part1 , .card3-part2 , .card3-part3, .card3-part4, .card3-part5 , .card3-part6{
+.dash-card3-part1 , .dash-card3-part2 , .dash-card3-part3, .dash-card3-part4, .dash-card3-part5 , .dash-card3-part6{
     position: relative;
     display: flex;
     flex-direction: row;
@@ -244,7 +245,7 @@ body{
     width: 30%;
     border-radius: 20px;
 }
-.card4{
+.dash-card4{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -253,7 +254,7 @@ body{
     height: 60%;
     border-radius: 20px;
 }
-.changing-catalog{
+.dash-changing-catalog{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -261,7 +262,7 @@ body{
     height: 10%;
     border-radius: 20px;
 }
-.statistics-graphs{
+.dash-statistics-graphs{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -269,7 +270,7 @@ body{
     height: 90%;
     border-radius: 20px;
 }
-.card5{
+.dash-card5{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -280,7 +281,7 @@ body{
     height: 100%;
     border-radius: 20px;
 }
-.card5-profile-infos{
+.dash-card5-profile-infos{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -296,7 +297,7 @@ body{
     border-radius: 20px;
 }
 
-.card5-settings{
+.dash-card5-settings{
     position:relative;
     display: flex;
     flex-direction: column;
@@ -309,7 +310,7 @@ body{
     border-radius: 20px;
     background-color: #10292F;
 }
-.input1 input:focus-visible, .input2 input:focus-visible, .input3 input:focus-visible, .input4 input:focus-visible, .input5 input:focus-visible,.input6 input:focus-visible{
+.dash-input1 input:focus-visible, .dash-input2 input:focus-visible, .dash-input3 input:focus-visible, .dash-input4 input:focus-visible, .dash-input5 input:focus-visible,.dash-input6 input:focus-visible{
     outline: 2px solid orange;
 }
 
@@ -320,11 +321,11 @@ input:focus, input:not(:placeholder-shown){
     border: 2px solid rebeccapurple;
 }
 
-.input1 , .input2 , .input3  , .input4 , .input5 , .input6 , .save_changes1 {
+.dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6 , .dash-save_changes1 {
     display: flex;
     flex-direction: column;
     height: 15%;
-    color: #EFF3DD;
+    color: #f1f2ed;
     border-radius: 20px;
     position: relative;
     display: flex;
@@ -333,20 +334,21 @@ input:focus, input:not(:placeholder-shown){
     padding: 5%;
 }
 
-.input1 p, .input2 p, .input3  p, .input4 p, .input5 p, .input6p{
+.dash-input1 p, .dash-input2 p, .dash-input3  p, .dash-input4 p, .dash-input5 p, .dash-input6p{
     text-align: center;
     padding: 1%;
 }
 
-.input1 input, .input2 input, .input3  input, .input4 input, .input5 input, .input6 input{
+.dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
     padding: 3%;
     border: #E5F690 1px solid;
 }
 
 
-.card5-profile-infos-part1{
+.dash-card5-profile-infos-part1{
     position: relative;
     display: flex;
+    background-image: url(../image/defaultprofilepic.png); 
     flex-direction: column;
     align-items: center;
     align-content: center;
@@ -354,7 +356,7 @@ input:focus, input:not(:placeholder-shown){
     border: 1px solid #E5F690;
 }
 
-.card5-profile-infos-part2{
+.dash-card5-profile-infos-part2{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -365,7 +367,7 @@ input:focus, input:not(:placeholder-shown){
     row-gap: 10px;
 }
 
-.email , .name, .nickname, .description , .level{
+.dash-email , .dash-name, .dash-nickname, .dash-description , .dash-level{
     position: relative;
     display: flex;
     align-items: center;
@@ -377,18 +379,18 @@ input:focus, input:not(:placeholder-shown){
     height: 20%;
 }
 
-.card5-part1{
+.dash-card5-part1{
     position: relative;
     display: flex;
     flex-direction: column;
     border-radius: 20px;
 }
 
-.card5-part1 p{
+.dash-card5-part1 p{
     color: #EFF3DD;
 }
 
-.card5-part2{
+.dash-card5-part2{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -400,10 +402,10 @@ input:focus, input:not(:placeholder-shown){
     align-content: center;
 }
 
-.card5-part2 a{
+.dash-card5-part2 a{
     border: 1px solid  #E5F690;
 }
-.Save-Changes{
+.dash-Save-Changes{
     display: flex;
     flex-direction: column;
     position: relative;
@@ -411,19 +413,19 @@ input:focus, input:not(:placeholder-shown){
     align-content: center;
 }
 
-.card5-profile-infos-part1 img{
+.dash-card5-profile-infos-part1 img{
     width: 100px;
     height: 100px;
     border: 1px solid #10292F;
     border-radius: 18px;
 }
 
-.card2-image img{
+.dash-card2-image img{
     width: 100%;
     height: 100%;
 }
 
-.Start{
+.dash-Start{
     background-color: #10292F;
     border-radius: 10px;
     color: #E5F690;
@@ -437,17 +439,17 @@ input:focus, input:not(:placeholder-shown){
     cursor: pointer;
     border: #E5F690 1px solid;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.dash-3s ease;
 }
 
-.Start:hover {
+.dash-Start:hover {
     border: 1px solid #10292F;
     background-color: #E5F690;
     color: #10292F;
 }
 
 
-input:placeholder-shown {
+input:placeholderr-shown {
     background-color: #10292F;
     border-radius: 20px;
     text-overflow: ellipsis;
@@ -469,7 +471,7 @@ input:placeholder-shown {
     
     }
 
-    .dashboard-container{
+    .dash-dashboard-container{
         max-height: none;
         height: 100%;
         width: 100%;
@@ -477,26 +479,26 @@ input:placeholder-shown {
         grid-template-rows: 320px 550px 320px;
         grid-template-columns: 800px
     }
-    .col1{
+    .dash-col1{
         position: relative;
         display: flex;
         flex-direction: row;
         padding: 5px;
     }
-    .card1 , .card2, .card5{
+    .dash-card1 , .dash-card2, .dash-card5{
         flex-direction: row;
     }
-    .card5{
+    .dash-card5{
         column-gap: 10px;
     }
-    .card1-enlign-freinds , .card1-enlign-tournaments , .freinds-list, .Tournaments-list{
+    .dash-card1-enlign-friends , .dash-card1-enlign-tournaments , .dash-friends-list, .dash-Tournaments-list{
         position: relative;
         flex-direction: row;
         flex-wrap: wrap;
         width: 50%;
         padding: 0;
     }
-    .card1-enlign-freinds{
+    .dash-card1-enlign-friends{
         position: relative;
         display: flex;
         flex-direction: row;
@@ -506,13 +508,13 @@ input:placeholder-shown {
         height: 100%;
     }
 
-    .email , .name, .nickname, .description , .level{
+    .dash-email , .dash-name, .dash-nickname, .dash-description , .dash-level{
         border-radius: 20px;
         text-align: center;
  
         height: 20%;
     }
-    .freinds-list{
+    .dash-friends-list{
         position: relative;
         flex-direction: column;
         row-gap: 10px;
@@ -520,7 +522,7 @@ input:placeholder-shown {
         width: 95%;
         height: 90%;
     }
-    .card1-enlign-tournaments{
+    .dash-card1-enlign-tournaments{
         position: relative;
         display: flex;
         flex-direction: row;
@@ -529,7 +531,7 @@ input:placeholder-shown {
         width: 50%;
         height: 100%;
     }
-    .Tournaments-list{
+    .dash-Tournaments-list{
         position: relative;
         flex-direction: column;
         flex-wrap: wrap;
@@ -538,18 +540,18 @@ input:placeholder-shown {
         width: 95%;
     }
 
-    .col1, .col3{
+    .dash-col1, .dash-col3{
         flex-direction: row;
         align-content: center;
         justify-content: center;
 
     }
 
-    .input1 , .input2 , .input3  , .input4 , .input5 , .input6{
+    .dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6{
         height: 30%;
     }
 
-    .card5-profile-infos , .card5-settings , .card5-part1 ,.card5-part2 , .card5-part3, .card5-part4,  .card5-part5 , .card5-part6{
+    .dash-card5-profile-infos , .dash-card5-settings , .dash-card5-part1 ,.dash-card5-part2 , .dash-card5-part3, .dash-card5-part4,  .dash-card5-part5 , .dash-card5-part6{
         position: relative;
         flex-direction: row;
         flex-wrap: wrap;
@@ -557,10 +559,10 @@ input:placeholder-shown {
         justify-content: center;
         align-items: center;
     }
-    .card5-profile-infos{
+    .dash-card5-profile-infos{
         width: 100%;
     }
-    .input1 , .input2 , .input3 , .input4 , .input5, .input6{
+    .dash-input1 , .dash-input2 , .dash-input3 , .dash-input4 , .dash-input5, .dash-input6{
         width: 30%;
         align-content: center;
         justify-content: center;
@@ -568,10 +570,10 @@ input:placeholder-shown {
         flex-direction: row;
         flex-wrap: wrap;        
     }
-    .input1 input, .input2 input, .input3  input, .input4 input, .input5 input, .input6 input{
+    .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
         padding: 1%;
     }
-    .card5-part2{
+    .dash-card5-part2{
         column-gap: 3px;
         row-gap: 10px;
         padding: 0;
@@ -579,63 +581,63 @@ input:placeholder-shown {
         justify-content: center;
         align-items: center;
     }
-    .card5-settings{
+    .dash-card5-settings{
         padding: 1%;
     }
 
-    .card5-profile-infos{
+    .dash-card5-profile-infos{
         position: relative;
         display: flex;
         flex-direction: column;
         width: 30%;
         height: 100%;
     }
-    .card5-profile-infos-part1{
+    .dash-card5-profile-infos-part1{
         position: relative;
         display: flex;
         flex-direction: column;
     }
-    .card5-profile-infos-part1 img{
+    .dash-card5-profile-infos-part1 img{
         width: 70px;
         height: 70px;
     }
-    .card5-profile-infos-part2{
+    .dash-card5-profile-infos-part2{
         position: relative;
         display: flex;
         row-gap: 10px;
         row-gap: 0px;
         flex-direction: column; 
     }
-    .card5-settings{
+    .dash-card5-settings{
         position: relative;
         display: flex;
         width: 70%;
     }
-    .card5-part1{
+    .dash-card5-part1{
         position: relative;
         display: flex;
         flex-direction: column;
     }
-    .card5-part2{
+    .dash-card5-part2{
         position: relative;
         display: flex;
         flex-direction: row;
         row-gap: 20px;
         column-gap: 10px;
     }
-    .card2-content h1{
+    .dash-card2-content h1{
         font-size:larger;
     }
-    .card2-content h3{
+    .dash-card2-content h3{
         font-size: medium;
     }
 
-    .card2-col1{
+    .dash-card2-col1{
         flex-direction: row;
         flex-wrap: wrap;
         position: relative;
     }
-    .card2-buttons {
+    .dash-card2-buttons {
         width: 30%;
         display: flex;
         flex-direction: column;
@@ -644,29 +646,29 @@ input:placeholder-shown {
         justify-content: center;
         height: 100%;
     }
-    .card2-content{
+    .dash-card2-content{
         width: 70%;
         height: 100%;
     }
-    .Start{
+    .dash-Start{
         padding: 3px;
         font-size: 15px;
     }
-    .card2-col1{
+    .dash-card2-col1{
         width: 89%;
     }
     
-    .input1 p, .input2 p, .input3  p, .input4 p, .input5 p, .input6 p{
+    .dash-input1 p, .dash-input2 p, .dash-input3  p, .dash-input4 p, .dash-input5 p, .dash-input6 p{
         font-size: small;
     }
-    .input1 input, .input2 input, .input3  input, .input4 input, .input5 input, .input6 input{
+    .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
         width: 130px;
     }
   } 
 
   @media screen  and (max-width : 840px)
   {
-    .Tournaments-list img{
+    .dash-Tournaments-list img{
         height: 100%;
         width: 100%;
         object-fit:cover;
@@ -674,7 +676,7 @@ input:placeholder-shown {
         justify-content: center;
     
     } 
-    .dashboard-container{
+    .dash-dashboard-container{
         max-height: none;
         height: 100%;
         width: 100%;
@@ -682,86 +684,88 @@ input:placeholder-shown {
         grid-template-rows: 320px 550px 320px;
         grid-template-columns: 400px
     }
-    .card5{
+    .dash-card5{
         flex-direction: column;
         row-gap: 5px;
+        width: 100%;
     }
-    .card5-settings{
+    .dash-card5-settings{
         row-gap: 5px;
     }
-    .card2-content{
+    .dash-card2-content{
         width: 60%;
     }
-    .card2-buttons {
+    .dash-card2-buttons {
         row-gap: 10px;
         width: 40%;
     }
-    .card2-content h1{
+    .dash-card2-content h1{
         font-size: medium;
     }
-    .card2-content h3{
+    .dash-card2-content h3{
         font-size:small;
     }
-    .card2 img{
+    .dash-card2 img{
         height: 70px;
         width: 70px;
     }
-    .input1 input, .input2 input, .input3  input, .input4 input, .input5 input, .input6 input{
+    .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
         width: 100px;
     }
-    .card3-part1 h3, .card3-part2 h3, .card3-part3 h3, .card3-part4 h3, .card3-part5 h3, .card3-part6 h3{
+    .dash-card3-part1 h3, .dash-card3-part2 h3, .dash-card3-part3 h3, .dash-card3-part4 h3, .dash-card3-part5 h3, .dash-card3-part6 h3{
         font-size:small;
     }
-    .card3-part1 h1, .card3-part2 h1, .card3-part3 h1, .card3-part4 h1, .card3-part5 h1, .card3-part6 h1{
+    .dash-card3-part1 h1, .dash-card3-part2 h1, .dash-card3-part3 h1, .dash-card3-part4 h1, .dash-card3-part5 h1, .dash-card3-part6 h1{
         font-size: larger;
     }
-    .card3{
+    .dash-card3{
         column-gap: 20px;
     }
-    .input1 p, .input2 p, .input3 p, .input4 p, .input5,p .input6 p{
+    .dash-input1 p, .dash-input2 p, .dash-input3 p, .dash-input4 p, .dash-input5,p .dash-input6 p{
         font-size: 12px;
     }
 
-    .card5-part1{
+    .dash-card5-part1{
         height: 10%;
     }
-    .card5-part2{
+    .dash-card5-part2{
         height: 80%;
+        width: 100%;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         column-gap: 10px;
         row-gap: 5px;
     }
-    .save_changes1{
+    .dash-save_changes1{
         height: 10%;
         position: relative;
         display: flex;
         flex-direction: column;
     }
-    .card5-part2 a{
+    .dash-card5-part2 a{
         display: flex;
         flex-direction: column;
     }
-    .Start{
+    .dash-Start{
         padding: 3px;
         font-size: 13px;
     }
-    .card5-profile-infos-part1 img{
+    .dash-card5-profile-infos-part1 img{
         width: 60px;
         height: 60px;
     }
 
-    .input1 , .input2 , .input3  , .input4 , .input5 , .input6 , .save_changes1{
+    .dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6 , .dash-save_changes1{
         position: relative;
         padding: 0px;
     }
-    .card5-settings{
+    .dash-card5-settings{
         height: 65%;
         width: 100%;
     }
 
-    .card5-profile-infos{
+    .dash-card5-profile-infos{
         padding: 0px;
         height: 35%;
         width: 100%;
