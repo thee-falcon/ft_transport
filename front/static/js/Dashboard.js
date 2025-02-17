@@ -1,5 +1,11 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
+        const username =getCookie('username');
+        const first_name = getCookie('first_name');
+        const lastname  =  getCookie('last_name');
+        const profilePicture = getCookie('profile_picture')  ;
+        const email = getCookie('email');
+
                     this.innerHTML = `
     <div id="lo">
         <div class="dash-dashboard-container">
@@ -103,14 +109,14 @@ class dashboard extends HTMLElement {
                         <div class="dash-card5-profile-infos">
                             <div class="dash-card5-profile-infos-part1">
                   
-                                <img src="/media/defaultprofilepic.png" alt="">
+                                <img    src=${profilePicture}  alt="">
                             </div>
                             <div class="dash-card5-profile-infos-part2"> 
-                                <p class="dash-name"> MOHAMED BOUDRIOUA </p>
-                                <p class="dash-nickname"> Excalibur66 </p>
-                                <p class="dash-level"> LvL 15</p>
+                                <p class="dash-name">  ${first_name} ${lastname} </p>
+                                <p class="dash-nickname"> ${username} </p>
+                                <p class="dash-level"> LvL 0</p>
                                 <p class="dash-description"> "the Conquer of PING-PONG Realm" </p>
-                                <p class="dash-email"> joumanji22@gmail </p>
+                                <p class="dash-email"> ${email} </p>
                             </div>
                         </div>
                         <div class="dash-card5-settings">

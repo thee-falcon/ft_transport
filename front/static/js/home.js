@@ -1,7 +1,7 @@
 class home extends HTMLElement {
     async connectedCallback() {
        const username =getCookie('username');
-        // const profilename = getCookie('username');
+         const profilename = getCookie('username');
         const profilePicture = getCookie("profile_picture")  ;
         
             console.log("profilePicture  " , profilePicture );
@@ -47,7 +47,7 @@ class home extends HTMLElement {
         <div class="card33">
             <div id="koo">
                 <div id="limm">
-
+                <h2>Welcome, ${username}!</h2> 
                 </div>
             </div>
             <div class="card-content">
@@ -72,10 +72,11 @@ class home extends HTMLElement {
 
         document.getElementById("logout").addEventListener('click', async function(event) {
             event.preventDefault();
-        
+            const csrftoken = getCookie('csrftoken');  // Fetch CSRF token
             try {
                 const response = await fetch("http://localhost:8000/logout/", {
                     method: "POST",
+                    'X-CSRFToken': csrftoken,  // Include CSRF token in headers
                     credentials: "include", // Ensure cookies are sent
                 });
         

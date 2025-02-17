@@ -8,15 +8,16 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializer import UserSerializer
+from .models import UserProfile  # Ensure you have a UserProfile model
 import secrets
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.core.mail import send_mail
-from .models import OtpToken
 from django.conf import settings
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+# OAuth Credentials
 SECRET = "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"  
 UID = "u-s4t2ud-ce06a015b3085a9d1b2735ae095fdd353bebe0c3deeb5d67f164a0dfdfbbb144"
 AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=" + UID + "&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
@@ -27,12 +28,11 @@ def set_token_cookies(response, refresh_token, access_token, username):
     response.set_cookie('access_token', access_token, samesite='None', httponly=False)
     response.set_cookie('username', username, samesite='None', httponly=False)  # Allow frontend access
 
-
 @api_view(['POST'])
 def login(req):
     user = get_object_or_404(User, username=req.data['username'])
     if not user.check_password(req.data['password']):
-        return Response({"detail": "Wrong Password !"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({"detail": "Wrong Password!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
     
     refresh = RefreshToken.for_user(user)
     response = Response({
@@ -41,16 +41,13 @@ def login(req):
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
     
-    # Pass the username to the function
     set_token_cookies(response, str(refresh), str(refresh.access_token), req.data['username'])
-    print(response, str(refresh) ,str(refresh.access_token) ,req.data['username'])
     return response
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def check_token(req):
-    return Response({"detail": "You are authenticated !"}, status=status.HTTP_200_OK)
-
+    return Response({"detail": "You are authenticated!"}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def signup(req):
@@ -61,14 +58,11 @@ def signup(req):
 
     serializer = UserSerializer(data=req.data)
     if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=req.data['username'])
-        user.set_password(req.data['password'])
-        user.save()
-        return Response({"user": serializer.data})
+        user = serializer.save()
+        return Response({"user": serializer.data}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+@csrf_exempt
 @api_view(['POST'])
 def logout(req):
     refresh_token = req.COOKIES.get('refresh_token')
@@ -82,23 +76,18 @@ def logout(req):
             print("Error blacklisting token:", e)
 
     response.delete_cookie('access_token')
-    
     response.delete_cookie('refresh_token')
     response.delete_cookie('username')
-    response.delete_cookie( 'email' )
-    response.delete_cookie( 'first_name' )
-    response.delete_cookie( 'last_name' )
-    response.delete_cookie( 'profile_picture' )
+    response.delete_cookie('email')
+    response.delete_cookie('first_name')
+    response.delete_cookie('last_name')
+    response.delete_cookie('profile_picture')
     req.session.flush()
     return response
-
-
 
 def login42(request: HttpRequest):
     return redirect(AUTH_URL)
 
-#exchange token with code  ||  send code  to /api.intra.42.fr/oauth/token
-# and 42 respond with acces token allows the app to authorize req 
 def exchange_code_for_token(code: str):
     token_url = "https://api.intra.42.fr/oauth/token"
     data = {
@@ -109,10 +98,8 @@ def exchange_code_for_token(code: str):
         'grant_type': 'authorization_code'
     }
     response = requests.post(token_url, data=data)
-    print("Token exchange response:", response.json())  # Log the response
     if response.status_code != 200:
         return None
-    
     return response.json().get('access_token')
 
 def get_42_user_info(access_token: str):
@@ -124,44 +111,39 @@ def get_42_user_info(access_token: str):
         return None
     
     return response.json()
-## check if authrnticated else redirect to signin     
+
 @api_view(['GET'])
 def login42_redir(request):
-    code = request.GET.get('code') # ara dak code AUTH_CODE
+    code = request.GET.get('code')
     if not code:
-        print("-------intra-------->error :", "code not provided")
         return redirect("http://localhost:8000/#signin")
-        # return JsonResponse({"error": "code not provided"}, status=409)
 
-    access_token = exchange_code_for_token(code) # send code and get the token 
+    access_token = exchange_code_for_token(code)
     if not access_token:
-        print("-------intra-------->error:" , "Failed to retrieve access token")
         return redirect("http://localhost:8000/#signin")
 
     user_info = get_42_user_info(access_token)
     if not user_info:
-        print("--------intra------->error:" , "Failed to retrieve user information")
         return redirect("http://localhost:8000/#signin")
 
     username = user_info.get('login')
     email = user_info.get('email')
     first_name = user_info.get('first_name')
     last_name = user_info.get('last_name')
-    profile_picture = user_info.get('image', {}).get('link')  # Intra returns profile picture inside `image`
+    profile_picture = user_info.get('image', {}).get('link')  
+
     try:
         user, created = User.objects.get_or_create(
             username=username,
             defaults={'email': email, 'first_name': first_name, 'last_name': last_name}
         )
         if created:
-            print(f"New user {username} created.")
-        # else:
-        #     print(f"User {username} already exists.")
-    
+            UserProfile.objects.create(user=user, profile_picture=profile_picture)
+
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
-        print(refresh_token)
+
         response = Response({
             "access_token": access_token,
             "refresh_token": refresh_token,
@@ -170,12 +152,10 @@ def login42_redir(request):
             "first_name": first_name,
             "last_name": last_name,
             "profile_picture": profile_picture,
-            
         }, status=302)
 
         response.set_cookie(key='access_token', value=access_token)
         response.set_cookie(key='refresh_token', value=refresh_token)
-        print(response.set_cookie(key='refresh_token', value=refresh_token))
         response.set_cookie(key='username', value=username)
         response.set_cookie(key='email', value=email)
         response.set_cookie(key='first_name', value=first_name)
@@ -185,5 +165,4 @@ def login42_redir(request):
         response['Location'] = "http://localhost:8000/#home"
         return response
     except Exception as e:
-        print("Error during user creation:", str(e))
         return JsonResponse({"error": "An error occurred during user creation"}, status=500)

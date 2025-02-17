@@ -1,12 +1,16 @@
 from django.db import models
-from django.conf import settings
-import secrets
+from django.contrib.auth.models import User
 
-class OtpToken(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otps")
-    otp_code = models.CharField(max_length=6, default=secrets.token_hex(3))
-    otp_created_at = models.DateTimeField(auto_now_add=True)
-    otp_expires_at = models.DateTimeField(blank=True, null=True)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.CharField(max_length=100, blank=True, null=True)
+    nickname = models.CharField(max_length=50, blank=True, null=True)
+    matches_won = models.IntegerField(default=0)
+    matches_lost = models.IntegerField(default=0)
+    matches_count = models.IntegerField(default=0)
+    tournaments_won = models.IntegerField(default=0)
+    tournaments_lost = models.IntegerField(default=0)
+    tournaments_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.user.username
+        return self.nickname or self.user.username
