@@ -16,6 +16,10 @@ urlpatterns = [
     path('token-refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('login42/', views.login42, name='login42'),
     path('login42_redir/', views.login42_redir, name='login42_redir'),
+    path('get_user_stats/' , views.get_user_stats,),
+    # path('some_view/' , views.some_view),
+
+    
     #     path('login2fa/', views.login2fa, name='login2fa'),
     # path('confirm/', views.confirm_account, name='confirm'),
 ]

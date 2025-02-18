@@ -47,7 +47,7 @@ class home extends HTMLElement {
         <div class="card33">
             <div id="koo">
                 <div id="limm">
-                <h2>Welcome, ${username}!</h2> 
+                <h2>${username}!</h2> 
                 </div>
             </div>
             <div class="card-content">
@@ -67,7 +67,7 @@ class home extends HTMLElement {
     </div>
 </div>
 </body>
-        `;
+`;
    
 
         document.getElementById("logout").addEventListener('click', async function(event) {
@@ -99,16 +99,43 @@ class home extends HTMLElement {
             }
         });
         let gotodash = document.getElementById("go-to-dashboard");
-        gotodash.addEventListener('click', async function(event) 
+        gotodash.addEventListener('click', async function(event) {
+            event.preventDefault();
+            try {
+                const token = getCookie("access_token"); // Retrieve stored token
+                if (!token) {
+                    console.error("No access token found!");
+                    return;
+                }
+                console.log('print token ' , token);
         
-            {
-                event.preventDefault();
-                        alert('go to dashboard');
-                    window.location.hash = "dashboard";
-            });
-    } 
-}
+                const response = await fetch("http://localhost:8000/get_user_stats/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`, // Add Authorization header
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include" // Include cookies if needed
+                });
+        
+                const responseData = await response.json();
+                console.log("stats response:", responseData);
+        
+                if (response.ok) {
+                    console.log("get_user_stats response:", responseData);
+                    window.location.hash = "dashboard"; 
+
+                } else {
+                    console.error("Error fetching stats:", responseData);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+        
+
+            }
+                }
 customElements.define('home-component', home);
 
 
- 

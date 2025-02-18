@@ -15,7 +15,6 @@ function isAuthenticated() {
 
     const refresh_Token = getCookie("refresh_token");
     const access_Token = getCookie("access_token");
-
     if (!refresh_Token || !access_Token) {
         console.log("Not authenticated: missing tokens redrecting to signin ");
 

@@ -17,6 +17,18 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .serializer import UserSerializer
+from django.contrib.auth.models import User
+from .models import UserProfile
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+import requests
+
 # OAuth Credentials
 SECRET = "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"  
 UID = "u-s4t2ud-ce06a015b3085a9d1b2735ae095fdd353bebe0c3deeb5d67f164a0dfdfbbb144"
@@ -31,6 +43,7 @@ def set_token_cookies(response, refresh_token, access_token, username):
 @api_view(['POST'])
 def login(req):
     user = get_object_or_404(User, username=req.data['username'])
+
     if not user.check_password(req.data['password']):
         return Response({"detail": "Wrong Password!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
     
@@ -40,8 +53,8 @@ def login(req):
         "refresh_token": str(refresh),
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
-    
     set_token_cookies(response, str(refresh), str(refresh.access_token), req.data['username'])
+    print("ressssss  ", response)
     return response
 
 @api_view(['GET'])
@@ -51,6 +64,7 @@ def check_token(req):
 
 @api_view(['POST'])
 def signup(req):
+    # Check if username or email is already taken
     if User.objects.filter(username=req.data['username']).exists():
         return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
     if User.objects.filter(email=req.data['email']).exists():
@@ -58,7 +72,7 @@ def signup(req):
 
     serializer = UserSerializer(data=req.data)
     if serializer.is_valid():
-        user = serializer.save()
+        user = serializer.save()  # Automatically creates the UserProfile as well
         return Response({"user": serializer.data}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -102,6 +116,27 @@ def exchange_code_for_token(code: str):
         return None
     return response.json().get('access_token')
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_stats(req):
+    user_profile = get_object_or_404(UserProfile, user=req.user)
+    
+    response = Response({
+        "nickname": user_profile.nickname,
+        "matches_won": user_profile.matches_won,
+        "matches_lost": user_profile.matches_lost,
+        "matches_count": user_profile.matches_count,
+        "tournaments_won": user_profile.tournaments_won,
+        "tournaments_lost": user_profile.tournaments_lost,
+        "tournaments_count": user_profile.tournaments_count,
+        # "profile_picture": user_profile.profile_picture.url if user_profile.profile_picture else None
+    }, status=status.HTTP_200_OK)
+    
+    return response
+    
+    
+    
 def get_42_user_info(access_token: str):
     user_info_url = "https://api.intra.42.fr/v2/me"
     headers = {'Authorization': f'Bearer {access_token}'}
