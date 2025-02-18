@@ -1,0 +1,448 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1B3E46;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    min-height: 100vh;
+    padding: 1rem;
+} 
+
+.main-parent {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 8px;
+    height: 100%;
+    width: 100%;
+    padding: clamp(1rem, 5vw, 9rem);
+}
+    
+.div1 {
+    grid-column: span 3 / span 3;
+    grid-row: span 10 / span 10;
+    background-image: url(../images/girl.png);
+    background-size: cover;
+    background-position: center;
+    border-radius: 32px;
+}
+
+.div2 {
+    grid-column: span 6 / span 6;
+    grid-row: span 10 / span 10;
+    grid-column-start: 4;
+}
+
+.parent-right {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    gap: clamp(10px, 2vw, 20px);
+    height: 100%;
+    width: 100%;
+    border: 3px solid #E5F690;
+    background-color:#EFF3DD;
+    padding: clamp(1rem, 3vw, 3rem);
+    border-radius: 32px;
+}
+
+.div1-right {
+    grid-column: span 7 / span 7;
+    grid-row: span 5 / span 5;
+    border: 3px solid #E5F690;
+    border-radius: 32px;
+    background-color: #1B3E46;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    padding: 1rem;
+}
+
+.div1-div1-right{
+    grid-column: span 2 / span 2;
+    grid-row: span 4 / span 4;
+    overflow: hidden;
+    border-radius: 32px;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.div1-div1-right .imgConatiner{
+    height: 150px;
+    overflow: hidden;
+    border-radius: 32px;
+    margin-bottom: 20px;
+}
+
+.div1-div1-right img {
+    width: 100%;
+    max-width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 32px;
+    border: 3px solid #E5F690;
+}
+
+.div1-div1-right .info {
+    font-family: "Bai Jamjuree", serif;
+    text-transform: capitalize;
+    color: #E5F690;
+    font-weight: bold;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    margin-top: auto;
+}
+
+.info-won, .info-lose {
+    margin-bottom: 8px;
+}
+
+.div2-div1-right{
+    grid-column: span 3 / span 3;
+    grid-row: span 4 / span 4;
+    grid-column-start: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: start;
+    font-family: "Bai Jamjuree", serif;
+    text-transform: capitalize;
+    color: #E5F690;
+    font-weight: bold;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+.div2-right {
+    grid-column: span 3 / span 3;
+    grid-column-start: 8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div3-right {
+    grid-column: span 3 / span 3;
+    grid-row: span 4 / span 4;
+    grid-column-start: 8;
+    grid-row-start: 2;
+    border: 3px solid #E5F690;
+    border-radius: 32px;
+    background-color: #1B3E46;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+}
+
+.current-strike {
+    color: #E5F690;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-family: "Bai Jamjuree", serif;
+    text-transform: capitalize;
+    font-weight: 400;
+    text-align: center;
+}
+
+.strike-value {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.contacts-div3 {
+    color: #E5F690;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: bold;
+    font-family: "Bai Jamjuree", serif;
+    text-transform: capitalize;
+    font-weight: 400;
+    text-align: center;
+}
+
+.social-icons {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.social-icons i {
+    font-size: clamp(1.5rem, 2vw, 1.8rem);
+    cursor: pointer;
+}
+
+.div4-right {
+    grid-column: span 10 / span 10;
+    grid-row: span 6 / span 6;
+    grid-row-start: 6;
+    border: 3px solid #E5F690;
+    border-radius: 32px;
+    background-color: #1B3E46;
+    padding: clamp(10px, 2vw, 20px);
+}
+
+.match-history {
+    color: #E5F690;
+    font-family: "Bai Jamjuree", serif;
+}
+
+.match-header {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #E5F690;
+    margin-bottom: 10px;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.match {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    padding: 10px;
+    align-items: center;
+    border-bottom: 1px solid rgba(229, 246, 144, 0.3);
+}
+
+.match-time {
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+}
+
+.match-players {
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+}
+
+.match-result {
+    font-weight: bold;
+    text-align: right;
+}
+
+.win {
+    color: #4CAF50;
+}
+
+.lose {
+    color: #f44336;
+}
+
+.div5-right {
+    grid-column: span 10 / span 10;
+    grid-row-start: 12;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.div5-right button {
+    text-transform: capitalize;
+    font-family: "Bai Jamjuree", serif;
+    font-weight: 400;
+    padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2vw, 20px);
+    border-radius: 32px;
+    background-color: #1B3E46;
+    color: #E5F690;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+}
+
+.div2-right button {
+    text-transform: capitalize;
+    font-family: "Bai Jamjuree", serif;
+    font-weight: 400;
+    padding: clamp(8px, 1.5vw, 10px);
+    border-radius: 32px;
+    background-color: #1B3E46;
+    color: #E5F690;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    cursor: pointer;
+    border: none;
+    padding-inline: clamp(3rem, 5vw, 7rem);
+    white-space: nowrap;
+}
+
+.gameStatus:hover, .gameEdit:hover {
+    background-color: #E5F690;
+    color: #1B3E46;
+    transition: all 0.3s ease;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1200px) {
+    .main-parent {
+        padding: 2rem;
+    }
+    
+    .div2-div1-right {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .main-parent {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    
+    .div1 {
+        grid-column: 1 / -1;
+        height: 300px;
+    }
+    
+    .div2 {
+        grid-column: 1 / -1;
+    }
+    
+    .parent-right {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .div1-right {
+        grid-column: span 6;
+    }
+    
+    .div2-right {
+        grid-column: span 6;
+        grid-row: auto;
+        margin: 1rem 0;
+    }
+    
+    .div3-right {
+        grid-column: span 6;
+        grid-row: auto;
+    }
+    
+    .div4-right {
+        grid-column: span 6;
+    }
+    
+    .div5-right {
+        grid-column: span 6;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .main-parent {
+        gap: 8px;
+        padding: 2rem;
+    }
+    
+    .parent-right {
+        padding: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .main-parent {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 2rem;
+    }
+    
+    .div1 {
+        grid-column: 1 / -1;
+        height: 300px;
+        grid-row: unset;
+    }
+    
+    .div2 {
+        grid-column: 1 / -1;
+        grid-row: unset;
+    }
+    
+    .parent-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        height: auto;
+    }
+    
+    .div1-right {
+        flex: none;
+        height: auto;
+    }
+    
+    .div2-right {
+        flex: none;
+    }
+    
+    .div3-right {
+        flex: none;
+    }
+    
+    .div4-right {
+        flex: none;
+    }
+    
+    .div5-right {
+        flex: none;
+        display: flex;
+        gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .div1-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .div1-div1-right {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .div2-div1-right {
+        width: 100%;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .div3-right {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .match-header, 
+    .match {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-parent {
+        padding: 1rem;
+    }
+    
+    .parent-right {
+        padding: 1rem;
+    }
+    
+    .div5-right {
+        flex-direction: column;
+    }
+    
+    .gameStatus {
+        width: 100%;
+    }
+    
+    .match-header, 
+    .match {
+        font-size: 0.8rem;
+    }
+}
