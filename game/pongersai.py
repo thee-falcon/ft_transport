@@ -334,11 +334,11 @@ class PongServer(BaseHTTPRequestHandler):
 def run_neat(ai):
     # Only run if no generations have been completed
     if len(ai.training_history['generations']) == 0:
-        ai.population.run(ai.eval_genomes, 200)
+        ai.population.run(ai.eval_genomes, 4000)
     else:
         # Resume from last generation
         last_generation = len(ai.training_history['generations'])
-        ai.population.run(ai.eval_genomes, 200 - last_generation)
+        ai.population.run(ai.eval_genomes, 4000 - last_generation)
 
 def run_server():
     server_address = ('', 8000)
