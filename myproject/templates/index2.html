@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ft_transcendence</title>
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+<body>
+	<!-- Hidden field containing the logged-in user's ID (set this value as needed) -->
+	<input type="hidden" id="logged-in-user"/>
+	
+	<!-- This element can be updated later with the logged-in user's name -->
+	<h1 id="user-name">User Name</h1>
+	
+	<div class="app-container">
+		<!-- Users List -->
+		<div class="users-list">
+			<!-- Friends list will be injected here -->
+		</div>
+		
+		<!-- Chat Area -->
+		<div class="chat-container">
+			<div class="chat-header">
+				<span id="chat-header-username">Select a friend</span>
+			</div>
+			<div class="chat-messages">
+				<!-- Chat messages will be injected here -->
+			</div>
+			<form id="send-message-form">
+				<div class="chat-input">
+					<input type="text" id="input-message" placeholder="Kteb message..." />
+					<button id="chat-message-submit" type="submit">Send</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+    <script src="../static/js/script.js"></script>
+
+</body>
+</html>

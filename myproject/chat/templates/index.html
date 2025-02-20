@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ft_transcendence</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+		<!-- <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1> -->
+		<input type="hidden" id="logged-in-user" value="{{ user.id }}">
+		<h1>{{ user }}</h1>
+
+    <div class="app-container">
+        <!-- Users List -->
+		<div class="users-list">
+			{% for friend in friends %}
+				<div class="user_info">
+					<div class="user-item {% if loop.first %}active{% endif %}" data-chat-id="{{ friend.id }}">
+						<div>
+							<strong>{{ friend.username }}</strong>
+							<div style="font-size: 12px; color: #666;">Last seen 9h ago</div>
+						</div>
+						<span class="notification-badge">5</span>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+        <!-- Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <!-- <img src="/api/placeholder/35/35" alt="Karim"> -->
+                <span>{{ friend.username }}</span>
+            </div>
+            <div class="chat-messages">
+				{% if messages %}
+					{% for message in messages %}
+						{% if message.sent_by_id == user.id %}
+						<!-- Message sent by the current user -->
+						<div class="message sent">
+							<!-- <p>{{ message.sent_by_id }}</p> -->
+							<!-- <p>{{ message.send_to_id }}</p> -->
+							<div class="message-content">{{ message.message.message }}</div>
+							<p><small>Sent at: {{ message.timestamp }}</small></p>
+						</div>
+						{% else %}
+						<!-- Message received by the current user -->
+							<div class="message received">
+								<!-- <p>{{ message.send_to_id }}</p>
+								<p>{{ message.sent_by_id }}</p> -->
+								<div class="message-content">{{ message.message.message }}</div>
+								<p><small>Received at: {{ message.timestamp }}</small></p>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					<p>No messages found.</p>
+				{% endif %}
+			</div>
+			<form id="send-message-form">
+				<div class="chat-input">
+					<input type="text" name="" id="input-message"  placeholder="Kteb message...">
+					<button id="chat-message-submit">Send</button>
+
+				</div>
+			</form>
+        </div>
+    </div>
+
+	<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
