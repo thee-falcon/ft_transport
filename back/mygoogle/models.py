@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.CharField(max_length=100, blank=True, null=True)
+    profile_picture = models.CharField(max_length=100, blank=True, null=True, default='/media/defaultprofilepic.png')
     nickname = models.CharField(max_length=50, blank=True, null=True)
     matches_won = models.IntegerField(default=0)
     matches_lost = models.IntegerField(default=0)

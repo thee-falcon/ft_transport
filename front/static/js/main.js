@@ -3,6 +3,7 @@ const route = {
     'signup': 'signup-component',
     'home':   'home-component',
     'dashboard': 'dashboard-component',
+    'profile':   'profile-component',
 };
 
 function getCookie(name) {
@@ -34,7 +35,7 @@ function isAuthenticated() {
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log('path === ' ,path);
-    if ((path === "home" || path === "dashboard") && !isAuthenticated()) {
+    if ((path === "home" || path === "profile" ||path === "dashboard" ) && !isAuthenticated()) {
         window.location.hash = "signin";
         return;
     }
@@ -43,10 +44,11 @@ async function navigate() {
     const container = document.getElementById("view-container");
 
     if (!page) {
+        console.log(path ,"no page awayli ??");
         window.location.hash = "signin";
         return;
     }
-    
+    console.log('how abt now path === ' ,path);
     container.innerHTML = `<${page}></${page}>`;
     container.classList.add("active");
 }

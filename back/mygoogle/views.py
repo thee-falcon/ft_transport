@@ -117,6 +117,8 @@ def exchange_code_for_token(code: str):
     return response.json().get('access_token')
 
 
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_stats(req):
@@ -132,6 +134,15 @@ def get_user_stats(req):
         "tournaments_count": user_profile.tournaments_count,
         # "profile_picture": user_profile.profile_picture.url if user_profile.profile_picture else None
     }, status=status.HTTP_200_OK)
+    response.set_cookie(key='nickname', value=user_profile.nickname)
+    response.set_cookie(key='matches_won', value=user_profile.matches_won)
+    response.set_cookie(key='matches_lost', value=user_profile.matches_lost)
+    response.set_cookie(key='tournaments_won', value=user_profile.tournaments_won)
+    response.set_cookie(key='tournaments_lost', value=user_profile.tournaments_lost)
+    response.set_cookie(key='profile_picture', value=user_profile.profile_picture)
+    print('picture ==' , user_profile.profile_picture)
+        # response.set_cookie(key='last_name', value=user_profile.last_name)
+        # response.set_cookie(key='profile_picture', value=profile_picture)
     
     return response
     

@@ -51,7 +51,7 @@ class home extends HTMLElement {
                 </div>
             </div>
             <div class="card-content">
-                <a href="#" class="card-button">Profile</a>
+                <a href="#" class="card-button" id="go-to-profile">Profile</a>
             </div>
             <div class="card-content">
             <a href="#" class="card-button" id="logout" >Logout</a>
@@ -69,6 +69,7 @@ class home extends HTMLElement {
 </body>
 `;
    
+
 
         document.getElementById("logout").addEventListener('click', async function(event) {
             event.preventDefault();
@@ -89,7 +90,7 @@ class home extends HTMLElement {
                     document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     document.cookie = "profile_picture=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                    window.location.hash = "#signin"; 
+                    window.location.hash = "signin"; 
                 } else {
                     console.error("Logout failed:", responseData);
                     alert(responseData.detail || "Logout failed");
@@ -98,6 +99,41 @@ class home extends HTMLElement {
                 console.error("Error:", error);
             }
         });
+        let goprofile = document.getElementById("go-to-profile");
+        goprofile.addEventListener('click', async function(event) {
+            event.preventDefault();
+            try {
+                const token = getCookie("access_token"); // Retrieve stored token
+                if (!token) {
+                    console.error("No access token found!");
+                    return;
+                }
+                console.log('print token ' , token);
+        
+                const response = await fetch("http://localhost:8000/get_user_stats/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`, // Add Authorization header
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include" // Include cookies if needed
+                });
+        
+                const responseData = await response.json();
+                console.log("stats response:", responseData);
+        
+                if (response.ok) {
+                    console.log("get_user_stats response:", responseData);
+                    window.location.hash = "profile"; 
+
+                } else {
+                    console.error("Error fetching stats:", responseData);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+
         let gotodash = document.getElementById("go-to-dashboard");
         gotodash.addEventListener('click', async function(event) {
             event.preventDefault();
@@ -132,7 +168,6 @@ class home extends HTMLElement {
                 console.error("Error:", error);
             }
         });
-        
 
             }
                 }
