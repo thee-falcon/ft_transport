@@ -79,6 +79,8 @@ body {
     transform: translateX(-50%); /* Center the line horizontally */
 }
 
+
+
 #boardcanva {
     position: absolute;
     top: 0;
