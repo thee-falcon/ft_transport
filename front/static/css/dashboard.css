@@ -262,13 +262,22 @@ body{
     height: 10%;
     border-radius: 20px;
 }
-.dash-statistics-graphs{
+.dash-statistics-graphs {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Keeps charts stacked */
+    align-items: center;
+    justify-content: space-around; /* Adds spacing between charts */
     background-color: #EFF3DD;
     height: 90%;
     border-radius: 20px;
+    padding: 15px;
+}
+
+.dash-statistics-graphs canvas {
+    width: 90%; /* Ensures charts don’t overflow */
+    height: 45%; /* Splits the available space */
+    max-height: 200px; /* Prevents excessive stretching */
 }
 .dash-card5{
     position: relative;

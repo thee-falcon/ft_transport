@@ -16,7 +16,7 @@ function isAuthenticated() {
 
     const refresh_Token = getCookie("refresh_token");
     const access_Token = getCookie("access_token");
-    if (!refresh_Token || !access_Token) {
+    if ((!refresh_Token || !access_Token)  ) {
         console.log("Not authenticated: missing tokens redrecting to signin ");
 
         return false;
@@ -36,6 +36,7 @@ async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log('path === ' ,path);
     if ((path === "home" || path === "profile" ||path === "dashboard" ) && !isAuthenticated()) {
+        
         window.location.hash = "signin";
         return;
     }
