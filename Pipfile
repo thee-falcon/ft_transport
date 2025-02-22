@@ -6,13 +6,13 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-psycopg2-binary = "*"
-python-dotenv = "*"
 django-cors-headers = "*"
 djangorestframework-simplejwt = "*"
 django-otp = "*"
 qrcode = "*"
 pillow = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
