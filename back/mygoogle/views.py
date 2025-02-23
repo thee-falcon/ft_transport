@@ -28,6 +28,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 import requests
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from .models import UserProfile
+from .serializer import UserProfileSerializer
 
 # OAuth Credentials
 SECRET = "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"  
@@ -36,26 +42,34 @@ AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=" + UID + "&redire
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
 def set_token_cookies(response, refresh_token, access_token, username):
-    response.set_cookie('refresh_token', refresh_token, samesite='None', httponly=False)
-    response.set_cookie('access_token', access_token, samesite='None', httponly=False)
-    response.set_cookie('username', username, samesite='None', httponly=False)  # Allow frontend access
+    response.set_cookie('refresh_token', refresh_token, samesite='None')
+    response.set_cookie('access_token', access_token, samesite='None')
+    response.set_cookie('username', username, samesite='None')  # Allow frontend access
 
 @api_view(['POST'])
 def login(req):
+    print("Received login request for:", req.data['username'])
+
     user = get_object_or_404(User, username=req.data['username'])
+    print("Stored password (hashed):", user.password)
+    print("Entered password:", req.data['password'])
 
     if not user.check_password(req.data['password']):
+        print("Password check failed!")
         return Response({"detail": "Wrong Password!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    
+
+    print("Password check passed!")
+
     refresh = RefreshToken.for_user(user)
     response = Response({
         "access_token": str(refresh.access_token),
         "refresh_token": str(refresh),
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
+
     set_token_cookies(response, str(refresh), str(refresh.access_token), req.data['username'])
-    print("ressssss  ", response)
     return response
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -212,3 +226,55 @@ def login42_redir(request):
         return response
     except Exception as e:
         return JsonResponse({"error": "An error occurred during user creation"}, status=500)
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from .models import UserProfile
+from .serializer import UserProfileSerializer
+
+import logging
+logger = logging.getLogger(__name__)
+
+# class UpdateUserProfileView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def put(self, request):
+#         logger.info(f"Received data: {request.data}")  # Log received data
+
+#         user = request.user  
+#         user_profile = UserProfile.objects.get(user=user)
+
+#         user_data = request.data.get("user", {})
+#         profile_data = request.data.get("profile", request.data)
+
+#         # Debug: Check extracted data
+#         logger.info(f"User data: {user_data}, Profile data: {profile_data}")
+
+#         # Update User fields
+#         if "username" in user_data:
+#             user.username = user_data["username"]
+#         if "email" in user_data:
+#             user.email = user_data["email"]
+#         user.save()  
+
+#         # Update UserProfile fields
+#         serializer = UserProfileSerializer(user_profile, data=profile_data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+
+#         logger.warning(f"Serializer errors: {serializer.errors}")  # Log errors
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user  # Get the logged-in user
+        serializer = UserSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

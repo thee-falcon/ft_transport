@@ -61,9 +61,11 @@ class signin extends HTMLElement {
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": getCookie("csrftoken")
+    
         },
         body: JSON.stringify({ username, password })
       });
+      console.log('resoinse' , response);
 
       const data = await response.json();
       try {

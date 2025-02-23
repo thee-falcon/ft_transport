@@ -1,4 +1,4 @@
-const route = {
+ const route = {
     'signin': 'signin-component',
     'signup': 'signup-component',
     'home':   'home-component',

@@ -113,7 +113,7 @@ class dashboard extends HTMLElement {
 
         // Chart 2: Tournaments Won & Lost
         new Chart(tournamentsCanvas.getContext('2d'), {
-            type: 'line',
+            type: 'doughnut',
             data: {
                 labels: ['Tournaments Won', 'Tournaments Lost'],
                 datasets: [{
