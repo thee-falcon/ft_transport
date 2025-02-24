@@ -2,14 +2,10 @@ class Profile extends HTMLElement {
     async connectedCallback() {
         const username = getCookie('username');
         const first_name = getCookie('first_name');
-        const lastname = getCookie('last_name');
+        const last_name = getCookie('last_name');
         const profilePicture = getCookie('profile_picture') || "/media/defaultprofilepic.png";
-        console.log("picture", profilePicture);
+        console.log("Profile Picture:", profilePicture);
         const email = getCookie('email');
-        const matches_won = getCookie('matches_won');
-        const matches_lost = getCookie('matches_lost');
-        const tournaments_won = getCookie('tournaments_won');
-        const tournaments_lost = getCookie('tournaments_lost');
 
         this.innerHTML = `
         <div id="lo">
@@ -21,7 +17,7 @@ class Profile extends HTMLElement {
                                 <img src="${profilePicture}" alt="Profile Picture">
                             </div>
                             <div class="dash-card5-profile-infos-part2"> 
-                                <p class="dash-name">${first_name} ${lastname}</p>
+                                <p class="dash-name">${first_name} ${last_name}</p>
                                 <p class="dash-nickname">${username}</p>
                                 <p class="dash-level">LvL 0</p>
                                 <p class="dash-description">"The Conqueror of PING-PONG Realm"</p>
@@ -34,7 +30,7 @@ class Profile extends HTMLElement {
                             </div>
                             <div class="dash-card5-part2">
                                 <div class="dash-input1">
-                                    <p>Edit FName</p>
+                                    <p>Edit First Name</p>
                                     <input type="text" id="FirstName" placeholder="New First Name">
                                 </div>
                                 <div class="dash-input2">
@@ -47,11 +43,19 @@ class Profile extends HTMLElement {
                                 </div>
                                 <div class="dash-input5">
                                     <p>Edit Email</p>
-                                    <input type="text" id="newEmail" placeholder="New Email">
+                                    <input type="email" id="newEmail" placeholder="New Email">
                                 </div>
                                 <div class="dash-input6">
-                                    <p>Edit Password</p>
+                                    <p>Old Password</p>
+                                    <input type="password" id="OldPassword" placeholder="Old Password">
+                                </div>    
+                                <div class="dash-input6">
+                                    <p>New Password</p>
                                     <input type="password" id="newPassword" placeholder="New Password">
+                                </div>    
+                                <div class="dash-input6">
+                                    <p>Confirm Password</p>
+                                    <input type="password" id="conf-password" placeholder="Confirm Password">
                                 </div>    
                                 <div class="dash-save_changes1">
                                     <button class="dash-Start" id="Editbtn">Save Changes</button>
@@ -66,19 +70,31 @@ class Profile extends HTMLElement {
         document.getElementById("Editbtn").addEventListener('click', async function (event) {
             event.preventDefault();
         
-            // Prepare the data to be sent as JSON
+            const oldPassword = document.getElementById("OldPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            const conf_password = document.getElementById("conf-password").value;
+        
+            if (!oldPassword) {
+                console.error("Old password is required!");
+                return;
+            }
+        
+            if (newPassword && newPassword !== conf_password) {
+                console.error("Passwords do not match!");
+                return;
+            }
+        
             const data = {
-                username: document.getElementById("newUsername").value,
-                first_name: document.getElementById("FirstName").value,
-                last_name: document.getElementById("LastName").value,
-                email: document.getElementById("newEmail").value,
-                password: document.getElementById("newPassword").value
+                username: document.getElementById("newUsername").value || null,
+                first_name: document.getElementById("FirstName").value || null,
+                last_name: document.getElementById("LastName").value || null,
+                email: document.getElementById("newEmail").value || null,
+                oldPassword: oldPassword, // Backend will use this to verify before changing password
+                password: newPassword || null, // Only sent if the user wants to change it
             };
         
             const accessToken = getCookie('access_token');
             console.log("Access Token:", accessToken);
-        
-            // Debugging data
             console.log("Data to be sent:", data);
         
             try {
@@ -86,19 +102,26 @@ class Profile extends HTMLElement {
                     method: "PUT",
                     headers: {
                         "Authorization": `Bearer ${accessToken}`,
-                        "Content-Type": "application/json"  // Ensure you're sending JSON
+                        "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(data)  // Send the data as JSON
+                    body: JSON.stringify(data)
                 });
         
                 const responseData = await response.json();
                 console.log("Response Data:", responseData);
+        
+                if (response.ok) {
+                    console.log("Profile updated successfully!");
+                } else {
+                    console.error("Error updating profile:", responseData.message || "Unknown error");
+                }
             } catch (error) {
                 console.error("Error updating profile:", error);
             }
         });
         
-
+        
+        
     }
 }
 

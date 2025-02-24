@@ -267,14 +267,88 @@ logger = logging.getLogger(__name__)
 
 #         logger.warning(f"Serializer errors: {serializer.errors}")  # Log errors
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class UpdateUserProfileView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def put(self, request):
+#         user = request.user  # Get the logged-in user
+#         serializer = UserSerializer(user, data=request.data, partial=True)
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+import json
+
+# class UpdateUserProfileView(APIView):
+#     permission_classes = [IsAuthenticated]  # Ensure only authenticated users can update their profile
+
+#     def put(self, request):
+#         user = request.user  # Get the logged-in user
+
+#         # Update user fields
+#         if 'username' in request.data:
+#             user.username = request.data['username']
+#         if 'first_name' in request.data:
+#             user.first_name = request.data['first_name']
+#         if 'last_name' in request.data:
+#             user.last_name = request.data['last_name']
+#         if 'email' in request.data:
+#             user.email = request.data['email']
+        
+        
+#         # Handle password update with hashing
+#         if 'password' in request.data and request.data['password']:
+#             user.password = make_password(request.data['password'])  # Hash password
+
+#         user.save()  # Save updates
+
+#         return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
+
+
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth import update_session_auth_hash
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+
 class UpdateUserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can update their profile
 
     def put(self, request):
         user = request.user  # Get the logged-in user
-        serializer = UserSerializer(user, data=request.data, partial=True)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Check if old password is provided before updating password
+        if 'password' in request.data and request.data['password']:
+            old_password = request.data.get("oldPassword", "")
+            if not old_password:
+                return Response({"message": "Old password is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not check_password(old_password, user.password):
+                return Response({"message": "Incorrect old password"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(request.data["password"])  # Hash password
+            update_session_auth_hash(request, user)  # Prevent logout after password change
+
+        # Update user fields if provided (without overwriting with None)
+        user.username = request.data.get("username", user.username) or user.username
+        user.first_name = request.data.get("first_name", user.first_name) or user.first_name
+        user.last_name = request.data.get("last_name", user.last_name) or user.last_name
+        user.email = request.data.get("email", user.email) or user.email
+
+        user.save()  # Save updates
+
+        return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
