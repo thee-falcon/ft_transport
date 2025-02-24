@@ -17,7 +17,7 @@ class home extends HTMLElement {
         <div class="card11">
             <!-- <img src="../image/Screen_Shot_2025-01-12_at_12.47.51_AM-removebg-preview.png" alt="Game Image"> -->
             <div class="card-content">
-            <a href="#" class="card-button">Start Game</a>
+            <a href="#" class="card-button" id="go-to-gameoption">Start Game</a>
             </div>
         </div>
         <div class="card44">
@@ -69,7 +69,11 @@ class home extends HTMLElement {
 </body>
 `;
    
-
+let gotogameoption = document.getElementById("go-to-gameoption");
+gotogameoption.addEventListener('click', function(event) {
+    event.preventDefault();  
+    window.location.hash = "gameoption";   
+});
 
         document.getElementById("logout").addEventListener('click', async function(event) {
             event.preventDefault();

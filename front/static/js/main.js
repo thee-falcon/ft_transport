@@ -4,6 +4,7 @@
     'home':   'home-component',
     'dashboard': 'dashboard-component',
     'profile':   'profile-component',
+    'gameoption': 'gameoption-component',
 };
 
 function getCookie(name) {
@@ -34,9 +35,10 @@ function isAuthenticated() {
 
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
-    console.log('path === ' ,path);
-    if ((path === "home" || path === "profile" ||path === "dashboard" ) && !isAuthenticated()) {
-        
+    console.log("Navigating to:", path); // ✅ Debugging
+
+    if ((path === "home" || path === "profile" || path === "dashboard" || path === "gameoption") && !isAuthenticated()) {
+        console.log("User not authenticated, redirecting to signin.");
         window.location.hash = "signin";
         return;
     }
@@ -45,13 +47,13 @@ async function navigate() {
     const container = document.getElementById("view-container");
 
     if (!page) {
-        console.log(path ,"no page awayli ??");
+        console.log("No page found for:", path);
         window.location.hash = "signin";
         return;
     }
-    console.log('how abt now path === ' ,path);
+
+    console.log("Loading component:", page); // ✅ Debugging
     container.innerHTML = `<${page}></${page}>`;
-    container.classList.add("active");
 }
 
 

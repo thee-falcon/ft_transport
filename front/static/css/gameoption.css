@@ -1,0 +1,139 @@
+body {
+    background-color: #10292F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #298862;
+    justify-content: center;
+    align-items: center;
+    width: 700px;
+    height: 350px;
+    border-radius: 10px;
+}
+
+.container .glass {
+    position: relative;
+    width: 150px; 
+    max-width: 250px; 
+    height: auto;
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(#EFF3DD, transparent);
+    border: 2px solid #E5F690;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    /* gap: 20px; */
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s ease;
+    border-radius: 10px;
+    margin: 0 -90px;
+    backdrop-filter: blur(10px);
+    transform: rotate(calc(var(--r) * 1deg));
+}
+
+.container:hover .glass {
+    transform: rotate(0deg);
+    margin: 0 10px;
+}
+
+.container .glass i {
+    font-size: 3vw; 
+    color: #10292F;
+}
+
+/* Buttons */
+.button {
+    border: 2px solid #E5F690;
+    text-align: center;
+    background-color: #10292F;
+    color: #E5F690;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size:medium; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    /* transform: translateY(30px); */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.button:hover {
+    background-color: #E5F690;
+    color: #10292F;
+}
+
+.Game_Modes_img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Game_Modes_img img {
+    width: 15vw; 
+    max-width: 70px; 
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .container {
+        gap: 1px;
+    }
+
+    .container .glass {
+        width: 29%;
+        max-width: none;
+    }
+
+    .container .glass i {
+        font-size: 5vw; 
+    }
+
+    .button {
+        font-size: 3vw; 
+        /* width: 70%; */
+        font-size: medium;
+    }
+
+    .Game_Modes_img img {
+        width: 15vw; 
+    }
+}
+
+@media (max-width: 630px) {
+    .container {
+        gap: 10px;
+    }
+
+    .container .glass {
+        /* width: 29%; */
+        /* max-width: none; */
+        margin: 0 -60px;
+    }
+
+    .container .glass i {
+        font-size: 5vw; 
+    }
+
+    .button {
+        font-size: 3vw; 
+        /* width: 50%; */
+        /* font-size: small; */
+        padding: 4px;
+    }
+
+    .Game_Modes_img img {
+        width: 10vw; 
+    }
+}
