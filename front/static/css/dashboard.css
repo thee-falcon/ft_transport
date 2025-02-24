@@ -36,7 +36,7 @@ body{
     border-color: 3px solid gold;
     row-gap: 10px;
     height: 100%;
-    background-color: #EFF3DD;
+    background-color: #8E995C;;
     border-radius: 20px;
 }
 .dash-col2{
@@ -104,7 +104,7 @@ body{
 .dash-friends1 img, .dash-friends2 img, .dash-friends3 img, .dash-friends4 img, .dash-friends5 img{
     width: 40px;
     height: 40px;
-    border: 1px solid #E5F690;
+    border: 1px solid #8E995C;;
     border-radius: 50%;
 }
 
@@ -113,7 +113,7 @@ body{
     display: flex;
     background-image: url("../image/defaultprofilepic.png"); 
     flex-direction: row;
-    color: #EFF3DD;
+    color: #8E995C;;
     height: 15%;
     align-items: center;
     border-radius: 20px;
