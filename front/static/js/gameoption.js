@@ -25,8 +25,6 @@ this.innerHTML = `
       </div>
       
 </body>
- 
-
 
 `;
     }

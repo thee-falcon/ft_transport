@@ -9,7 +9,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #298862;
+    /* background-color: #298862; */
     justify-content: center;
     align-items: center;
     width: 700px;
@@ -48,7 +48,6 @@ body {
     color: #10292F;
 }
 
-/* Buttons */
 .button {
     border: 2px solid #E5F690;
     text-align: center;
