@@ -23,7 +23,7 @@ class home extends HTMLElement {
         <div class="card44">
             <!-- <img src="../image/Screen Shot 2024-10-02 at 3.53.12 AM.png" alt="Training Image"> -->
             <div class="card-content">
-                <a href="#" class="card-button">Start Training</a>
+                <a href="#" class="card-button"id="go-to-training">Start Training</a>
             </div>
         </div>
     </div>
@@ -69,6 +69,12 @@ class home extends HTMLElement {
 </body>
 `;
    
+let gototraining = document.getElementById("go-to-training");
+gototraining.addEventListener('click', function(event) {
+    event.preventDefault();  
+    window.location.hash = "training";   
+});
+
 let gotogameoption = document.getElementById("go-to-gameoption");
 gotogameoption.addEventListener('click', function(event) {
     event.preventDefault();  
