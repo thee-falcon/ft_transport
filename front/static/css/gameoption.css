@@ -5,35 +5,33 @@ body {
     align-items: center;
 }
 .container {
-    position: relative !important;
-    display: flex  !important ;
-    justify-content: center !important ;
-    align-items: center !important ;
-    /* background-color: #298862 !important ; */
-    justify-content: center !important ;
-    align-items: center !important ;
-    width: 700px !important ;
-    height: 350px !important ;
-    border-radius: 10px !important ;
+    position: relative ;
+    display: flex ;
+    flex-direction: row;
+    justify-content: center  ;
+    align-items: center  ;
+    justify-content: center  ;
+    align-items: center  ;
+    width: 300px ! ;
+    height: 350px  ;
+    border-radius: 10px ;
 }
 
 .container .glass {
     position: relative ;
     width: 150px ; 
-    max-width: 250px ; 
-    height: auto ;
+    display: flex;
+    flex-direction: row;
     aspect-ratio: 3 / 4 ;
     background: linear-gradient(#8E995C, transparent) ;
     border: 2px solid #8E995C ; ;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25) ;
-    display: flex ;
     flex-direction: column ;
-    /* gap: 20px ; */
     justify-content: center ;
     align-items: center ;
     transition: 0.5s ease ;
     border-radius: 10px ;
-    margin: 0 -90px ;
+    margin: 0 10px ;
     backdrop-filter: blur(10px) ;
     transform: rotate(calc(var(--r) * 1deg)) ;
 }
@@ -54,17 +52,14 @@ body {
     background-color: #10292F;
     color: #8E995C;;
     text-decoration: none;
+    width: 80%;
     padding: 8px 12px;
     border-radius: 12px;
-    font-size:medium; 
+    font-size: medium; 
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin-top: 40px;
     /* transform: translateY(30px); */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
 }
 
 .button:hover {
@@ -80,59 +75,43 @@ body {
 }
 
 .Game_Modes_img img {
-    width: 15vw; 
+    width: 100%; 
     max-width: 70px; 
     height: auto;
 }
 
 @media (max-width: 768px) {
     .container {
-        gap: 1px;
+        gap: 40px;
+        flex-direction: column;
     }
 
     .container .glass {
-        width: 29%;
-        max-width: none;
+        flex-direction: column;
     }
 
-    .container .glass i {
-        font-size: 5vw; 
-    }
-
-    .button {
-        font-size: 3vw; 
-        /* width: 70%; */
+    .button { 
         font-size: medium;
-    }
-
-    .Game_Modes_img img {
-        width: 15vw; 
-    }
-}
-
-@media (max-width: 630px) {
-    .container {
-        gap: 10px;
-    }
-
-    .container .glass {
-        /* width: 29%; */
-        /* max-width: none; */
-        margin: 0 -60px;
-    }
-
-    .container .glass i {
-        font-size: 5vw; 
-    }
-
-    .button {
-        font-size: 3vw; 
-        /* width: 50%; */
-        /* font-size: small; */
         padding: 4px;
     }
 
-    .Game_Modes_img img {
-        width: 10vw; 
+}
+
+
+@media (max-width: 630px) {
+    .container {
+        gap: 40px;
+        flex-direction: column;
     }
+
+    .container .glass {
+        flex-direction: column;
+    }
+
+
+    .button {
+        font-size: medium; 
+        padding: 4px;
+    }
+
 }
