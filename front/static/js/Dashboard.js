@@ -36,27 +36,27 @@ class dashboard extends HTMLElement {
                 </div>
                 <div class="dash-card3">
                     <div class="dash-card3-part1">
-                        <h3>Won<br>Matches :</h3>
+                        <p>Won<br>Matches :</p>
                         <h1>${matches_won}</h1>
                     </div>
                     <div class="dash-card3-part2">
-                        <h3>Lost<br>Matches :</h3>
+						<p>Lost<br>Matches :</p>
                         <h1>${matches_lost}</h1>
                     </div>
                     <div class="dash-card3-part3">
-                        <h3>Success<br>Rate (%)</h3>
+                        <p>Success<br>Rate (%)</p>
                         <h1>${matchSuccessRate}</h1>
                     </div>
                     <div class="dash-card3-part4">
-                        <h3>Tournaments<br>Won :</h3>
+                        <p>Tournaments<br>Won :</p>
                         <h1>${tournaments_won}</h1>
                     </div>
                     <div class="dash-card3-part5">
-                        <h3>Tournaments<br>Lost :</h3>
+                        <p>Tournaments<br>Lost :</p>
                         <h1>${tournaments_lost}</h1>
                     </div>
                     <div class="dash-card3-part6">
-                        <h3>Tournaments Success<br>Rate (%):</h3>
+                        <p>Tournaments Success<br>Rate (%):</p>
                         <h1>${tournamentSuccessRate}</h1>
                     </div>
                 </div>

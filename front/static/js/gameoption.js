@@ -1,6 +1,11 @@
 class Gameoption extends HTMLElement {
     async connectedCallback() {
 this.innerHTML = `
+<head>
+<style>
+
+</style>
+</head>
 <body>
     
     <div class="container">

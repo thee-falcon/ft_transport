@@ -9,7 +9,7 @@ class home extends HTMLElement {
                 <div class="card-container">
                     <!-- ✅ Settings Button -->
                     <button id="open-settings" class="settings-button">⚙ Settings</button>
-                    <settings-component id="settings-panel" style="display: none;"></settings-component>
+                    <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
 
                     <div class="col11">
                         <div class="card11">

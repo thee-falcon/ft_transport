@@ -237,47 +237,7 @@ from .serializer import UserProfileSerializer
 import logging
 logger = logging.getLogger(__name__)
 
-# class UpdateUserProfileView(APIView):
-#     permission_classes = [IsAuthenticated]
 
-#     def put(self, request):
-#         logger.info(f"Received data: {request.data}")  # Log received data
-
-#         user = request.user  
-#         user_profile = UserProfile.objects.get(user=user)
-
-#         user_data = request.data.get("user", {})
-#         profile_data = request.data.get("profile", request.data)
-
-#         # Debug: Check extracted data
-#         logger.info(f"User data: {user_data}, Profile data: {profile_data}")
-
-#         # Update User fields
-#         if "username" in user_data:
-#             user.username = user_data["username"]
-#         if "email" in user_data:
-#             user.email = user_data["email"]
-#         user.save()  
-
-#         # Update UserProfile fields
-#         serializer = UserProfileSerializer(user_profile, data=profile_data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-
-#         logger.warning(f"Serializer errors: {serializer.errors}")  # Log errors
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# class UpdateUserProfileView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def put(self, request):
-#         user = request.user  # Get the logged-in user
-#         serializer = UserSerializer(user, data=request.data, partial=True)
-
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
@@ -292,31 +252,39 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 import json
 
-# class UpdateUserProfileView(APIView):
-#     permission_classes = [IsAuthenticated]  # Ensure only authenticated users can update their profile
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
-#     def put(self, request):
-#         user = request.user  # Get the logged-in user
+class RefreshTokenView(APIView):
+    permission_classes = [IsAuthenticated]  # Only authenticated users can refresh their token
 
-#         # Update user fields
-#         if 'username' in request.data:
-#             user.username = request.data['username']
-#         if 'first_name' in request.data:
-#             user.first_name = request.data['first_name']
-#         if 'last_name' in request.data:
-#             user.last_name = request.data['last_name']
-#         if 'email' in request.data:
-#             user.email = request.data['email']
+    def post(self, request):
+        # Get refresh token from request
+        refresh_token = request.data.get('refresh')
         
-        
-#         # Handle password update with hashing
-#         if 'password' in request.data and request.data['password']:
-#             user.password = make_password(request.data['password'])  # Hash password
+        if not refresh_token:
+            return Response({'error': 'No refresh token provided'}, status=400)
 
-#         user.save()  # Save updates
+        try:
+            # Decode and refresh the token
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
 
-#         return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
+            # Set new access token in the response
+            response = Response({
+                'access': access_token,
+                'refresh': str(refresh),
+            })
+            
+            # Update cookies with the latest username (you can also set new expiration time here)
+            response.set_cookie('username', request.user.username, max_age=3600, httponly=True)
 
+            return response
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=400)
 
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import update_session_auth_hash

@@ -144,8 +144,8 @@ STATICFILES_DIRS = [
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Adjust as needed
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Extend refresh token to 30 days
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Adjust as needed
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Extend refresh token to 30 days
     'ROTATE_REFRESH_TOKENS': True,  # Issues a new refresh token upon refreshing
     'BLACKLIST_AFTER_ROTATION': True,  # Prevents old refresh tokens from being reused
 }

@@ -5,35 +5,42 @@ class SettingsPage extends HTMLElement {
         /* ✅ Full-Screen Overlay */
         .settings-button {
             position: fixed;
-            top: 20px;  /* Distance from the top */
-            right: 20px; /* Distance from the right */
-            z-index: 9999; /* Ensures the button is above other content */
-            padding: 10px 15px;
-            font-size: 18px;
+            top: 10px;
+            right: 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
+            padding: 10px 15px;
+            font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 1000;
         }
         
-
-        /* ✅ Centered Settings Panel */
+        /* ✅ Full-Screen Overlay */
+        .settings-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        
+        /* ✅ Settings Panel */
         .settings-content {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            width: 400px;  /* Adjust width */
-            max-width: 90%;
-            height: auto;
+            width: 300px;
             text-align: center;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
-
+        
         .settings-content input {
             width: 100%;
             padding: 8px;
@@ -41,7 +48,7 @@ class SettingsPage extends HTMLElement {
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
+        
         .settings-content button {
             padding: 10px;
             margin: 5px;
@@ -49,12 +56,12 @@ class SettingsPage extends HTMLElement {
             border-radius: 5px;
             cursor: pointer;
         }
-
+        
         #save-settings {
             background-color: #4CAF50;
             color: white;
         }
-
+        
         #close-settings {
             background-color: #f44336;
             color: white;
@@ -62,6 +69,7 @@ class SettingsPage extends HTMLElement {
     </style>
 
         <!-- ✅ Settings Panel -->
+
         <div id="settings-overlay" class="settings-overlay">
             <div class="settings-content">
                 <h2>Settings</h2>
