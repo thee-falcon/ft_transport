@@ -19,7 +19,7 @@ class home extends HTMLElement {
                         </div>
                         <div class="card44">
                             <div class="card-content">
-                                <a href="#" class="card-button">Start Training</a>
+                                <a href="#" class="card-button" id="go-to-training">Start Training</a>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,11 @@ class home extends HTMLElement {
             event.preventDefault();
             window.location.hash = "gameoption";
         });
-
+        let gototraining = document.getElementById("go-to-training");
+gototraining.addEventListener('click', function(event) {
+    event.preventDefault();  
+    window.location.hash = "training";   
+});
         // ✅ Navigate to Profile Page
         document.getElementById("go-to-profile").addEventListener("click", async function (event) {
             event.preventDefault();

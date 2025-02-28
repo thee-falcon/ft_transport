@@ -5,6 +5,10 @@
     'dashboard': 'dashboard-component',
     'profile':   'profile-component',
     'gameoption': 'gameoption-component',
+    'training': 'training-component',
+    'normal': 'normal-mode',
+    'multiplayer': 'multiplayer-mode',
+
 };
 
 function getCookie(name) {
@@ -37,7 +41,7 @@ async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log("Navigating to:", path); // ✅ Debugging
 
-    if ((path === "home" || path === "profile" || path === "dashboard" || path === "gameoption") && !isAuthenticated()) {
+    if ((path === "home" || path === "profile" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");
         window.location.hash = "signin";
         return;
