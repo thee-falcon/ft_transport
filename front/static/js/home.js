@@ -39,11 +39,7 @@ class home extends HTMLElement {
 
                     <div class="col33">
                         <div class="card33">
-                            <div id="koo">
-                                <div id="limm">
-                                    <h2>${username}!</h2> 
-                                </div>
-                            </div>
+
                             <div class="card-content">
                                 <a href="#" class="card-button" id="go-to-profile">Profile</a>
                             </div>
