@@ -7,24 +7,37 @@ from django.db import models
 User = get_user_model()
 
 class Friendship(models.Model):
-	user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends1")
-	user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends2")
-	ubdated = models.DateTimeField(auto_now=True)
-	timestart = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
 
-	class Meta:
-		unique_together = ("user1", "user2")
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friendships_initiated")
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friendships_received")
+    status = models.CharField(
+        max_length=20,
+        choices=[("pending", "Pending"), ("accepted", "Accepted"), ("declined", "Declined")]
+    )
+    # New field: stores the user who blocked this friendship (if any)
+    blocked_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="friendships_blocked")
 
-	def __str__(self):
-		return f"{self.user1} <-> {self.user2}"
+    timestart = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-# Function to get a user's friends
+    class Meta:
+        unique_together = ("user1", "user2")
+
+    def __str__(self):
+        return f"{self.user1} -> {self.user2} ({self.status})" + (f" [Blocked by {self.blocked_by}]" if self.blocked_by else "")
+
+
+# Function to get a user's accepted friends
 def get_friends(user):
-	friends1 = Friendship.objects.filter(user1=user).values_list("user2", flat=True)
-	friends2 = Friendship.objects.filter(user2=user).values_list("user1", flat=True)
-	friend_ids = set(friends1) | set(friends2)
-	return User.objects.filter(id__in=friend_ids)
-
+    friends1 = Friendship.objects.filter(user1=user, status="accepted").values_list("user2", flat=True)
+    friends2 = Friendship.objects.filter(user2=user, status="accepted").values_list("user1", flat=True)
+    friend_ids = set(friends1) | set(friends2)
+    return User.objects.filter(id__in=friend_ids)
 
 class Message(models.Model):
     sent_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)

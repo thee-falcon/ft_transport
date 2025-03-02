@@ -23,27 +23,43 @@ const HomeChat = () => {
 		
 		<!-- Users List -->
 		<div class="friends">
-			<div class="user_search">
-				<input type="text" id="id-friends" placeholder="Search" />
+
+				<input class="user_search" type="text" id="id-friends" placeholder="Search" />
+
+
+			<div class="header-users-list">
+				<div class="users-list"></div>
 			</div>
-
-			<div class="users-list"></div>
-
 
 		</div>
 		
 		<!-- Chat Area -->
 		<div class="chat-container">
-		  <div class="chat-header">
-			<span id="chat-header-username">Select a friend</span>
-			<div class="chat-messages"></div>
-				<form id="send-message-form">
-					<div class="chat-input">
-						<input type="text" id="input-message" placeholder="Type your message here" />
-						<button id="chat-message-submit" type="submit">Send</button>
-					</div>
-				</form>
+		  	<div class="chat-header">
+		  		<div class="user-chat">
+					<span id="chat-header-username"></span>
 				</div>
+				<div class="dropdown">
+					<button class="dropdown-button">
+						<img src="../../static/imgs/dots.png" alt="dots" class="dropdown-icon">
+					</button>
+					<div class="dropdown-content">
+						<a href="#" id="block-user">block</a>
+						<a href="#">invitation game</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-messages"></div>
+				<div class="chat-messages"></div>
+					<form id="send-message-form">
+						<div class="chat-input">
+							<input type="text" id="input-message" placeholder="Type your message here" />
+							<button id="chat-message-submit" type="submit">Send</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 
 	  </div>
