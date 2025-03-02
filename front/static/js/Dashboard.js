@@ -1,12 +1,6 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
         const storedUserData = JSON.parse(localStorage.getItem('userData'));
-        // const username = storedUserData.usernamel;
-        // const first_name = storedUserData.first_name;
-        // const lastname =storedUserData.lastname;
-        // const profilePicture = storedUserData.profile_picture;
-
-        // const email = storedUserData.email;
         const matches_won = storedUserData.matches_won;
         const matches_lost = storedUserData.matches_lost;
         const tournaments_won = storedUserData.tournaments_won;

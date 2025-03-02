@@ -96,7 +96,7 @@ gototraining.addEventListener('click', function(event) {
                 const responseData = await response.json();
 
                 if (response.ok) {
-                    // localStorage.setItem('userData', JSON.stringify(responseData));
+                    localStorage.setItem('userData', JSON.stringify(responseData));
                     console.log("User data after retrieving from localStorage:", responseData);
                     window.location.hash = "profile";
                 } else {
@@ -129,7 +129,7 @@ gototraining.addEventListener('click', function(event) {
                 const responseData = await response.json();
 
                 if (response.ok) {
-                    // localStorage.setItem('userData', JSON.stringify(responseData));
+                    localStorage.setItem('userData', JSON.stringify(responseData));
                     console.log("User data after retrieving from localStorage:", responseData);
                     window.location.hash = "dashboard";
                 } else {
