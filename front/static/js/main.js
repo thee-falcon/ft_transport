@@ -40,6 +40,8 @@ function isAuthenticated() {
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log("Navigating to:", path); // ✅ Debugging
+        // if(isTokenExpired())
+        //     console.log("token is expirreddd");
 
     if ((path === "home" || path === "profile" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");
@@ -65,17 +67,31 @@ async function navigate() {
 window.addEventListener("hashchange", navigate);
 window.addEventListener("DOMContentLoaded", navigate);
 
-const isTokenExpired = () => {
-    const expiry = localStorage.getItem('tokenExpiry');
-    if (!expiry) return true;
-    return Date.now() > parseInt(expiry, 10);
-};
 
-//  function refreshhhToken() {
+function isTokenExpired() {
+    const expiresAt = getCookie("expires_at");
+
+    if (!expiresAt) {
+        console.warn("No expires_at cookie found!");
+        return true;  // Treat it as expired if missing
+    }
+
+    const now = Math.floor(Date.now() / 1000);  // Current time in seconds
+    return now >= expiresAt;
+}
+
+// Example usage
+// if (isTokenExpired()) {
+//     console.log("Token expired! Refresh needed.");
+// } else {
+//     console.log("Token is still valid.");
+// }
+
+// async  function refreshhhToken() {
 //     console.log('Refreshing access token...');
 //     const refresh_Token = getCookie('refresh_token');
 
-//     if (!refresh_Token) {
+//     if (!refresh_Token|| isTokenExpired()) {
 //         console.log("No refresh token found, user not authenticated.");
 //         return false;
 //     }

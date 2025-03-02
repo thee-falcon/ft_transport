@@ -73,11 +73,11 @@ class signin extends HTMLElement {
           console.log("data", data);
           const accessToken = getCookie('access_token');
           const refreshToken = getCookie('refresh_token');
-          const username = getCookie('username');
+           const username = getCookie('username');
           console.log('Access Token:', accessToken);
           console.log('Refresh Token:', refreshToken);
-          console.log('Username:', username);
-          console.log('simple login  Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
+          // console.log('Username:', username);
+          console.log('simple login  Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken);
             alert('simple login go to home');
           window.location.hash = "home";
         } else {
@@ -115,8 +115,7 @@ class signin extends HTMLElement {
 }
 
 
+
+
+
 customElements.define('signin-component', signin);
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
-}

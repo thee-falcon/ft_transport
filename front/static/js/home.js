@@ -53,7 +53,7 @@ class home extends HTMLElement {
                         </div>
                         <div class="card66">
                             <div class="card-content">
-                                <a href="#" class="card-button">Join Club</a>
+                                <a href="#" class="card-button">Join Chat</a>
                             </div>
                         </div>
                     </div>
@@ -61,13 +61,11 @@ class home extends HTMLElement {
             </div>
         </body>`;
 
-        // ✅ Open & Close Settings Panel
-        document.getElementById("open-settings").addEventListener("click", () => {
+         document.getElementById("open-settings").addEventListener("click", () => {
             document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
 
-        // ✅ Navigate to Game Options
-        document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
+         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
             event.preventDefault();
             window.location.hash = "gameoption";
         });
@@ -98,6 +96,8 @@ gototraining.addEventListener('click', function(event) {
                 const responseData = await response.json();
 
                 if (response.ok) {
+                    // localStorage.setItem('userData', JSON.stringify(responseData));
+                    console.log("User data after retrieving from localStorage:", responseData);
                     window.location.hash = "profile";
                 } else {
                     console.error("Error fetching stats:", responseData);
@@ -129,6 +129,8 @@ gototraining.addEventListener('click', function(event) {
                 const responseData = await response.json();
 
                 if (response.ok) {
+                    // localStorage.setItem('userData', JSON.stringify(responseData));
+                    console.log("User data after retrieving from localStorage:", responseData);
                     window.location.hash = "dashboard";
                 } else {
                     console.error("Error fetching stats:", responseData);
@@ -138,7 +140,6 @@ gototraining.addEventListener('click', function(event) {
             }
         });
 
-        // ✅ Logout Logic
         document.getElementById("logout").addEventListener("click", async function (event) {
             event.preventDefault();
             try {

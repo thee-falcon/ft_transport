@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializer import UserSerializer
-from .models import UserProfile  # Ensure you have a UserProfile model
+from .models import UserProfile
 import secrets
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -36,15 +36,17 @@ from .models import UserProfile
 from .serializer import UserProfileSerializer
 
 # OAuth Credentials
-SECRET = "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"  
-UID = "u-s4t2ud-ce06a015b3085a9d1b2735ae095fdd353bebe0c3deeb5d67f164a0dfdfbbb144"
-AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=" + UID + "&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
+SECRET = "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"  
+UID = "u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df"
+AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
-def set_token_cookies(response, refresh_token, access_token, username):
-    response.set_cookie('refresh_token', refresh_token, samesite='None')
-    response.set_cookie('access_token', access_token, samesite='None')
-    response.set_cookie('username', username, samesite='None')  # Allow frontend access
+def set_token_cookies(response, refresh_token, access_token):
+    expires_at = datetime.utcnow() + timedelta(minutes=1)
+    response.set_cookie('refresh_token', refresh_token, max_age=3600, samesite='Lax')
+    response.set_cookie('access_token', access_token,max_age=3600 ,samesite='Lax')
+    response.set_cookie('expires_at', expires_at.timestamp(), max_age=900, samesite='Lax')  # Store expiration
+    # response.set_cookie('username',username,max_age=3600, samesite='Lax')  # Allow frontend access
 
 @api_view(['POST'])
 def login(req):
@@ -67,7 +69,7 @@ def login(req):
         "username": req.data['username'],
     }, status=status.HTTP_200_OK)
 
-    set_token_cookies(response, str(refresh), str(refresh.access_token), req.data['username'])
+    set_token_cookies(response, str(refresh), str(refresh.access_token))
     return response
 
 
@@ -96,12 +98,12 @@ def logout(req):
     refresh_token = req.COOKIES.get('refresh_token')
     response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
 
-    if refresh_token:
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-        except Exception as e:
-            print("Error blacklisting token:", e)
+    # if refresh_token:
+    #     try:
+    #         token = RefreshToken(refresh_token)
+    #         token.blacklist()
+    #     except Exception as e:
+    #         print("Error blacklisting token:", e)
 
     response.delete_cookie('access_token')
     response.delete_cookie('refresh_token')
@@ -137,7 +139,22 @@ def exchange_code_for_token(code: str):
 @permission_classes([IsAuthenticated])
 def get_user_stats(req):
     user_profile = get_object_or_404(UserProfile, user=req.user)
-    
+
+    user = req.user
+    username = user.username
+    email = user.email
+    first_name = user.first_name
+    last_name = user.last_name
+
+    profile_picture = user_profile.profile_picture  # Get the stored value
+
+    if isinstance(profile_picture, str):  # If it's a URL string, use it as is
+        profile_picture = profile_picture
+    elif profile_picture:  # If it's an ImageField, get the full URL
+        profile_picture = req.build_absolute_uri(profile_picture.url)
+    else:
+        profile_picture = None  # If no image is set
+
     response = Response({
         "nickname": user_profile.nickname,
         "matches_won": user_profile.matches_won,
@@ -146,20 +163,17 @@ def get_user_stats(req):
         "tournaments_won": user_profile.tournaments_won,
         "tournaments_lost": user_profile.tournaments_lost,
         "tournaments_count": user_profile.tournaments_count,
-        # "profile_picture": user_profile.profile_picture.url if user_profile.profile_picture else None
+        "username": username,  
+        "email": email,        
+        "profile_picture": profile_picture,  
+        "first_name": first_name,  
+        "last_name": last_name,    
     }, status=status.HTTP_200_OK)
-    response.set_cookie(key='nickname', value=user_profile.nickname)
-    response.set_cookie(key='matches_won', value=user_profile.matches_won)
-    response.set_cookie(key='matches_lost', value=user_profile.matches_lost)
-    response.set_cookie(key='tournaments_won', value=user_profile.tournaments_won)
-    response.set_cookie(key='tournaments_lost', value=user_profile.tournaments_lost)
-    response.set_cookie(key='profile_picture', value=user_profile.profile_picture)
-    print('picture ==' , user_profile.profile_picture)
-        # response.set_cookie(key='last_name', value=user_profile.last_name)
-        # response.set_cookie(key='profile_picture', value=profile_picture)
-    
+
+    print('response ===', response.data)
     return response
-    
+
+
     
     
 def get_42_user_info(access_token: str):
@@ -174,16 +188,20 @@ def get_42_user_info(access_token: str):
 
 @api_view(['GET'])
 def login42_redir(request):
+    print("login42_redir function is called")  # Debugging print
     code = request.GET.get('code')
     if not code:
+        print("No code in request")
         return redirect("http://localhost:8000/#signin")
 
     access_token = exchange_code_for_token(code)
     if not access_token:
+        print("Failed to exchange code for token")
         return redirect("http://localhost:8000/#signin")
 
     user_info = get_42_user_info(access_token)
     if not user_info:
+        print("Failed to get user info")
         return redirect("http://localhost:8000/#signin")
 
     username = user_info.get('login')
@@ -216,16 +234,17 @@ def login42_redir(request):
 
         response.set_cookie(key='access_token', value=access_token)
         response.set_cookie(key='refresh_token', value=refresh_token)
-        response.set_cookie(key='username', value=username)
-        response.set_cookie(key='email', value=email)
-        response.set_cookie(key='first_name', value=first_name)
-        response.set_cookie(key='last_name', value=last_name)
-        response.set_cookie(key='profile_picture', value=profile_picture)
-
+        # response.set_cookie(key='username', value=username)
+        # response.set_cookie(key='email', value=email)
+        # response.set_cookie(key='first_name', value=first_name)
+        # response.set_cookie(key='last_name', value=last_name)
+        # response.set_cookie(key='profile_picture', value=profile_picture)
+        print( 'fffffffffffffffffffffffffffff' , response)
         response['Location'] = "http://localhost:8000/#home"
         return response
     except Exception as e:
         return JsonResponse({"error": "An error occurred during user creation"}, status=500)
+
 
 from rest_framework import status
 from rest_framework.response import Response
