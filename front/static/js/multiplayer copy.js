@@ -21,10 +21,6 @@ class Multiplayer extends HTMLElement {
         this.custoctx = null;
         this.cont = null;
         this.custoDiv = null;
-        this.finish = null;
-                this.images = []; // Property to hold images
-        this.imageSize = 300; // Define image size
-        this.loadImages(); // Load images during initialization
         
         // Game state
         this.gameState = {
@@ -80,27 +76,13 @@ class Multiplayer extends HTMLElement {
                     <canvas id="gamecanvas"></canvas>
                 </div>
                 <div class="customization" id="custo">
-                <button class="finish-button"id="finish">Finish Match</button>
                     <canvas id="custocanvas"></canvas>
                 </div>
             </div>
         `;
 
+        // Initialize after DOM elements are created
         this.initializeGame();
-    }
-        loadImages() {
-        const imageSources = [
-            "../media/badge1.png",
-            "../media/badge2.png",
-            "../media/badge3.png",
-            "../media/badge4.png"
-        ];
-
-        this.images = imageSources.map(src => {
-            const img = new Image();
-            img.src = src;
-            return img; // Return the image object
-        });
     }
 
     initializeGame() {
@@ -112,7 +94,6 @@ class Multiplayer extends HTMLElement {
         this.ctx = this.board.getContext('2d');
         this.custoctx = this.custo.getContext('2d');
         this.cont = this.canvas.getContext('2d');
-        this.finish = document.getElementById("finish");
         this.custoDiv.style.display = 'none'
 
 //         const canvasWidth = this.custo.width; // Get the width of the canvas
@@ -129,8 +110,8 @@ class Multiplayer extends HTMLElement {
         this.canvas.width = 1072;
         this.board.height = 900;
         this.board.width = 1400;
-        this.custo.height = 480;
-        this.custo.width = 1072;
+        // this.custo.height = 580;
+        // this.custo.width = 500;
 
         // Initialize paddle positions
         this.paddles.left.x = 20;
@@ -227,21 +208,21 @@ class Multiplayer extends HTMLElement {
     updatePaddles() {
         // Left main paddle
         if (this.input.isLeftW) {
-            this.paddles.left.y = Math.max((this.paddles.height / 2) + 9, 
+            this.paddles.left.y = Math.max((this.paddles.height / 2) + 5, 
                 this.paddles.left.y - this.PADDLE_SPEED);
         }
         if (this.input.isLeftS) {
-            this.paddles.left.y = Math.min((this.canvas.height - this.paddles.height / 2) - 9, 
+            this.paddles.left.y = Math.min((this.canvas.height - this.paddles.height / 2) - 5, 
                 this.paddles.left.y + this.PADDLE_SPEED);
         }
         
         // Right main paddle
         if (this.input.isRightUp) {
-            this.paddles.right.y = Math.max((this.paddles.height / 2) + 9, 
+            this.paddles.right.y = Math.max((this.paddles.height / 2) + 5, 
                 this.paddles.right.y - this.PADDLE_SPEED);
         }
         if (this.input.isRightDown) {
-            this.paddles.right.y = Math.min((this.canvas.height - this.paddles.height / 2) - 9, 
+            this.paddles.right.y = Math.min((this.canvas.height - this.paddles.height / 2) - 5, 
                 this.paddles.right.y + this.PADDLE_SPEED);
         }
         
@@ -572,71 +553,31 @@ class Multiplayer extends HTMLElement {
         this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
         this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
     }
-    async sendscoreandfinish()
+    drawEndgame()
     {
-        const response = await fetch("http://localhost:8000/get_user_stats/", {
-            method: "POST",
-            headers: {
-
-            },
-            credentials: "include"
-        });
-        window.location.hash = "home"
-        console.log("miiiiw");
-    }
-    drawEndgame() {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);
-        this.custoDiv.style.display = 'flex';
-        this.custoctx.clearRect(0, 0, this.custo.width, this.custo.height);
-    
-        // Determine winning team and set images accordingly
-        let imagesToDraw;
-        const right_score = this.scores.r_score;
-        const left_score = this.scores.l_score;
-
-        if (this.scores.l_score > this.scores.r_score) {
+        if(this.scores.l_score > this.scores.r_score)
+        {
             console.log("rb7o zr9in");
-            imagesToDraw = [
-                { img: this.images[2], x: (this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 }, // Center in left half
-                { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
-            ];
-             this.ctx.fillStyle = "#0000FF";
-             this.ctx.fillText("👑👑 Blue Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Blue Team won! 👑👑").width) / 2, this.board.height/6);
-            //  this.ctx.fillText(`${this.scores.lscore}-${this.scores.rscore}`, (this.board.width - this.ctx.measureText(`${this.scores.lscore}-${this.scores.rscore}`).width) / 2, this.board.height/6);
-            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
             
-             this.ctx.fillStyle = "#000000";
-        
-            } else {
-
-            console.log("rb7o 7mrin");
-            imagesToDraw = [
-                { img: this.images[0], x: (this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 }, // Center in left half
-                { img: this.images[1], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
-            ];
-            this.ctx.fillStyle = "#FF0000";
-            this.ctx.fillText("👑👑 Red Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Red Team won! 👑👑").width) / 2, this.board.height/6);
-            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
-            
-            this.ctx.fillStyle = "#000000";
-
         }
-        imagesToDraw.forEach(imgData => {
-            this.custoctx.save();
-            this.custoctx.beginPath();
-            this.custoctx.arc(imgData.x + this.imageSize / 2, imgData.y + this.imageSize / 2, this.imageSize / 2, 0, Math.PI * 2);
-            this.custoctx.clip();
-            this.custoctx.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
-            this.custoctx.restore();
+        else
+        {
+            console.log("rb7o 7mrin");
             
-        });
-        
-        this.finish.addEventListener("click",this.sendscoreandfinish)
+        }
+        this.custoDiv.style.display = 'flex'; 
+        // console.log(this.custoDiv.style.width);
+        // console.log(this.custoDiv.style.height);
         console.log(this.custo.width);
         console.log(this.custo.height);
+
+        // // Example: Draw something on the custocanvas
+        // this.custoctx.fillStyle = "white"; // Set the fill color
+        // this.custoctx.fillRect(0, 0, this.custo.width, this.custo.height); // Draw a rectangle
+
     }
 }
 
 // Register the component
 customElements.define('multiplayer-mode', Multiplayer);
-

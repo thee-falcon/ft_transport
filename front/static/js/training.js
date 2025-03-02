@@ -117,16 +117,16 @@ class TrainingHTML extends HTMLElement {
         const paddleSpeed = 10;
     
         if (this.isRightUp) {
-            this.right_paddleY = Math.max((this.paddle_height / 2)+5, this.right_paddleY - paddleSpeed);
+            this.right_paddleY = Math.max((this.paddle_height / 2)+9, this.right_paddleY - paddleSpeed);
         }
         if (this.isRightDown) {
-            this.right_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-5, this.right_paddleY + paddleSpeed);
+            this.right_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-9, this.right_paddleY + paddleSpeed);
         }
         if (this.isLeftW) {
-            this.left_paddleY = Math.max((this.paddle_height / 2)+5, this.left_paddleY - paddleSpeed);
+            this.left_paddleY = Math.max((this.paddle_height / 2)+9, this.left_paddleY - paddleSpeed);
         }
         if (this.isLeftS) {
-            this.left_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-5, this.left_paddleY + paddleSpeed);
+            this.left_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-9, this.left_paddleY + paddleSpeed);
         }
     }
     
@@ -143,7 +143,7 @@ class TrainingHTML extends HTMLElement {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);
         this.ctx.font = "Bold 40px 'Bai Jamjuree'";
     
-        const text = "Training Mode";
+        const text = getCookie('username');
         const left_scorestring = this.scores.l_score.toString();
         const right_scorestring = this.scores.r_score.toString();
     
@@ -155,7 +155,7 @@ class TrainingHTML extends HTMLElement {
         this.ctx.fillText(text, x, y);
         this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
         this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
-        this.ctx.fillText("Practice", (this.board.width - this.ctx.measureText("Practice").width) / 2, 150);
+        this.ctx.fillText(getCookie('username'), (this.board.width - this.ctx.measureText(getCookie('username')).width) / 2, 150);
         this.ctx.fillText(this.streak, (this.board.width) / 2, 100);
         this.ctx.fillText(this.ballspeed, (this.board.width) / 2, y+50);
         this.ctx.fillText(this.paddle_height, ((this.board.width) / 2)-150, y+50);

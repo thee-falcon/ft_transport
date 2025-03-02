@@ -2,6 +2,7 @@ class Scores {
     constructor() {
         this.left_score = 0;
         this.right_score = 0;
+        this.total_score = 0;
     }
 
     get l_score() {
@@ -14,9 +15,16 @@ class Scores {
 
     increment_lscore() {
         this.left_score += 1;
+        this.total_score +=1;
     }
 
     increment_rscore() {
+        
         this.right_score += 1;
+        this.total_score +=1;
+    }
+    get get_total()
+    {
+        return this.total_score;
     }
 }

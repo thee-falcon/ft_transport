@@ -14,23 +14,60 @@ body {
 
 .customization
 {
-   display: flex;
-   z-index: 3;
-   /* display: none; */
-   position: fixed;
-   background-color: rgb(255, 255, 255,0.3);
-   width: 25%; 
-   height: 350px; 
-   top: 420px;
-   justify-content: center;
-   align-items: center;
-   /* background-color: transparent; */
-    /* tranp */
+    display: none; /* Hidden by default */
+    z-index: 3;
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    width: 1072px; /* Width of the game area */
+    height: 480px; /* Height of the game area */
+    /* top: 420px; */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
+    display: flex; /* Use flexbox to center contents */
+    justify-content: center;
+    align-items: center;
 }
-#custos
+#custocanvas
 {
     position: fixed;
+    width: 100%; /* Make the canvas take full width of the customization div */
+    height: 100%; /* Make the canvas take full height of the customization div */
+    /* border: 1px solid #000; Optional: Add a border for visibility */
+    
+}
+@keyframes flash {
+    0% {
+        background-color: #10292F; /* Original color */
+    }
+    50% {
+        background-color: #E5F690; /* Flash color */
+    }
+    100% {
+        background-color: #10292F; /* Original color */
+    }
+}
 
+.finish-button {
+    border: 2px solid #E5F690;
+    text-align: center;
+    background-color: #10292F;
+    color: #8E995C;;
+    text-decoration: none;
+    width: 20%;
+    /* height: 70%; */
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: medium; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 400px;
+    z-index: 4;
+    animation: flash 1s infinite; /* Flashing effect */
+    /* transform: translateY(30px); */
+}
+.finish-button:hover {
+    background-color: #E5F690;
+    color: #10292F;
 }
 
 .board {
@@ -53,13 +90,13 @@ body {
 
     justify-content: center; /* Center content inside */
     align-items: center; /* Center content vertically */
-    border: 11px solid #e5f690; /* Border around the game area */
+    border: 8px solid #e5f690; /* Border around the game area */
     border-radius: 30px;
     width: 1072px; /* Width of the game area */
     height: 480px; /* Height of the game area */
     background-color: #1B3E46; /* Background color of the game area */
     position: relative; /* Position for the dotted line */
-    overflow: hidden; /* Prevent overflow */
+    /* overflow: hidden; Prevent overflow */
 }
 
 .game-area::after {
