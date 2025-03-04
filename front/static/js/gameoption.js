@@ -32,10 +32,10 @@ class Gameoption extends HTMLElement {
         let gotonormal = document.getElementById("normal-mode");
         gotonormal.addEventListener('click', function (event) {
             event.preventDefault();
-            console.log(window.location.hash);
-            console.log(window.location.host);
-            console.log(window.location.hostname);
-            console.log(window.location.href);
+            // console.log(window.location.hash);
+            // console.log(window.location.host);
+            // console.log(window.location.hostname);
+            // console.log(window.location.href);
             window.location.hash = "normal";
             // console.log(window.location.hash);
 
@@ -43,10 +43,10 @@ class Gameoption extends HTMLElement {
         let gotomultiplayer = document.getElementById("multiplayer-mode");
         gotomultiplayer.addEventListener('click', function (event) {
             event.preventDefault();
-            console.log(window.location.hash);
-            console.log(window.location.host);
-            console.log(window.location.hostname);
-            console.log(window.location.href);
+            // console.log(window.location.hash);
+            // console.log(window.location.host);
+            // console.log(window.location.hostname);
+            // console.log(window.location.href);
             window.location.hash = "multiplayer";
             // console.log(window.location.hash);
 

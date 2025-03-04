@@ -26,7 +26,7 @@ body {
 .div1 {
     grid-column: span 3 / span 3;
     grid-row: span 10 / span 10;
-    /* background-image: url("/media/Screen Shot 2024-10-02 at 2.10.41 AM.png"); */
+    background-image: url(/media/girl.png);
     background-size: cover;
     background-position: center;
     border-radius: 32px;

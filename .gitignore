@@ -29,15 +29,4 @@ __pycache__/
 *.pyc
 
 
-git add front/static/css/test.css
-git add front/static/js/multiplayer.js
-git add front/static/js/scores.js
-git add front/static/js/training.js
-git add .gitignore
-git add front/static/.DS_Store
-git add front/static/js/multiplayer\ copy.js
-git add front/static/js/multiplayer3.js
-git add back/media/ram1.jpg
-git add back/media/ram2.png
-git add back/media/ram3.png
-git add back/media/ram4.jpg
+

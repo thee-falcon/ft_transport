@@ -1,15 +1,10 @@
 class dashboard extends HTMLElement {
     async connectedCallback() {
-        const username = getCookie('username');
-        const first_name = getCookie('first_name');
-        const lastname = getCookie('last_name');
-        const profilePicture = getCookie('profile_picture');
-        console.log("picture", profilePicture);
-        const email = getCookie('email');
-        const matches_won = getCookie('matches_won') || 0;
-        const matches_lost = getCookie('matches_lost') || 0;
-        const tournaments_won = getCookie('tournaments_won') || 0;
-        const tournaments_lost = getCookie('tournaments_lost') || 0;
+        const storedUserData = JSON.parse(localStorage.getItem('userData'));
+        const matches_won = storedUserData.matches_won;
+        const matches_lost = storedUserData.matches_lost;
+        const tournaments_won = storedUserData.tournaments_won;
+        const tournaments_lost = storedUserData.tournaments_lost;
         const matchSuccessRate = (matches_won + matches_lost) > 0 
         ? ((matches_won / (matches_won + matches_lost)) * 100).toFixed(2) 
         : 0;

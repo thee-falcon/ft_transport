@@ -375,10 +375,10 @@ class Multiplayer extends HTMLElement {
         // Check for scoring (ball goes off screen)
         if (this.ball.x + this.RADIUS >= this.canvas.width) {
             this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
         // this.gameState.finished = 1; // hada ghir debug
 
             if(this.scores.get_total >=5 ){
@@ -393,10 +393,10 @@ class Multiplayer extends HTMLElement {
         }
         if (this.ball.x - this.RADIUS <= 0) {
             this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
             if(this.scores.get_total >=5 ){
                 this.endgame();
             }
@@ -574,7 +574,7 @@ class Multiplayer extends HTMLElement {
     }
     async sendscoreandfinish()
     {
-        const response = await fetch("http://localhost:8000/get_user_stats/", {
+        const response = await fetch("http://localhost:8000/set_user_stats/", {
             method: "POST",
             headers: {
 

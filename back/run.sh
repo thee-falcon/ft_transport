@@ -1,5 +1,5 @@
 #!/bin/bash
 
-python manage.py makemigrations
-python manage.py migrate
-exec python manage.py runserver
+python3 manage.py makemigrations
+python3 manage.py migrate
+exec python3 manage.py runserver

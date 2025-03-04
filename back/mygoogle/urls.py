@@ -17,6 +17,8 @@ urlpatterns = [
     path('login42/', views.login42, name='login42'),
     path('login42_redir/', views.login42_redir, name='login42_redir'),
     path('get_user_stats/' , views.get_user_stats,),
+    path('update_game_result/' , views.update_game_result),
+
     path('refresh-token/', RefreshTokenView.as_view(), name='refresh-token'),
     path('update-profile/', UpdateUserProfileView.as_view(), name='update-profile'),
 ]
