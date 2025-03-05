@@ -13,6 +13,7 @@ class dashboard extends HTMLElement {
         ? ((tournaments_won / (tournaments_won + tournaments_lost)) * 100).toFixed(2) 
         : 0;
         this.innerHTML = /*html*/`
+        <link rel="stylesheet" href="static/css/dashboard.css">
     <div id="lo">
         <div class="dash-dashboard-container">
             <div></div>

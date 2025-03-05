@@ -29,16 +29,6 @@ body{
     column-gap: 20px;
 }
 
-.dash-col1{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-color: 3px solid gold;
-    row-gap: 10px;
-    height: 100%;
-    background-color: #8E995C;;
-    border-radius: 20px;
-}
 .dash-col2{
     position: relative;
     display: flex;
@@ -47,14 +37,7 @@ body{
     row-gap: 20px;
     height: 100%;
 }
-.dash-col3{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-color: 3px solid gold;
-    row-gap: 10px;
-    height: 100%;
-}
+
 .dash-card1{
     position: relative;
     display: flex;
@@ -65,98 +48,6 @@ body{
     border-radius: 20px;
 }
 
-
-.dash-card1-enlign-friends p , .dash-card1-enlign-tournaments p{
-    padding: 2%;
-}
-.dash-card1-enlign-friends{ 
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 4%;
-    height: 50%;
-    border-radius: 20px;
-    width: 95%;
-    align-self: center;
-}
-.dash-friends-list{
-    position:relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #10292F;
-    background-color: #10292F;
-    padding: 4%;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    height: 100%;
-    row-gap: 20px;
-    border-radius: 20px;
-}
-
-.dash-friends1-Players, .dash-friends2-Players, .dash-friends3-Players, .dash-friends4-Players, .dash-friends5-Players
-{
-    background-image: url("../image/defaultprofilepic.png"); 
-    background-position: center;
-    background-size: contain;
-}
-.dash-friends1 img, .dash-friends2 img, .dash-friends3 img, .dash-friends4 img, .dash-friends5 img{
-    width: 40px;
-    height: 40px;
-    border: 1px solid #8E995C;;
-    border-radius: 50%;
-}
-
-.dash-friends1 , .dash-friends2 , .dash-friends3, .dash-friends4, .dash-friends5{
-    position: relative;
-    display: flex;
-    background-image: url("../image/defaultprofilepic.png"); 
-    flex-direction: row;
-    color: #8E995C;;
-    height: 15%;
-    align-items: center;
-    border-radius: 20px;
-    border: 1px solid #10292F;
-    padding: 5%;
-}
-
-.dash-Tournaments-list{
-    position:relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #10292F;
-    background-color: #10292F;
-    padding: 4%;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    height: 100%;
-    row-gap: 20px;
-    border-radius: 20px;
-}
-
-.dash-Tournaments-list img{
-    position: relative;
-    height: 100%;
-    width: 100%;
-    object-fit: fill;
-    justify-content:stretch;
-    border-radius: 20px;
-
-}
-
-.dash-card1-enlign-tournaments{
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 50%;
-    padding: 2%;
-    border-radius: 20px;
-    width: 95%;
-    align-self: center;
-}
 .dash-card2{
     display: flex;
     flex-direction: row;
@@ -281,155 +172,6 @@ body{
     height: 45%; /* Splits the available space */
     max-height: 200px; /* Prevents excessive stretching */
 }
-.dash-card5{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    background-color: #EFF3DD;
-    border-color:3px solid red;
-    padding: 7px;
-    height: 100%;
-    border-radius: 20px;
-}
-.dash-card5-profile-infos{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px dashed #10292F;
-    background-color: #10292F;
-    padding: 15px;
-    row-gap: 10px;
-    height: 40%;
-    color: #EFF3DD;
-    align-self: center;
-    align-items: center;
-    align-content: center;
-    border-radius: 20px;
-}
-
-.dash-card5-settings{
-    position:relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #10292F;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    height: 100%;
-    row-gap: 20px;
-    border-radius: 20px;
-    background-color: #10292F;
-}
-.dash-input1 input:focus-visible, .dash-input2 input:focus-visible, .dash-input3 input:focus-visible, .dash-input4 input:focus-visible, .dash-input5 input:focus-visible,.dash-input6 input:focus-visible{
-    outline: 2px solid orange;
-}
-
-input:focus, input:not(:placeholder-shown){
-    border-radius: 20px;
-    background-color: #10292F;
-    color: #EFF3DD;
-    border: 2px solid rebeccapurple;
-}
-
-.dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6 , .dash-save_changes1 {
-    display: flex;
-    flex-direction: column;
-    height: 15%;
-    color: #f1f2ed;
-    border-radius: 20px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid #10292F;
-    padding: 5%;
-}
-
-.dash-input1 p, .dash-input2 p, .dash-input3  p, .dash-input4 p, .dash-input5 p, .dash-input6p{
-    text-align: center;
-    padding: 1%;
-}
-
-.dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
-    padding: 3%;
-    border: #E5F690 1px solid;
-}
-
-
-.dash-card5-profile-infos-part1{
-    position: relative;
-    display: flex;
-    background-image: url(../image/defaultprofilepic.png); 
-    flex-direction: column;
-    align-items: center;
-    align-content: center;
-    border-radius: 20px;
-    border: 1px solid #E5F690;
-}
-
-.dash-card5-profile-infos-part2{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    border-radius: 20px;
-    row-gap: 10px;
-}
-
-.dash-email , .dash-name, .dash-nickname, .dash-description , .dash-level{
-    position: relative;
-    display: flex;
-    align-items: center;
-    border-radius: 20px;
-    text-align: center;
-    align-content: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 20%;
-}
-
-.dash-card5-part1{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-radius: 20px;
-}
-
-.dash-card5-part1 p{
-    color: #EFF3DD;
-}
-
-.dash-card5-part2{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 90%;
-    border-radius: 20px;
-    row-gap: 20px;
-    justify-content: center;
-    padding: 3%;
-    align-content: center;
-}
-
-.dash-card5-part2 a{
-    border: 1px solid  #E5F690;
-}
-.dash-Save-Changes{
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    align-items: center;
-    align-content: center;
-}
-
-.dash-card5-profile-infos-part1 img{
-    width: 100px;
-    height: 100px;
-    border: 1px solid #10292F;
-    border-radius: 18px;
-}
 
 .dash-card2-image img{
     width: 100%;
@@ -472,15 +214,6 @@ input:placeholderr-shown {
     #lo{
         padding: 100px;
     }
-    
-    Tournaments-list img{
-        height: 100%;
-        width: 100%;
-        object-fit:cover;
-        border-radius: 20px;
-        justify-content: center;
-    
-    }
 
     .dash-dashboard-container{
         /* max-height: none; */
@@ -490,33 +223,11 @@ input:placeholderr-shown {
         /* grid-template-rows:  550px ; */
         /* grid-template-columns: 800px */
     }
-    .dash-col1{
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        padding: 5px;
-    }
     .dash-card1 , .dash-card2, .dash-card5{
         flex-direction: row;
     }
     .dash-card5{
         column-gap: 10px;
-    }
-    .dash-card1-enlign-friends , .dash-card1-enlign-tournaments , .dash-friends-list, .dash-Tournaments-list{
-        position: relative;
-        flex-direction: row;
-        flex-wrap: wrap;
-        width: 50%;
-        padding: 0;
-    }
-    .dash-card1-enlign-friends{
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        height: 100%;
     }
 
     .dash-email , .dash-name, .dash-nickname, .dash-description , .dash-level{
@@ -533,46 +244,8 @@ input:placeholderr-shown {
         width: 95%;
         height: 90%;
     }
-    .dash-card1-enlign-tournaments{
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        height: 100%;
-    }
-    .dash-Tournaments-list{
-        position: relative;
-        flex-direction: column;
-        flex-wrap: wrap;
-        row-gap: 10px;
-        height: 90%;
-        width: 95%;
-    }
 
-    .dash-col1, .dash-col3{
-        flex-direction: row;
-        align-content: center;
-        justify-content: center;
 
-    }
-
-    .dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6{
-        height: 30%;
-    }
-
-    .dash-card5-profile-infos , .dash-card5-settings , .dash-card5-part1 ,.dash-card5-part2 , .dash-card5-part3, .dash-card5-part4,  .dash-card5-part5 , .dash-card5-part6{
-        position: relative;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-content: center;
-        justify-content: center;
-        align-items: center;
-    }
-    .dash-card5-profile-infos{
-        width: 100%;
-    }
     .dash-input1 , .dash-input2 , .dash-input3 , .dash-input4 , .dash-input5, .dash-input6{
         width: 30%;
         align-content: center;
@@ -583,58 +256,6 @@ input:placeholderr-shown {
     }
     .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
         padding: 1%;
-    }
-    .dash-card5-part2{
-        column-gap: 3px;
-        row-gap: 10px;
-        padding: 0;
-        align-content: center;
-        justify-content: center;
-        align-items: center;
-    }
-    .dash-card5-settings{
-        padding: 1%;
-    }
-
-    .dash-card5-profile-infos{
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 30%;
-        height: 100%;
-    }
-    .dash-card5-profile-infos-part1{
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-    .dash-card5-profile-infos-part1 img{
-        width: 70px;
-        height: 70px;
-    }
-    .dash-card5-profile-infos-part2{
-        position: relative;
-        display: flex;
-        row-gap: 10px;
-        row-gap: 0px;
-        flex-direction: column; 
-    }
-    .dash-card5-settings{
-        position: relative;
-        display: flex;
-        width: 70%;
-    }
-    .dash-card5-part1{
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-    .dash-card5-part2{
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        row-gap: 20px;
-        column-gap: 10px;
     }
     .dash-card2-content h1{
         font-size:larger;
@@ -669,24 +290,10 @@ input:placeholderr-shown {
         width: 89%;
     }
     
-    .dash-input1 p, .dash-input2 p, .dash-input3  p, .dash-input4 p, .dash-input5 p, .dash-input6 p{
-        font-size: small;
-    }
-    .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
-        width: 130px;
-    }
   } 
 
   @media screen  and (max-width : 840px)
   {
-    .dash-Tournaments-list img{
-        height: 100%;
-        width: 100%;
-        object-fit:cover;
-        border-radius: 20px;
-        justify-content: center;
-    
-    } 
     .dash-dashboard-container{
         /* max-height: none;
         height: 100%; */
@@ -695,14 +302,7 @@ input:placeholderr-shown {
         /* grid-template-rows: 320px 550px 320px; */
         grid-template-columns: 450px
     }
-    .dash-card5{
-        flex-direction: column;
-        row-gap: 5px;
-        width: 100%;
-    }
-    .dash-card5-settings{
-        row-gap: 5px;
-    }
+    
     .dash-card2-content{
         width: 60%;
     }
@@ -720,63 +320,23 @@ input:placeholderr-shown {
         height: 70px;
         width: 70px;
     }
-    .dash-input1 input, .dash-input2 input, .dash-input3  input, .dash-input4 input, .dash-input5 input, .dash-input6 input{
-        width: 100px;
-    }
-
+   
     .dash-card3{
         column-gap: 20px;
     }
-    .dash-input1 p, .dash-input2 p, .dash-input3 p, .dash-input4 p, .dash-input5,p .dash-input6 p{
-        font-size: 12px;
-    }
 
-    .dash-card5-part1{
-        height: 10%;
-    }
-    .dash-card5-part2{
-        height: 80%;
-        width: 100%;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        column-gap: 10px;
-        row-gap: 5px;
-    }
     .dash-save_changes1{
         height: 10%;
         position: relative;
         display: flex;
         flex-direction: column;
     }
-    .dash-card5-part2 a{
-        display: flex;
-        flex-direction: column;
-    }
+    
     .dash-Start{
         padding: 3px;
         font-size: 13px;
     }
-    .dash-card5-profile-infos-part1 img{
-        width: 60px;
-        height: 60px;
-    }
 
-    .dash-input1 , .dash-input2 , .dash-input3  , .dash-input4 , .dash-input5 , .dash-input6 , .dash-save_changes1{
-        position: relative;
-        padding: 0px;
-    }
-    .dash-card5-settings{
-        height: 65%;
-        width: 100%;
-    }
-
-    .dash-card5-profile-infos{
-        padding: 0px;
-        height: 35%;
-        width: 100%;
-        column-gap: 20px;
-    }
 	.dash-card3-part1 p, .dash-card3-part2 p, .dash-card3-part3 p, .dash-card3-part4 p, .dash-card3-part5 p, .dash-card3-part6 p{
 		font-size: 55%;
 	}

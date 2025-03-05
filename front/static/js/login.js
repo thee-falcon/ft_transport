@@ -3,6 +3,7 @@
 class signin extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
+    <link rel="stylesheet" href="static/css/style.css">
     <div class="contonair">
       <form id="login-form">
           <h1>Sign In</h1>

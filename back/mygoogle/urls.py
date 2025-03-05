@@ -13,7 +13,7 @@ urlpatterns = [
     path('logout/', views.logout),
     path('check/', views.check_token),
     path('signup/', views.signup),
-    # path('token-refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('token-refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('login42/', views.login42, name='login42'),
     path('login42_redir/', views.login42_redir, name='login42_redir'),
     path('get_user_stats/' , views.get_user_stats,),

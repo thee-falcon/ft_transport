@@ -1,6 +1,8 @@
 class Gameoption extends HTMLElement {
     async connectedCallback() {
         this.innerHTML = `
+        <link rel="stylesheet" href="static/css/gameoption.css">
+
 <body>
     
     <div class="container">

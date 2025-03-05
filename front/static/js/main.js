@@ -37,11 +37,10 @@ function isAuthenticated() {
 
 
 
+
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log("Navigating to:", path); // ✅ Debugging
-        // if(isTokenExpired())
-        //     console.log("token is expirreddd");
 
     if ((path === "home" || path === "profile" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");

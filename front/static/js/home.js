@@ -5,6 +5,7 @@ class home extends HTMLElement {
 
         this.innerHTML = `
         <body>
+        <link rel="stylesheet" href="static/css/home.css">
             <div id="ok1">
                 <div class="card-container">
                     <!-- ✅ Settings Button -->
@@ -39,7 +40,6 @@ class home extends HTMLElement {
 
                     <div class="col33">
                         <div class="card33">
-
                             <div class="card-content">
                                 <a href="#" class="card-button" id="go-to-profile">Profile</a>
                             </div>
@@ -57,29 +57,90 @@ class home extends HTMLElement {
             </div>
         </body>`;
 
-         document.getElementById("open-settings").addEventListener("click", () => {
+        async function refreshhhToken() {
+            console.log('Refreshing access token...');
+            const refresh_Token = getCookie('refresh_token');
+        
+            if (!refresh_Token|| isTokenExpired()) {
+                console.log("No refresh token found, user not authenticated.");
+
+        
+            try {
+                const response = await fetch("http://localhost:8000/token-refresh/", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ refresh: refresh_Token }),
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("data  accces=== " , data.access);
+                    document.cookie = `access_token=${data.access}; path=/; SameSite=None; Secure`;
+                    console.log("New access token received:", data.access);
+                    return true;
+                } else {
+                    console.error("Failed to refresh token. Redirecting to signin.");
+                    deleteCookie("access_token");
+                    deleteCookie("refresh_token");
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error refreshing token:", error);
+                return false;
+            }
+        }
+        }
+
+
+
+       function isTokenExpired(token) {
+            if (!token) return true; 
+        
+            try {
+                const base64Url = token.split('.')[1];  
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');  
+                const payload = JSON.parse(atob(base64));  
+                
+                const currentTime = Math.floor(Date.now() / 1000);  
+                return payload.exp < currentTime; 
+            } catch (error) {
+                console.error("Invalid token format:", error);
+                return true;  
+            }
+        }
+
+        document.getElementById("open-settings").addEventListener("click", () => {
             document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
 
-         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
+        document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
             event.preventDefault();
-            window.location.hash = "gameoption";
-        });
-        let gototraining = document.getElementById("go-to-training");
-gototraining.addEventListener('click', function(event) {
-    event.preventDefault();  
-    window.location.hash = "training";   
-});
-        // ✅ Navigate to Profile Page
-        document.getElementById("go-to-profile").addEventListener("click", async function (event) {
-            event.preventDefault();
-            try {
-                const token = getCookie("access_token");
-                if (!token) {
-                    console.error("No access token found!");
-                    return;
-                }
+            fetchUserStats("gameoption");
 
+         });
+
+        document.getElementById("go-to-training").addEventListener("click", function (event) {
+            event.preventDefault();
+            fetchUserStats("training");
+        });
+        async function fetchUserStats(redirectPage) {
+            let token = getCookie("access_token");
+        
+            // If token is expired, refresh it
+            if (isTokenExpired(token)) {
+                console.log("Access token expired, attempting refresh...");
+                const refreshed = await refreshhhToken();
+                if (!refreshed) {
+                    console.error("Failed to refresh token. Redirecting to signin.");
+                    // window.location.hash = "signin";
+                    // return;
+                }
+                token = getCookie("access_token"); // Get the new token
+            }
+        
+            // Proceed with API request
+            try {
                 const response = await fetch("http://localhost:8000/get_user_stats/", {
                     method: "GET",
                     headers: {
@@ -88,52 +149,64 @@ gototraining.addEventListener('click', function(event) {
                     },
                     credentials: "include"
                 });
-
+        
                 const responseData = await response.json();
-
                 if (response.ok) {
-                    localStorage.setItem('userData', JSON.stringify(responseData));
-                    console.log("User data after retrieving from localStorage:", responseData);
-                    window.location.hash = "profile";
+                    localStorage.setItem("userData", JSON.stringify(responseData));
+                    console.log("User data retrieved:", responseData);
+                    window.location.hash = redirectPage;
                 } else {
                     console.error("Error fetching stats:", responseData);
                 }
             } catch (error) {
                 console.error("Error:", error);
             }
+        }
+        
+    //     async function fetchUserStats(redirectPage) {
+
+    //         try {
+    //             const token = getCookie("access_token");
+
+    // if ( isTokenExpired(token)) {
+    //     console.error("Access token is missing or expired!");
+    //     alert("Session expired. Please log in again.");
+
+    //             }
+
+    //             const response = await fetch("http://localhost:8000/get_user_stats/", {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Authorization": `Bearer ${token}`,
+    //                     "Content-Type": "application/json"
+    //                 },
+    //                 credentials: "include"
+    //             });
+
+    //             const responseData = await response.json();
+
+    //             if (response.ok) {
+    //                 localStorage.setItem('userData', JSON.stringify(responseData));
+    //                 console.log("User data after retrieving from localStorage:", responseData);
+    //                 window.location.hash = redirectPage;
+    //             } else {
+    //                 console.error("Error fetching stats:", responseData);
+    //             }
+    //         } catch (error) {
+    //             console.error("Error:", error);
+    //         }
+    //     }
+
+        // ✅ Navigate to Profile Page
+        document.getElementById("go-to-profile").addEventListener("click", (event) => {
+            event.preventDefault();
+            fetchUserStats("profile");
         });
 
         // ✅ Navigate to Dashboard Page
-        document.getElementById("go-to-dashboard").addEventListener("click", async function (event) {
+        document.getElementById("go-to-dashboard").addEventListener("click", (event) => {
             event.preventDefault();
-            try {
-                const token = getCookie("access_token");
-                if (!token) {
-                    console.error("No access token found!");
-                    return;
-                }
-
-                const response = await fetch("http://localhost:8000/get_user_stats/", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    },
-                    credentials: "include"
-                });
-
-                const responseData = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem('userData', JSON.stringify(responseData));
-                    console.log("User data after retrieving from localStorage:", responseData);
-                    window.location.hash = "dashboard";
-                } else {
-                    console.error("Error fetching stats:", responseData);
-                }
-            } catch (error) {
-                console.error("Error:", error);
-            }
+            fetchUserStats("dashboard");
         });
 
         document.getElementById("logout").addEventListener("click", async function (event) {
