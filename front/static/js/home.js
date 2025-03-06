@@ -28,7 +28,7 @@ class home extends HTMLElement {
                     <div class="col22">
                         <div class="card22">
                             <div class="card-content">
-                                <a href="#" class="card-button">Join Tournament</a>
+                                <a href="#" class="card-button" id="go-to-tour">Join Tournament</a>
                             </div>
                         </div>
                         <div class="card55">
@@ -109,7 +109,7 @@ class home extends HTMLElement {
                 return true;  
             }
         }
-
+        
         document.getElementById("open-settings").addEventListener("click", () => {
             document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
@@ -119,7 +119,11 @@ class home extends HTMLElement {
             fetchUserStats("gameoption");
 
          });
-
+         document.getElementById("go-to-tour").addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log("tournament");
+            fetchUserStats("tournament");
+        });
         document.getElementById("go-to-training").addEventListener("click", function (event) {
             event.preventDefault();
             fetchUserStats("training");

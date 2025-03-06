@@ -15,11 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)  # not exposed
-    profile = UserProfileSerializer(required=False)  # Allows profile data to be nested
+    profile = UserProfileSerializer(required=False) 
+    profile_picture = serializers.ImageField(source='profile.profile_picture', required=False)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'profile']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'profile', 'profile_picture']
     
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -33,6 +34,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
+        profile_picture = profile_data.pop('profile_picture', '/media/blue2.jpg')  # Default value
+
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -40,24 +43,29 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', '')
         )
-        # Creating the UserProfile object linked to the User object
-        UserProfile.objects.create(user=user, **profile_data)
+        UserProfile.objects.create(user=user, profile_picture=profile_picture, **profile_data)
         return user
 
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', {})
+        profile_picture = profile_data.get('profile_picture')
 
+        # Update user fields
+        if 'password' in validated_data:
+            instance.set_password(validated_data.pop('password'))
 
-from django.contrib.auth.hashers import make_password
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
-def update(self, instance, validated_data):
-    # Check if the password is being updated
-    if 'password' in validated_data:
-        # Set the password using set_password to ensure it's hashed
-        instance.set_password(validated_data['password'])
-        validated_data.pop('password')  # Remove password from validated data to prevent duplication
+        instance.save()
 
-    # Update other fields
-    for attr, value in validated_data.items():
-        setattr(instance, attr, value)
+        # Update profile fields
+        profile = instance.profile  
+        if profile_picture:
+            profile.profile_picture = profile_picture  
 
-    instance.save()
-    return instance
+        for attr, value in profile_data.items():
+            setattr(profile, attr, value)
+
+        profile.save()
+        return instance

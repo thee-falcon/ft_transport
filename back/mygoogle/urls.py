@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from .views import UpdateUserProfileView ,RefreshTokenView
+from .views import ProfilePictureUpdateView
 urlpatterns = [
     path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / 'front/index.html').read(), content_type='text/html')),
     path('auth/', include('allauth.urls')),
@@ -18,7 +19,7 @@ urlpatterns = [
     path('login42_redir/', views.login42_redir, name='login42_redir'),
     path('get_user_stats/' , views.get_user_stats,),
     path('update_game_result/' , views.update_game_result),
-
+    path("pictureedit/", ProfilePictureUpdateView.as_view(), name="profile-picture-edit"),
     path('refresh-token/', RefreshTokenView.as_view(), name='refresh-token'),
     path('update-profile/', UpdateUserProfileView.as_view(), name='update-profile'),
 ]

@@ -165,24 +165,86 @@ def update_game_result(req ):
 
     return Response(response_data, status=status.HTTP_200_OK)
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.conf import settings
+import os
+from .models import UserProfile
+from .serializer import UserProfileSerializer
+
+import os
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import UserProfile
+
+import os
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import UserProfile
+
+class ProfilePictureUpdateView(APIView):
+    permission_classes = [IsAuthenticated]  # Ensure the user is logged in
+
+    def patch(self, request):
+        """Update only the profile picture"""
+        profile = request.user.userprofile  # Get authenticated user's profile
+
+        if 'profile_picture' not in request.FILES:
+            return Response({"error": "No profile picture provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get the file from the request
+        profile_picture = request.FILES['profile_picture']
+
+        # Sanitize the file name (optional: you can use a UUID for uniqueness)
+        file_name = profile_picture.name
+        file_name = file_name.replace(" ", "_")  # Replace spaces with underscores (optional)
+        
+        # Create a unique path for the image in the 'profile_pictures/' subdirectory inside MEDIA_ROOT
+        file_path = os.path.join(settings.MEDIA_ROOT, 'profile_pictures', file_name)
+        
+        # Create the directory if it does not exist
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        # Save the file in the media directory
+        with open(file_path, 'wb+') as destination:
+            for chunk in profile_picture.chunks():
+                destination.write(chunk)
+
+        # Save the image path in the model (store relative path for media)
+        profile.profile_picture = os.path.join('profile_pictures', file_name)  # Relative path for media
+        profile.save()
+
+        # Return the success response along with the profile picture URL
+        return Response({
+            "message": "Profile picture updated successfully!",
+            "profile_picture_url": os.path.join(settings.MEDIA_URL, profile.profile_picture)  # Provide URL to access the image
+        }, status=status.HTTP_200_OK)
+
+
+
+
+from django.conf import settings
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_stats(req):
     user_profile = get_object_or_404(UserProfile, user=req.user)
-
+    
     user = req.user
-    username = user.username
-    email = user.email
-    first_name = user.first_name
-    last_name = user.last_name
-
     profile_picture = user_profile.profile_picture  # Get the stored value
 
-    if isinstance(profile_picture, str):  # If it's a URL string, use it as is
-        profile_picture = profile_picture
-    elif profile_picture:  # If it's an ImageField, get the full URL
-        profile_picture = req.build_absolute_uri(profile_picture.url)
+    print("Raw Profile Picture Path:", profile_picture)
+
+    if profile_picture:  # If the image exists
+        profile_picture = req.build_absolute_uri(settings.MEDIA_URL + str(profile_picture))
     else:
         profile_picture = None  # If no image is set
 
@@ -194,16 +256,15 @@ def get_user_stats(req):
         "tournaments_won": user_profile.tournaments_won,
         "tournaments_lost": user_profile.tournaments_lost,
         "tournaments_count": user_profile.tournaments_count,
-        "username": username,  
-        "email": email,        
-        "profile_picture": profile_picture,  
-        "first_name": first_name,  
-        "last_name": last_name,    
+        "username": user.username,  
+        "email": user.email,        
+        "profile_picture": profile_picture,  # Now returns a full URL
+        "first_name": user.first_name,  
+        "last_name": user.last_name,    
     }, status=status.HTTP_200_OK)
 
-    print('response ===', response.data)
+    print('Response Data:', response.data)
     return response
-
 
     
     
