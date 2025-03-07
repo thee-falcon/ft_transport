@@ -4,14 +4,22 @@ class home extends HTMLElement {
         const profilePicture = getCookie("profile_picture");
 
         this.innerHTML = `
+        <style>
+        
+        </style>
         <body>
         <link rel="stylesheet" href="static/css/home.css">
-            <div id="ok1">
-                <div class="card-container">
-                    <!-- ✅ Settings Button -->
-                    <button id="open-settings" class="settings-button">⚙ Settings</button>
-                    <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
 
+            <div id="ok1">
+            
+            <input type="text" id="userSearch" placeholder="Search user..." />
+            <div id="searchResults"></div>
+
+
+            <button id="open-settings" class="settings-button">⚙ Settings</button>
+            <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
+                <div class="card-container">
+                        
                     <div class="col11">
                         <div class="card11">
                             <div class="card-content">
@@ -53,6 +61,7 @@ class home extends HTMLElement {
                             </div>
                         </div>
                     </div>
+  
                 </div>
             </div>
         </body>`;
@@ -91,8 +100,41 @@ class home extends HTMLElement {
             }
         }
         }
-
-
+            
+        document.getElementById("userSearch").addEventListener("input", function () {
+            let query = this.value.trim();
+            let searchResults = document.getElementById("searchResults");
+        
+            if (query.length > 0) {
+                fetch(`/search-users/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = ""; // Clear previous results
+                        if (data.length === 0) {
+                            searchResults.innerHTML = "<p>No users found</p>";
+                        } else {
+                            data.forEach(user => {
+                                let userElement = document.createElement("div");
+                                userElement.textContent = `${user.username} (${user.email})`;
+                                userElement.classList.add("search-result-item");
+                                userElement.dataset.userId = user.id; // Store user ID
+        
+                                // ✅ Make user clickable
+                                userElement.addEventListener("click", function () {
+                                    alert(`You clicked on ${user.username} (ID: ${user.id})`);
+                                    // You can redirect or use the user ID to fetch more details
+                                    // window.location.href = `/profile/${user.id}/`;
+                                });
+        
+                                searchResults.appendChild(userElement);
+                            });
+                        }
+                    });
+            } else {
+                searchResults.innerHTML = ""; // Clear results when input is empty
+            }
+        });
+        
 
        function isTokenExpired(token) {
             if (!token) return true; 
@@ -167,48 +209,15 @@ class home extends HTMLElement {
             }
         }
         
-    //     async function fetchUserStats(redirectPage) {
+            
+        
 
-    //         try {
-    //             const token = getCookie("access_token");
-
-    // if ( isTokenExpired(token)) {
-    //     console.error("Access token is missing or expired!");
-    //     alert("Session expired. Please log in again.");
-
-    //             }
-
-    //             const response = await fetch("http://localhost:8000/get_user_stats/", {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "Authorization": `Bearer ${token}`,
-    //                     "Content-Type": "application/json"
-    //                 },
-    //                 credentials: "include"
-    //             });
-
-    //             const responseData = await response.json();
-
-    //             if (response.ok) {
-    //                 localStorage.setItem('userData', JSON.stringify(responseData));
-    //                 console.log("User data after retrieving from localStorage:", responseData);
-    //                 window.location.hash = redirectPage;
-    //             } else {
-    //                 console.error("Error fetching stats:", responseData);
-    //             }
-    //         } catch (error) {
-    //             console.error("Error:", error);
-    //         }
-    //     }
-
-        // ✅ Navigate to Profile Page
-        document.getElementById("go-to-profile").addEventListener("click", (event) => {
+         document.getElementById("go-to-profile").addEventListener("click", (event) => {
             event.preventDefault();
             fetchUserStats("profile");
         });
 
-        // ✅ Navigate to Dashboard Page
-        document.getElementById("go-to-dashboard").addEventListener("click", (event) => {
+         document.getElementById("go-to-dashboard").addEventListener("click", (event) => {
             event.preventDefault();
             fetchUserStats("dashboard");
         });

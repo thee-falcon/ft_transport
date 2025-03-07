@@ -10,7 +10,7 @@ class Profile extends HTMLElement {
         const email = storedUserData.email;
          console.log("Profile Picture:", profilePicture);
 
-        this.innerHTML = `
+        this.innerHTML =/*html*/ `
 
         <head>
    <meta charset="UTF-8">
@@ -124,49 +124,9 @@ class Profile extends HTMLElement {
 </body>
         
         `;
-        document.getElementById("change").addEventListener("click", function (event) {
-            const fileInput = document.getElementById("profilePictureInput");
-            if (fileInput.files.length === 0) {
-                alert("Please select a file");
-                return;
-            }
-
-            // Use the global function to upload the file
-            uploadProfilePicture(fileInput.files[0]);
-        });
     }
 }
 
-// Define the function outside of the event listener
-async function uploadProfilePicture(file) {
-    const token = getCookie("access_token");
-    const formData = new FormData();
-    formData.append("profile_picture", file); // Assuming the server expects 'profile_picture'
-
-    try {
-        const response = await fetch("http://localhost:8000/pictureedit/", {
-            method: "PATCH",
-            body: formData,
-            headers: {
-                "Authorization": `Bearer ${token}` // Send the user's token
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            alert("Profile picture updated successfully!");
-            document.getElementById("profilePreview").src = data.profile_picture_url; // Update preview
-            document.getElementById("player-profile-picture").src = data.profile_picture_url; // Update the profile image
-        } else {
-            const errorData = await response.json();
-            alert("Error: " + JSON.stringify(errorData));
-        }
-    } catch (error) {
-        console.error("Upload failed:", error);
-    }
-}
-
-// Utility function to get the cookie (if required)
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

@@ -1,5 +1,8 @@
 class SettingsPage extends HTMLElement {
     async connectedCallback() {
+        const storedUserData = JSON.parse(localStorage.getItem('userData'));
+        const profilePicture = storedUserData.profile_picture || "media/Screen Shot 2024-10-02 at 2.05.14 AM.png";
+
         this.innerHTML = `
         <style>
         /* ✅ Full-Screen Overlay */
@@ -34,7 +37,7 @@ class SettingsPage extends HTMLElement {
         
         /* ✅ Settings Panel */
         .settings-content {
-            background: white;
+            background: #8e9095;;
             padding: 20px;
             border-radius: 10px;
             width: 300px;
@@ -56,7 +59,24 @@ class SettingsPage extends HTMLElement {
             border-radius: 5px;
             cursor: pointer;
         }
+        .omarr-imgConatinerr {
+            height: 150px;
+            overflow: hidden;
+            border-radius: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         
+        .omarr-imgConatinerr img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 32px;
+            object-fit: cover; /* Adjust this if needed */
+        }
+        
+
         #save-settings {
             background-color: #4CAF50;
             color: white;
@@ -73,6 +93,16 @@ class SettingsPage extends HTMLElement {
         <div id="settings-overlay" class="settings-overlay">
             <div class="settings-content">
                 <h2>Settings</h2>
+                <div class="oomar-ddiv1-ddiv1-rright">
+                <div class="omarr-imgConatinerr">
+                <img id="player-profile-picture" 
+                src=${profilePicture}>
+                </div>
+                <div >
+                <input type="file" id="profilePictureInput" accept="image/*">
+                <button id="change" class="omar-gameStatus">Edit</button>
+                </div>
+
                 <label>Change FirstName:<input type="text" id="FirstName"></label>
                 <label>Change Lastname:<input type="text" id="LastName"></label>
                 <label>Change Username: <input type="text" id="newUsername"></label>
@@ -137,7 +167,54 @@ class SettingsPage extends HTMLElement {
             } catch (error) {
                 console.error("Error:", error);
             }
+            
         });
+        document.getElementById("change").addEventListener("click", function (event) {
+            const fileInput = document.getElementById("profilePictureInput");
+            if (fileInput.files.length === 0) {
+                alert("Please select a file");
+                return;
+            }
+
+            // Use the global function to upload the file
+            uploadProfilePicture(fileInput.files[0]);
+        });
+        
+async function uploadProfilePicture(file) {
+    const token = getCookie("access_token");
+    const formData = new FormData();
+    formData.append("profile_picture", file); // Assuming the server expects 'profile_picture'
+
+    try {
+        const response = await fetch("http://localhost:8000/pictureedit/", {
+            method: "PATCH",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${token}` // Send the user's token
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert("Profile picture updated successfully!");
+            document.getElementById("profilePreview").src = data.profile_picture_url; // Update preview
+            document.getElementById("player-profile-picture").src = data.profile_picture_url; // Update the profile image
+        } else {
+            const errorData = await response.json();
+            alert("Error: " + JSON.stringify(errorData));
+        }
+    } catch (error) {
+        console.error("Upload failed:", error);
+    }
+}
+
+// Utility function to get the cookie (if required)
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
     }
 }
 

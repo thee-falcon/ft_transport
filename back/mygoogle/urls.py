@@ -6,6 +6,9 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from .views import UpdateUserProfileView ,RefreshTokenView
 from .views import ProfilePictureUpdateView
+from django.urls import path
+from .views import search_users
+
 urlpatterns = [
     path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / 'front/index.html').read(), content_type='text/html')),
     path('auth/', include('allauth.urls')),
@@ -22,4 +25,5 @@ urlpatterns = [
     path("pictureedit/", ProfilePictureUpdateView.as_view(), name="profile-picture-edit"),
     path('refresh-token/', RefreshTokenView.as_view(), name='refresh-token'),
     path('update-profile/', UpdateUserProfileView.as_view(), name='update-profile'),
-]
+    path("search-users/", search_users, name="search_users"),
+    ]
