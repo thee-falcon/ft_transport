@@ -146,35 +146,51 @@ from django.contrib.auth.models import User  # Import User model
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from .models import UserProfile
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from .serializer import UserSerializer
+
+
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from .models import UserProfile
 
 def search_users(request):
     query = request.GET.get("q", "").strip()  # Get the search query
+
     if query:
-        # Fetch users with related profile data (using select_related for efficiency)
-        users = User.objects.filter(username__icontains=query) \
-            .select_related("userprofile")  # Assuming the UserProfile is related via ForeignKey
+        # Fetch users with related UserProfile using select_related
+        users = User.objects.filter(username__icontains=query).select_related("userprofile")
 
         user_list = []
         for user in users:
-            profile = getattr(user, "userprofile", None)  # Safely get the related profile
+            profile = getattr(user, "userprofile", None)  # Get related profile safely
 
-            # Construct the user data dictionary
             user_data = {
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
-                "nickname": profile.nickname if profile else None,  # Add nickname from UserProfile
-                "matches_won": profile.matches_won if profile else 0,  # Add matches_won from UserProfile
-                "matches_lost": profile.matches_lost if profile else 0,  # Add matches_lost
-                "profile_picture": request.build_absolute_uri(profile.profile_picture.url) if profile and profile.profile_picture else None,  # Profile picture URL
+                "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),  # Format date
+                "is_active": user.is_active,  # Active status
+                "is_staff": user.is_staff,  # Staff status
+                "nickname": profile.nickname if profile else None,  # From UserProfile
+                "matches_won": profile.matches_won if profile else 0,
+                "matches_lost": profile.matches_lost if profile else 0,
+                "matches_count": profile.matches_count if profile else 0,
+                "tournaments_won": profile.tournaments_won if profile else 0,
+                "tournaments_lost": profile.tournaments_lost if profile else 0,
+                "tournaments_count": profile.tournaments_count if profile else 0,
+                "profile_picture": request.build_absolute_uri(profile.profile_picture.url) if profile and profile.profile_picture else None,
             }
+
             user_list.append(user_data)
 
         return JsonResponse(user_list, safe=False)
 
     return JsonResponse([], safe=False)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

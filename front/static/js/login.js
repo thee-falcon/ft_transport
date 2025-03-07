@@ -44,7 +44,45 @@ class signin extends HTMLElement {
  
 
 
-
+    async function fetchUserStats(redirectPage) {
+      let token = getCookie("access_token");
+  
+      // If token is expired, refresh it
+      if (isTokenExpired(token)) {
+          console.log("Access token expired, attempting refresh...");
+          const refreshed = await refreshhhToken();
+          if (!refreshed) {
+              console.error("Failed to refresh token. Redirecting to signin.");
+              // window.location.hash = "signin";
+              // return;
+          }
+          token = getCookie("access_token"); // Get the new token
+      }
+  
+      // Proceed with API request
+      try {
+          const response = await fetch("http://localhost:8000/get_user_stats/", {
+              method: "GET",
+              headers: {
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json"
+              },
+              credentials: "include"
+          });
+  
+          const responseData = await response.json();
+          if (response.ok) {
+              localStorage.setItem("userData", JSON.stringify(responseData));
+              console.log("User data retrieved:", responseData);
+              window.location.hash = redirectPage;
+          } else {
+              console.error("Error fetching stats:", responseData);
+          }
+      } catch (error) {
+          console.error("Error:", error);
+      }
+  }
+  
     document.getElementById("go-to-signup").addEventListener("click", () => {
       window.location.hash = "signup";
     });
@@ -79,7 +117,7 @@ class signin extends HTMLElement {
           // console.log('Username:', username);
           console.log('simple login  Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken);
             alert('simple login go to home');
-          window.location.hash = "home";
+            fetchUserStats('home');
         } else {
           alert("Login failed. Check your credentials.");
         }
@@ -103,9 +141,9 @@ class signin extends HTMLElement {
         console.log('intra acces Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
         if(accessToken &&  refreshToken)
           alert('intra login go to home');
-
-        window.location.hash = "home";
-      } catch (error) {
+          
+          fetchUserStats('home');
+              } catch (error) {
         console.error('Error during login42 authentication:', error);
       }
     });

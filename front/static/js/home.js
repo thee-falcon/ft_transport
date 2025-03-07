@@ -1,7 +1,6 @@
 class home extends HTMLElement {
     async connectedCallback() {
-        const username = getCookie('username');
-        const profilePicture = getCookie("profile_picture");
+
 
         this.innerHTML = `
         <style>
@@ -9,17 +8,19 @@ class home extends HTMLElement {
         </style>
         <body>
         <link rel="stylesheet" href="static/css/home.css">
-
-            <div id="ok1">
-            
-            <input type="text" id="userSearch" placeholder="Search user..." />
-            <div id="searchResults"></div>
-
-
-            <button id="open-settings" class="settings-button">⚙ Settings</button>
-            <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
-                <div class="card-container">
-                        
+        
+    
+        <div id="ok1">
+        
+        <input type="text" id="userSearch" placeholder="Search user..." />
+        <div id="searchResults"></div>
+        
+        
+        <div class="card-container">
+        <button id="open-settings" class="settings-button">⚙ Settings</button>
+        <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
+ 
+        
                     <div class="col11">
                         <div class="card11">
                             <div class="card-content">
@@ -153,7 +154,7 @@ class home extends HTMLElement {
         }
         
         document.getElementById("open-settings").addEventListener("click", () => {
-            document.getElementById("settings-panel").style.display = "block"; // Show settings
+             document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
 
         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
