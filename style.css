@@ -1,0 +1,80 @@
+* {
+	margin : 0;
+	padding: 0;
+	border: none;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	outline: none;
+	text-decoration: none;
+	font-family: 'Poppins', sans-serif;
+	/* max-width: 100%; */
+}
+
+
+body {
+
+	background: #1B3E46;
+	/* min-width: 50%; */
+    margin: 0;
+    padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.logo {
+	display: flex;
+    /* width: 220px; */
+	margin-left: 4%;
+	margin-right: 7%;
+	/* flex-direction: row; */
+	
+    /* height: auto; */
+}
+
+.header {
+	display: flex;
+	/* flex-direction: row; */
+	/* background-color: red;	 */
+}
+
+.navbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding: 3rem;
+	margin-top: 3rem;
+	justify-content: space-between;
+	width: 100%;
+	align-items: center;
+	font-family: Bai Jamjuree;
+	font-size: 230%;
+	font-weight: 600;
+	line-height: 25px;
+	text-align: left;
+	text-underline-position: from-font;
+	text-decoration-skip-ink: none;
+}
+
+
+.navbar a {
+	color: #E5F690;	
+	margin-bottom: 2%;
+}
+
+.logo img {
+	width: 220px;
+}
+
+
+.login {
+	background-color: #1B3E41;
+	border: 3px solid #E5F690;
+	border-radius: 50px ;
+	padding-right: 2.7%;
+	padding-left: 2.7%;
+	padding-top: 0.6%;
+	padding-bottom: 0.6%;
+	margin-right: 4%;
+	margin-left: 7%;
+}
+
