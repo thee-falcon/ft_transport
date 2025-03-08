@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-gc92=1w+!@_7e0hbfq&1&x@4u4159f-()35!@yij#*i_($o%x^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 import os
@@ -39,6 +39,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # AUTH_USER_MODEL = 'mygoogle.CustomUser'
 
 INSTALLED_APPS = [
+    'daphne',
     'mygoogle',
     'rest_framework',
     'dj_rest_auth',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'chat',
 
 ]
 SITE_ID = 1
@@ -144,7 +146,7 @@ STATICFILES_DIRS = [
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Adjust as needed
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=150000),  # Adjust as needed
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Extend refresh token to 30 days
     'ROTATE_REFRESH_TOKENS': True,  # Issues a new refresh token upon refreshing
     'BLACKLIST_AFTER_ROTATION': True,  # Prevents old refresh tokens from being reused
@@ -152,6 +154,7 @@ SIMPLE_JWT = {
 
 
 WSGI_APPLICATION = 'main.wsgi.application'
+ASGI_APPLICATION = "main.asgi.application"
 
 
 # Database
@@ -209,6 +212,15 @@ STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+CHANNEL_LAYERS = {
+	'default' : {
+		'BACKEND' : 'channels.layers.InMemoryChannelLayer',
+		# 'CONFIG' : {
+		# 	'hosts' : [('127.0.0.1', 6379)],
+		# }
+	}
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

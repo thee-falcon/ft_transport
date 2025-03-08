@@ -9,6 +9,8 @@ const route = {
     'normal': 'normal-mode',
     'multiplayer': 'multiplayer-mode',
     'tournament': 'tournament-component',
+	'chat': 'chat-component',
+	'navbar': 'navbar-component',
 
 };
 
@@ -43,11 +45,24 @@ async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log("Navigating to:", path); // ✅ Debugging
 
-    if ((path === "home" || path === "profile" || path==="tournament" ||path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
+    if ((path === "home" || path === "profile" || path==="tournament" || path==="chat" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");
         window.location.hash = "signin";
         return;
     }
+
+	 // Get the navbar container element
+	//  const navbarContainer = document.getElementById('navbar-container');
+    
+	//  // Only show the navbar if the route is not 'home'
+	//  if (path === 'home' || path === 'signin') {
+	// 	 navbarContainer.innerHTML = '';
+	//  } else {
+	// 	 // Optional: avoid re-rendering if it already exists
+	// 	 if (!document.querySelector('navbar-component')) {
+	// 		 navbarContainer.innerHTML = '<navbar-component></navbar-component>';
+	// 	 }
+	//  }
 
     const page = route[path];
     const container = document.getElementById("view-container");

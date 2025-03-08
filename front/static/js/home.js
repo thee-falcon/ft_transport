@@ -58,7 +58,7 @@ class home extends HTMLElement {
                         </div>
                         <div class="card66">
                             <div class="card-content">
-                                <a href="#" class="card-button">Join Chat</a>
+                                <a href="#" class="card-button" id="go-to-chat">Join Chat</a>
                             </div>
                         </div>
                     </div>
@@ -167,6 +167,13 @@ class home extends HTMLElement {
             console.log("tournament");
             fetchUserStats("tournament");
         });
+
+		document.getElementById("go-to-chat").addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log("go tooo chat");
+            fetchUserStats("chat");
+        });
+
         document.getElementById("go-to-training").addEventListener("click", function (event) {
             event.preventDefault();
             fetchUserStats("training");

@@ -42,7 +42,41 @@ class signin extends HTMLElement {
     </div>
     `;
  
+	async function refreshhhToken() {
+		console.log('Refreshing access token...');
+		const refresh_Token = getCookie('refresh_token');
+	
+		if (!refresh_Token|| isTokenExpired()) {
+			console.log("No refresh token found, user not authenticated.");
 
+	
+		try {
+			const response = await fetch("http://localhost:8000/token-refresh/", {
+				method: "POST",
+				credentials: "include",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ refresh: refresh_Token }),
+			});
+	
+			if (response.ok) {
+				const data = await response.json();
+				console.log("data  accces=== " , data.access);
+				document.cookie = `access_token=${data.access}; path=/; SameSite=None; Secure`;
+				console.log("New access token received:", data.access);
+				return true;
+			} else {
+				console.error("Failed to refresh token. Redirecting to signin.");
+				deleteCookie("access_token");
+				deleteCookie("refresh_token");
+				return false;
+			}
+		} catch (error) {
+			console.error("Error refreshing token:", error);
+			return false;
+		}
+	}
+	}
+	
 
     async function fetchUserStats(redirectPage) {
       let token = getCookie("access_token");
