@@ -52,17 +52,17 @@ async function navigate() {
     }
 
 	 // Get the navbar container element
-	//  const navbarContainer = document.getElementById('navbar-container');
+	 const navbarContainer = document.getElementById('navbar-container');
     
-	//  // Only show the navbar if the route is not 'home'
-	//  if (path === 'home' || path === 'signin') {
-	// 	 navbarContainer.innerHTML = '';
-	//  } else {
-	// 	 // Optional: avoid re-rendering if it already exists
-	// 	 if (!document.querySelector('navbar-component')) {
-	// 		 navbarContainer.innerHTML = '<navbar-component></navbar-component>';
-	// 	 }
-	//  }
+	 // Only show the navbar if the route is not 'home'
+	 if (path === 'home' || path === 'signin') {
+		 navbarContainer.innerHTML = '';
+	 } else {
+		 // Optional: avoid re-rendering if it already exists
+		 if (!document.querySelector('navbar-component')) {
+			 navbarContainer.innerHTML = '<navbar-component></navbar-component>';
+		 }
+	 }
 
     const page = route[path];
     const container = document.getElementById("view-container");

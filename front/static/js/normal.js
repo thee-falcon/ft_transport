@@ -15,6 +15,7 @@ class NormalMode extends HTMLElement {
 
     async connectedCallback() {
         this.innerHTML = `
+		<link rel="stylesheet" href="static/css/test.css">
             <div class="board" id="boardd">
                 <canvas id="boardcanva"></canvas>
                 <div class="game-area" id="game">

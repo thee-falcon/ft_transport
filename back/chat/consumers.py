@@ -52,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			self.channel_room = f'user_chatroom_{self.user.id}'
 		else:
 			self.channel_room = "anonymous_chatroom"
-
+		print ("first :", self.channel_room)
 		# Add user to group if authenticated
 		if self.user:
 			await self.channel_layer.group_add(
@@ -80,6 +80,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			return
 
 		if action == "send_invitation":
+			print( "hello" )
 			target_user_id = data.get("target_user_id")
 			# Create a pending friendship using self.user as sender.
 			friendship = await self.create_friendship(self.user, target_user_id)
@@ -93,13 +94,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 					"friendshipId": friendship.id,
 				}
 				target_room = f"user_chatroom_{target_user_id}"
+				print ("ssss :", target_room)
 				await self.channel_layer.group_send(
 					target_room,
 					{
-						"type": "invitation_message",
+						"type": "chat.message",
 						"text": json.dumps(invitation_data)
 					}
 				)
+			else:
+				
+				pass
 			
 			return
 
@@ -242,26 +247,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def create_friendship(self, sender, target_user_id):
-		# If sender is a User instance, extract its id.
-		if isinstance(sender, User):
-			sender_id = sender.id
-		else:
-			sender_id = sender
 		try:
-			sender_obj = User.objects.get(id=sender_id)
 			target_user = User.objects.get(id=target_user_id)
-			print("hello hamza : ", sender_obj, "       ", target_user)
 		except User.DoesNotExist:
 			return None
 
 		# Check if a friendship already exists (either direction)
 		exists = Friendship.objects.filter(
-			Q(user1=sender_obj, user2=target_user) | Q(user1=target_user, user2=sender_obj)
+			Q(user1=sender, user2=target_user) | Q(user1=target_user, user2=sender)
 		).exists()
+
 		if exists:
 			return None
 
-		return Friendship.objects.create(user1=sender_obj, user2=target_user, status="pending")
+		# Create a new pending friendship
+		return Friendship.objects.create(user1=sender, user2=target_user, status="pending")
 
 	@database_sync_to_async
 	def get_friendship(self, sender, receiver):
