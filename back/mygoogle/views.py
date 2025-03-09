@@ -179,9 +179,7 @@ def search_users(request):
     query = request.GET.get("q", "").strip()
 
     if query:
-        users = User.objects.filter(
-            Q(username__icontains=query) | Q(userprofile__nickname__icontains=query)  # Fix related field
-        ).select_related("userprofile")  # Fix related name
+        users = User.objects.filter(username__icontains=query).select_related("profile")  # Use the correct related_name
 
         if not users.exists():
             return JsonResponse({"error": "No users found"}, status=404)
@@ -191,43 +189,7 @@ def search_users(request):
 
     return JsonResponse([], safe=False)
 
-# def search_users(request):
-#     query = request.GET.get("q", "").strip()  # Get the search query
-
-#     if query:
-#         # Fetch users with related UserProfile using select_related
-#         users = User.objects.filter(username__icontains=query).select_related("userprofile")
-
-#         user_list = []
-#         for user in users:
-#             profile = getattr(user, "userprofile", None)  # Get related profile safely
-
-#             user_data = {
-#                 "id": user.id,
-#                 "username": user.username,
-#                 "email": user.email,
-#                 "first_name": user.first_name,
-#                 "last_name": user.last_name,
-#                 "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),  # Format date
-#                 "is_active": user.is_active,  # Active status
-#                 "is_staff": user.is_staff,  # Staff status
-#                 "nickname": profile.nickname if profile else None,  # From UserProfile
-#                 "matches_won": profile.matches_won if profile else 0,
-#                 "matches_lost": profile.matches_lost if profile else 0,
-#                 "matches_count": profile.matches_count if profile else 0,
-#                 "tournaments_won": profile.tournaments_won if profile else 0,
-#                 "tournaments_lost": profile.tournaments_lost if profile else 0,
-#                 "tournaments_count": profile.tournaments_count if profile else 0,
-#                 "profile_picture": request.build_absolute_uri(profile.profile_picture.url) if profile and profile.profile_picture else None,
-#             }
-
-#             user_list.append(user_data)
-
-#         return JsonResponse(user_list, safe=False)
-
-#     return JsonResponse([], safe=False)
-
-
+ 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_game_result(req ):

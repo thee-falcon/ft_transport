@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.CharField(max_length=100, blank=True,  default='/media/blue1.jpg')
-    nickname = models.CharField(max_length=50, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")  # Use related_name="profile"
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, default='profile_pics/default.jpg')  # Fixed
+
+    nickname = models.CharField(max_length=10, blank=True, null=True)
     matches_won = models.IntegerField(default=0)
     matches_lost = models.IntegerField(default=0)
     matches_count = models.IntegerField(default=0)
