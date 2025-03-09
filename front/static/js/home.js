@@ -11,10 +11,8 @@ class home extends HTMLElement {
         
     
         <div id="ok1">
-        
-        <input type="text" id="userSearch" placeholder="Search user..." />
+   <input type="text" id="userSearch" placeholder="Search user..." />
         <div id="searchResults"></div>
-        
         
         <div class="card-container">
         <button id="open-settings" class="settings-button">⚙ Settings</button>
@@ -122,9 +120,12 @@ class home extends HTMLElement {
         
                                 // ✅ Make user clickable
                                 userElement.addEventListener("click", function () {
+                                    // console.log("profile info======== ", user.profile.profile_picture);
                                     alert(`You clicked on ${user.username} (ID: ${user.id})`);
-                                    // You can redirect or use the user ID to fetch more details
-                                    // window.location.href = `/profile/${user.id}/`;
+                                    localStorage.setItem("guestData", JSON.stringify(data));
+                                    console.log("User data retrieved::::::::::::;;:", data);
+
+                                    window.location.hash ="guestprofile";
                                 });
         
                                 searchResults.appendChild(userElement);
@@ -167,13 +168,6 @@ class home extends HTMLElement {
             console.log("tournament");
             fetchUserStats("tournament");
         });
-
-		document.getElementById("go-to-chat").addEventListener("click", function (event) {
-            event.preventDefault();
-            console.log("go tooo chat");
-            fetchUserStats("chat");
-        });
-
         document.getElementById("go-to-training").addEventListener("click", function (event) {
             event.preventDefault();
             fetchUserStats("training");
@@ -229,7 +223,10 @@ class home extends HTMLElement {
             event.preventDefault();
             fetchUserStats("dashboard");
         });
-
+        document.getElementById("go-to-chat").addEventListener("click", (event) => {
+            event.preventDefault();
+            fetchUserStats("chat");
+        });
         document.getElementById("logout").addEventListener("click", async function (event) {
             event.preventDefault();
             try {
@@ -258,5 +255,4 @@ class home extends HTMLElement {
     }
 }
 
-// ✅ Define the Home Component
 customElements.define("home-component", home);

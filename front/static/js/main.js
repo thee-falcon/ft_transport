@@ -11,8 +11,8 @@ const route = {
     'tournament': 'tournament-component',
 	'chat': 'chat-component',
 	'navbar': 'navbar-component',
-
-};
+    'guestprofile': 'guestprofile-component',
+ };
 
 function getCookie(name) {
     let match = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -45,7 +45,7 @@ async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
     console.log("Navigating to:", path); // ✅ Debugging
 
-    if ((path === "home" || path === "profile" || path==="tournament" || path==="chat" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
+    if ((path === "home" || path === "profile" ||  path==="guestprofile" || path==="tournament" || path==="chat" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");
         window.location.hash = "signin";
         return;
