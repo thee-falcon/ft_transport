@@ -26,6 +26,11 @@ print(settings.BASE_DIR / 'front/index.html')
 from rest_framework_simplejwt import views as jwt_views
 
 from django.urls import path , include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 urlpatterns = [
     path('', lambda request: HttpResponse(
         open(settings.BASE_DIR.parent / 'front/index.html').read(), 
@@ -36,6 +41,12 @@ urlpatterns = [
     # path('logout/', views.logout),
     # path('signup/', views.signup),
     path('', include("mygoogle.urls")),
+        path('api/auth/', include('two_factor.urls')),
+    path('api/auth/jwt/', include([
+        path('create/', TokenObtainPairView.as_view(), name='jwt_create'),
+        path('refresh/', TokenRefreshView.as_view(), name='jwt_refresh'),
+    ])),
+    
     path('', include("chat.urls")),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
