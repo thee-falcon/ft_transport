@@ -12,34 +12,38 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from datetime import timedelta
-from dotenv import load_dotenv
-
-load_dotenv()
-
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security Settings
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-gc92=1w+!@_7e0hbfq&1&x@4u4159f-()35!@yij#*i_($o%x^'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ["*"]
+
+
+import os
 
 # Add the following to configure media files
-# Media Configuration (Keep from main)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Application Definition
+
+# Application definition
+# AUTH_USER_MODEL = 'mygoogle.CustomUser'
+
 INSTALLED_APPS = [
-    'channels',
     'daphne',
     'mygoogle',
-    'two_factor',  # 2FA app
     'rest_framework',
     'dj_rest_auth',
-    'django.contrib.admin',
+    'django.contrib.admin',  # Add this back
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -53,64 +57,73 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'chat',
-    'rest_framework_simplejwt',
-]
 
-# Middleware
+]
+SITE_ID = 1
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '598064932608-hf8f5bd6aehru3fjegblkhqpge7fnubr.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Move this to the top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+     'django.middleware.csrf.CsrfViewMiddleware',  # CSRF check should come after session middleware
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Keep only one instance
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-    'django_otp.middleware.OTPMiddleware',  # 2FA middleware
+        'allauth.account.middleware.AccountMiddleware',  # Add this line
+
+]
+LOGIN_URL = '/login-action/'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 
-# Authentication Backends
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'two_factor.backends.TwoFactorBackend',  # 2FA backend
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-# REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication', 
+                'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',# Add JWT Authentication
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+           'rest_framework.permissions.AllowAny',  # Optional: Requires the user to be authenticated
+    ],
 }
 
-# JWT Configuration
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'TOKEN_OBTAIN_SERIALIZER': 'two_factor.serializers.CustomTokenObtainPairSerializer'  # custom serializer 2FA
-}
-
-# Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+ROOT_URLCONF = 'main.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [  # You can add custom directories here for other views if needed
+            BASE_DIR / 'templates',
+        ],
+        'APP_DIRS': True,  # This is important for loading admin templates from the app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -121,14 +134,16 @@ TEMPLATES = [
         },
     },
 ]
+STATIC_URL = '/static/'
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://localhost:5500",
+# STATIC_ROOT = BASE_DIR / "static_root"
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / '../front' / 'static',  # This should point to front/static
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=150000),  # Adjust as needed
@@ -141,36 +156,6 @@ SIMPLE_JWT = {
 WSGI_APPLICATION = 'main.wsgi.application'
 ASGI_APPLICATION = "main.asgi.application"
 
-ROOT_URLCONF = 'main.urls'
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': '598064932608-hf8f5bd6aehru3fjegblkhqpge7fnubr.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''
-        },
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'}
-    }
-}
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.core.mail': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
