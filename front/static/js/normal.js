@@ -10,7 +10,18 @@ class NormalMode extends HTMLElement {
         this.custoDiv = null;
         this.custoDiv = null;
         this.finish = null;
-        
+        this.finishinng = null;
+        this.aceptiti = null;
+
+        this.numberofplayer = 1;
+        this.countdownActive = false;
+        this.countdownValue = 3;
+        this.countdownSound = new Audio('../media/beep.mp3'); // Add sound files
+        this.goSound = new Audio('../media/go.mp3');
+
+        this.gamestandby = this.gamestandby.bind(this);
+        this.startgame = this.startgame.bind(this);
+        // this.hh = this.hh.bind(this);
     }
 
     async connectedCallback() {
@@ -20,9 +31,9 @@ class NormalMode extends HTMLElement {
                 <canvas id="boardcanva"></canvas>
                 <div class="game-area" id="game">
                     <canvas id="gamecanvas"></canvas>
-                </div>
-                <div class="customization" id="custo">
-                <button class="finish-button"id="finish">Finish Match</button>
+                    </div>
+                    <div class="customization" id="custo">
+                    <button class="finish-button"id="finish">Finish Match</button>
                     <canvas id="custocanvas"></canvas>
                 </div>
             </div>
@@ -57,6 +68,10 @@ class NormalMode extends HTMLElement {
         this.custoctx = this.custo.getContext('2d');
         this.cont = this.canvas.getContext('2d');
         this.finish = document.getElementById("finish");
+        this.finishinng = document.getElementById("finishing");
+        this.aceptiti = document.getElementById("acceptit");
+
+
         this.custoDiv.style.display = 'none'
         // Hide customization div
 
@@ -107,10 +122,156 @@ class NormalMode extends HTMLElement {
         // Set up event listeners
         this.setupEventListeners();
 
+        // this.startgame();
+        // this.gameLoop();
+        // this.finishinng.addEventListener("click",this.gamestandby);
+        // this.aceptiti.addEventListener("click",this.hh);
+
+
+        this.gamestandby()
         // Start game loop
-        this.gameLoop();
+    }
+    // async hh()
+    // {
+    //     const responsed = await fetch("http://localhost:8000/accept_invite/", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Bearer ${getCookie("access_token")}`, 
+    //             "X-CSRFToken": getCookie("csrftoken")
+    //         },
+    //         credentials: "include",
+    //         body: JSON.stringify({ sender_username: "nbouhali" })
+
+    //     });
+
+    // }
+
+    async gamestandby()
+    {
+        // let imagesToDraw;
+
+        this.cont.fillStyle = "#e4c1b9";
+        this.cont.font = "24px Bai Jamjuree";
+        this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.cont.fillText("waiting for players to join ...", (this.canvas.width - this.cont.measureText("waiting for players to join ...").width) / 2, this.canvas.height/4);
+                // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
+        
+        this.cont.fillStyle = "#000000";
+        // await 
+        // const responsed = await fetch("http://localhost:8000/send_invite/", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Authorization": `Bearer ${getCookie("access_token")}`, 
+        //         "X-CSRFToken": getCookie("csrftoken")
+        //     },
+        //     credentials: "include",
+        //     body: JSON.stringify({ receiver_username: "theswoord" })
+
+        // });
+
+
+        this.checkInvitationTimeout = setTimeout(() => {
+            // alert("The other player did not accept the invitation in time. Redirecting to home.");
+            clearInterval(this.invitationCheckInterval);
+
+            window.location.hash = "home";
+        }, 30000);
+        
+            this.invitationCheckInterval = setInterval(async () => {
+                const response = await fetch("http://localhost:8000/check_invitation_status/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${getCookie("access_token")}`, 
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    credentials: "include"
+                });
+        
+                const invitationStatus = await response.json();
+                console.log(JSON.stringify(invitationStatus, null, 2));
+ 
+
+                if (invitationStatus.bothAccepted) {
+                    clearTimeout(this.checkInvitationTimeout);
+                    clearInterval(this.invitationCheckInterval); 
+                    this.startgame(); 
+                }
+            }, 5000); 
+        
+        
+            
+        // imagesToDraw = [
+        //     { img: this.images[0], x: (this.canvas.width / 2) - (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
+        //     { img: this.images[1], x: (this.canvas.width / 2) + (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
+        //     // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
+        // ];
+
+        // imagesToDraw.forEach(imgData => {
+        //     this.cont.save();
+        //     this.cont.beginPath();
+        //     this.cont.arc(imgData.x + this.imageSize / 2, imgData.y + this.imageSize / 2, this.imageSize / 2, 0, Math.PI * 2);
+        //     this.cont.clip();
+        //     this.cont.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
+        //     this.cont.restore();
+            
+        // });
+
+    }
+    startCountdown() {
+        this.countdownActive = true;
+        this.countdownValue = 3;
+        this.playCountdownSound();
+        if (this.countdownActive) {
+            this.cont.fillStyle = '#e4c1b9';
+            this.cont.font = 'bold 150px Bai Jamjuree';
+            this.cont.textAlign = 'center';
+            this.cont.textBaseline = 'middle'; 
+            this.cont.fillText(this.countdownValue.toString(), 
+                this.canvas.width/2, 
+                this.canvas.height/2);
+        }
+        const countdownInterval = setInterval(() => {
+            this.countdownValue--;
+            
+            if (this.countdownValue > 0) {
+                this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.cont.fillText(this.countdownValue.toString(), 
+                this.canvas.width/2, 
+                this.canvas.height/2);
+                this.playCountdownSound();
+            } else {
+                this.playGoSound();
+                this.countdownActive = false;
+                clearInterval(countdownInterval);
+                this.gameLoop(); // Start actual game loop
+            }
+        }, 1000);
+    }
+    playCountdownSound() {
+        if (this.countdownSound) {
+            this.countdownSound.currentTime = 0;
+            this.countdownSound.play();
+        }
     }
 
+    playGoSound() {
+        if (this.goSound) {
+            this.goSound.currentTime = 0;
+            this.goSound.play();
+        }
+    }
+
+
+    startgame()
+    {
+        this.startCountdown();
+
+
+        // this.gameLoop();
+    }
     setupEventListeners() {
         document.addEventListener('keydown', (e) => {
             if (e.code === "ArrowUp") this.isRightUp = true;
@@ -240,7 +401,7 @@ class NormalMode extends HTMLElement {
         this.bally = (this.canvas.height / 2);
     }
 
-    loadImages() {
+    loadImages() { // khani liks 
         const imageSources = [
             "../media/badge1.png",
             "../media/badge2.png",
@@ -253,6 +414,10 @@ class NormalMode extends HTMLElement {
         });
     }
 
+    allImagesLoaded() {
+        return this.imageLoadedCount === this.imageSources.length;
+    }
+
     endgame()
     {
         this.finished = true;
@@ -260,6 +425,9 @@ class NormalMode extends HTMLElement {
     
     update() {
 
+        if (this.countdownActive) {
+            return; // Don't update ball position during countdown
+        }
         if (this.isResetting) {
             if (performance.now() - this.lastResetTime >= this.resetDelay) {
                 // Perform the reset logic

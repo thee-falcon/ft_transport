@@ -8,14 +8,17 @@ class home extends HTMLElement {
         </style>
         <body>
         <link rel="stylesheet" href="static/css/home.css">
-        
+        <link rel="stylesheet" href="static/css/settings.css">
+
     
         <div id="ok1">
    <input type="text" id="userSearch" placeholder="Search user..." />
         <div id="searchResults"></div>
         
         <div class="card-container">
-        <button id="open-settings" class="settings-button">⚙ Settings</button>
+        <button id="open-settings" class="settings-button">⚙ Settings
+        
+        </button>
         <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
  
         
@@ -35,7 +38,7 @@ class home extends HTMLElement {
                     <div class="col22">
                         <div class="card22">
                             <div class="card-content">
-                                <a href="#" class="card-button" id="go-to-tour">Join Tournament</a>
+                                <a href="#" class="card-button" id="go-to-tournoi">Join Tournament</a>
                             </div>
                         </div>
                         <div class="card55">
@@ -109,6 +112,7 @@ class home extends HTMLElement {
                     .then(response => response.json())
                     .then(data => {
                         searchResults.innerHTML = ""; // Clear previous results
+        
                         if (data.length === 0) {
                             searchResults.innerHTML = "<p>No users found</p>";
                         } else {
@@ -118,25 +122,65 @@ class home extends HTMLElement {
                                 userElement.classList.add("search-result-item");
                                 userElement.dataset.userId = user.id; // Store user ID
         
-                                // ✅ Make user clickable
+                                // ✅ Store only the selected user's data
                                 userElement.addEventListener("click", function () {
-                                    // console.log("profile info======== ", user.profile.profile_picture);
-                                    alert(`You clicked on ${user.username} (ID: ${user.id})`);
-                                    localStorage.setItem("guestData", JSON.stringify(data));
-                                    console.log("User data retrieved::::::::::::;;:", data);
-
-                                    window.location.hash ="guestprofile";
+                                    let selectedUserData = {
+                                        id: user.id,
+                                        username: user.username,
+                                        email: user.email,
+                                        first_name: user.first_name,
+                                        last_name: user.last_name,
+                                        profile_picture: user.profile_picture,
+                                        nickname: user.profile.nickname,
+                                        matches_won: user.profile.matches_won,
+                                        matches_lost: user.profile.matches_lost,
+                                        matches_count: user.profile.matches_count,
+                                        tournaments_won: user.profile.tournaments_won,
+                                        tournaments_lost: user.profile.tournaments_lost,
+                                        tournaments_count: user.profile.tournaments_count
+                                    };
+        
+                                    localStorage.setItem("guestData", JSON.stringify(selectedUserData));
+                                    console.log("Stored User Data:", selectedUserData);
+        
+                                    window.location.hash = "guestprofile";
                                 });
         
                                 searchResults.appendChild(userElement);
                             });
                         }
-                    });
+                    })
+                    .catch(error => console.error("Error fetching users:", error));
             } else {
                 searchResults.innerHTML = ""; // Clear results when input is empty
             }
         });
         
+        async function Fetchinvites() {
+            try {
+              const response = await fetch("http://localhost:8000/get_invites/", {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${getCookie("access_token")}`,
+                  "X-CSRFToken": getCookie("csrftoken")
+                },
+                credentials: "include",
+              });
+              
+              if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('the-invites', JSON.stringify(data));
+                return data;
+              } else {
+                console.error("Failed to fetch invites:", response.status);
+                return null;
+              }
+            } catch (error) {
+              console.error("Error fetching invites:", error);
+              return null;
+            }
+          }
 
        function isTokenExpired(token) {
             if (!token) return true; 
@@ -157,15 +201,16 @@ class home extends HTMLElement {
         document.getElementById("open-settings").addEventListener("click", () => {
              document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
-
         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
             event.preventDefault();
+            // console.log("dkhel l game #optionnnn wiliiii")
             fetchUserStats("gameoption");
+            Fetchinvites();
 
          });
-         document.getElementById("go-to-tour").addEventListener("click", function (event) {
+         document.getElementById("go-to-tournoi").addEventListener("click", function (event) {
             event.preventDefault();
-            console.log("tournament");
+            console.log("gooooooooo tournament");
             fetchUserStats("tournament");
         });
         document.getElementById("go-to-training").addEventListener("click", function (event) {
@@ -226,6 +271,10 @@ class home extends HTMLElement {
         document.getElementById("go-to-chat").addEventListener("click", (event) => {
             event.preventDefault();
             fetchUserStats("chat");
+        });
+        document.getElementById("go-to-tournoi").addEventListener("click", (event) => {
+            event.preventDefault();
+            fetchUserStats("tournament");
         });
         document.getElementById("logout").addEventListener("click", async function (event) {
             event.preventDefault();

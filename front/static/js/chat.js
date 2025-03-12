@@ -48,6 +48,8 @@ class Chat extends HTMLElement {
     this.loc = window.location;
     this.dominePort = this.loc.host;
     this.accessToken = getCookie("access_token");
+    this.send_invite_game = null;
+    this.currentusername = null;
   }
 
   connectedCallback() {
@@ -77,7 +79,7 @@ class Chat extends HTMLElement {
               <button class="dropdown-button"></button>
               <div class="dropdown-content">
                 <a href="#" id="block-user">block</a>
-                <a href="#">invitation game</a>
+                <button class="sendinvite_button" id="justsend">invitation game</button>
               </div>
             </div>
           </div>
@@ -96,8 +98,35 @@ class Chat extends HTMLElement {
     // Initialize the socket connection when component is connected
     socket = this.getSocket();
     this.initializeChat();
+    this.send_invite_button();
   }
+  async send_invitation_game()
+  {
 
+            const responsed = await fetch("http://localhost:8000/send_invite/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getCookie("access_token")}`, 
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            credentials: "include",
+            body: JSON.stringify({ receiver_username: this.currentusername })
+
+        });
+
+        
+        
+        window.location.hash = "normal";
+        
+
+  }
+  send_invite_button()
+  {
+    console.log("add what ?");
+    this.send_invite_game = document.getElementById("justsend");
+    this.send_invite_game.addEventListener("click", () => this.send_invitation_game());
+    }
   // Send message through WebSocket
   sendMessage(data) {
     const ws = this.getSocket();
@@ -208,11 +237,14 @@ class Chat extends HTMLElement {
               </div>
             `;
           }
+        // this.currentusername = data.friend.username;
+
         });
       } else {
         messagesHtml = "<p>No messages found.</p>";
       }
-      
+      console.log("taaayzk");
+      console.log(this.currentusername)
       body_message.innerHTML = messagesHtml;
       scrollToBottom();
     })
@@ -367,7 +399,7 @@ class Chat extends HTMLElement {
           </div>
         `;
       });
-      
+      // console.log("tayzk")
       // Process messages for sorted friend list
       let friendsData = [];
       data.friends.forEach((friend) => {
@@ -398,6 +430,7 @@ class Chat extends HTMLElement {
         const words = contentMessage.split(" ");
         const firstFourWords = words.slice(0, 4).join(" ");
         const truncatedMessage = firstFourWords + (words.length > 4 ? " ..." : "");
+ 
         friendsHtml1 += `
           <div class="user_info">
             <div class="user-item ${index === 0 ? "active" : ""}" data-chat-id="${data.friend.id}">
@@ -472,6 +505,7 @@ class Chat extends HTMLElement {
       // Update UI
       const userName = item.querySelector("strong").textContent;
       currentChatId = item.getAttribute("data-chat-id");
+      self.currentusername = userName
       const isBlocked = item.getAttribute("data-blocked") === "true";
       
       chatHeader.innerHTML = `<img src="/static/image/Screen Shot 2024-10-02 at 2.05.14 AM.png" alt="${userName}" class="chat-header-img"> ${userName}`;
@@ -480,7 +514,7 @@ class Chat extends HTMLElement {
       // Load messages
       self.fetchMessagesForChat(currentChatId);
     }
-
+ 
     // Activate first user if available
     if (userItems.length > 0) {
       activateUser(userItems[0]);

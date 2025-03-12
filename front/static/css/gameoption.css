@@ -16,6 +16,12 @@ body {
     height: 350px  ;
     border-radius: 10px ;
 }
+.blocked_button {
+    background-color: #ccc; /* Light gray background */
+    color: #666;            /* Darker gray text */
+    cursor: not-allowed;    /* Change cursor to indicate it's not clickable */
+    pointer-events: none;   /* Prevent any interaction */
+}
 
 .container .glass {
     position: relative ;

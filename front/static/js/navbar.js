@@ -67,6 +67,9 @@ class navebar extends HTMLElement {
     }
 }
 
+ 
+
+
 customElements.define('navbar-component', navebar);
 
 

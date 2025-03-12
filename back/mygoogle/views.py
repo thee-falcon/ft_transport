@@ -33,6 +33,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import UserProfile
+from .models import Invitation
+from django.db.models import Q
 from .serializer import UserProfileSerializer
 
 # OAuth Credentials
@@ -247,43 +249,33 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import UserProfile
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
 class ProfilePictureUpdateView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure the user is logged in
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request):
         """Update only the profile picture"""
-        profile = request.user.userprofile  # Get authenticated user's profile
+        user = request.user
+
+        # Check if user has a UserProfile, if not, create one
+        profile, created = UserProfile.objects.get_or_create(user=user)
 
         if 'profile_picture' not in request.FILES:
             return Response({"error": "No profile picture provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get the file from the request
-        profile_picture = request.FILES['profile_picture']
-
-        # Sanitize the file name (optional: you can use a UUID for uniqueness)
-        file_name = profile_picture.name
-        file_name = file_name.replace(" ", "_")  # Replace spaces with underscores (optional)
-        
-        # Create a unique path for the image in the 'profile_pictures/' subdirectory inside MEDIA_ROOT
-        file_path = os.path.join(settings.MEDIA_ROOT, 'profile_pictures', file_name)
-        
-        # Create the directory if it does not exist
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
-        # Save the file in the media directory
-        with open(file_path, 'wb+') as destination:
-            for chunk in profile_picture.chunks():
-                destination.write(chunk)
-
-        # Save the image path in the model (store relative path for media)
-        profile.profile_picture = os.path.join('profile_pictures', file_name)  # Relative path for media
+        # Save the uploaded image
+        profile.profile_picture = request.FILES['profile_picture']
         profile.save()
 
-        # Return the success response along with the profile picture URL
         return Response({
             "message": "Profile picture updated successfully!",
-            "profile_picture_url": os.path.join(settings.MEDIA_URL, profile.profile_picture)  # Provide URL to access the image
+            "profile_picture_url": profile.profile_picture.url
         }, status=status.HTTP_200_OK)
+
 
 
 
@@ -294,16 +286,14 @@ from django.conf import settings
 @permission_classes([IsAuthenticated])
 def get_user_stats(req):
     user_profile = get_object_or_404(UserProfile, user=req.user)
-    
+
     user = req.user
     profile_picture = user_profile.profile_picture  # Get the stored value
 
     print("Raw Profile Picture Path:", profile_picture)
 
-    if profile_picture:  # If the image exists
-        profile_picture = req.build_absolute_uri(settings.MEDIA_URL + str(profile_picture))
-    else:
-        profile_picture = None  # If no image is set
+    # No need to call save_profile_picture here. Just return the stored path.
+    profile_picture_path = profile_picture.url if profile_picture else None
 
     response = Response({
         "nickname": user_profile.nickname,
@@ -315,7 +305,7 @@ def get_user_stats(req):
         "tournaments_count": user_profile.tournaments_count,
         "username": user.username,  
         "email": user.email,        
-        "profile_picture": profile_picture,  # Now returns a full URL
+        "profile_picture": profile_picture_path,  # Use stored path
         "first_name": user.first_name,  
         "last_name": user.last_name,    
     }, status=status.HTTP_200_OK)
@@ -323,7 +313,173 @@ def get_user_stats(req):
     print('Response Data:', response.data)
     return response
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_invite(request):
+    receiver_username = request.data.get('receiver_username')
+    # Prevent inviting yourself
+    if receiver_username == request.user.username:
+        return Response({'error': 'Cannot invite yourself'}, status=status.HTTP_400_BAD_REQUEST)
     
+    try:
+        receiver = User.objects.get(username=receiver_username)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Expire any old pending invitations first
+    old_invites = Invitation.objects.filter(
+        sender=request.user, 
+        receiver=receiver, 
+        status='PENDING'
+    )
+    for invite in old_invites:
+        invite.expire_if_needed()
+    
+    # Check for existing pending invite after expiration check
+    if Invitation.objects.filter(sender=request.user, receiver=receiver, status='PENDING').exists():
+        return Response({'error': 'Invitation already sent'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Create the invitation
+    invitation = Invitation.objects.create(
+        sender=request.user,
+        receiver=receiver,
+        status='PENDING'
+    )
+    
+    return Response({
+        'message': 'Invitation sent successfully',
+        'sender': request.user.username,
+        'receiver': receiver_username
+    }, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_invites(request):
+    """
+    Get all pending invitations related to the current user (both sent and received)
+    and expire any that have passed the time limit
+    """
+    # First, expire any old invitations
+    pending_invites = Invitation.objects.filter(
+        Q(sender=request.user) | Q(receiver=request.user),
+        status='PENDING'
+    )
+    
+    # Check each invitation for expiration
+    for invite in pending_invites:
+        invite.expire_if_needed()
+    
+    # Now get the fresh list of pending invitations
+    # Filter out any that might have just been marked as expired
+    pending_invites = Invitation.objects.filter(
+        Q(sender=request.user) | Q(receiver=request.user),
+        status='PENDING'
+    ).order_by('-created_at')  # Newest first
+    
+    # Serialize the invitations with relation info
+    invites_data = []
+    for invite in pending_invites:
+        # Calculate remaining time in seconds
+        time_elapsed = timezone.now() - invite.created_at
+        time_remaining = max(0, 60 - time_elapsed.total_seconds())
+        
+        invites_data.append({
+            'id': invite.id,
+            'sender': invite.sender.username,
+            'receiver': invite.receiver.username,
+            'created_at': invite.created_at,
+            'is_sender': invite.sender == request.user,
+            'is_receiver': invite.receiver == request.user,
+            'time_remaining_seconds': int(time_remaining)
+        })
+    
+    return Response({
+        'count': len(invites_data),
+        'invites': invites_data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def accept_invite(request):
+    sender_username = request.data.get('sender_username')
+    
+    try:
+        # Get the pending invitation
+        invitation = Invitation.objects.get(
+            sender__username=sender_username,
+            receiver=request.user,
+            status='PENDING'
+        )
+        
+        # Check if expired before accepting
+        if invitation.is_expired:
+            invitation.status = 'EXPIRED'
+            invitation.save()
+            return Response({'error': 'Invitation has expired'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update the invitation status
+        invitation.status = 'ACCEPTED'
+        invitation.save()
+        
+        return Response({
+            'message': 'Invitation accepted',
+            'sender': sender_username,
+            'receiver': request.user.username
+        })
+        
+    except Invitation.DoesNotExist:
+        return Response({'error': 'No valid invitation found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_invitation_status(request):
+    """
+    Check the status of game invitations for the authenticated user
+    """
+    # Get relevant invitations
+    invitations = Invitation.objects.filter(
+        Q(sender=request.user) | Q(receiver=request.user),
+        status__in=['PENDING', 'ACCEPTED']
+    ).order_by('-created_at')
+    
+    # Expire any pending invitations that need it
+    for invitation in invitations:
+        invitation.expire_if_needed()
+    
+    # Get the most recent active invitation after expiration checks
+    invitation = Invitation.objects.filter(
+        Q(sender=request.user) | Q(receiver=request.user),
+        status__in=['PENDING', 'ACCEPTED']
+    ).order_by('-created_at').first()
+    
+    if not invitation:
+        return Response({
+            'bothAccepted': False,
+            'status': 'NO_INVITE',
+            'message': 'No active invitation found'
+        }, status=status.HTTP_404_NOT_FOUND)
+    
+    # Determine user's role in the invitation
+    is_sender = invitation.sender == request.user
+    is_receiver = invitation.receiver == request.user
+    
+    # Calculate remaining time for pending invitations
+    time_remaining = None
+    if invitation.status == 'PENDING':
+        time_elapsed = timezone.now() - invitation.created_at
+        time_remaining = max(0, 60 - time_elapsed.total_seconds())
+    
+    return Response({
+        'bothAccepted': invitation.status == 'ACCEPTED',
+        'sender': invitation.sender.username,
+        'receiver': invitation.receiver.username,
+        'status': invitation.status,
+        'yourRole': 'sender' if is_sender else 'receiver',
+        'time_remaining_seconds': int(time_remaining) if time_remaining is not None else None
+    })
+
     
 def get_42_user_info(access_token: str):
     user_info_url = "https://api.intra.42.fr/v2/me"
@@ -334,6 +490,49 @@ def get_42_user_info(access_token: str):
         return None
     
     return response.json()
+def save_profile_picture(profile_picture_url, username):
+    """Downloads the profile picture and saves it to profile_pics/ directory."""
+    if not profile_picture_url:
+        return None
+
+    try:
+        response = requests.get(profile_picture_url, stream=True)
+        if response.status_code == 200:
+            # Define the local file path
+            file_extension = profile_picture_url.split(".")[-1]  # Get file extension
+            file_name = f"{username}.{file_extension}"  # Save as username.extension
+            file_path = os.path.join(settings.MEDIA_ROOT, "profile_pics", file_name)
+
+            # Save the image to the local directory
+            with open(file_path, "wb") as f:
+                for chunk in response.iter_content(1024):
+                    f.write(chunk)
+
+            return f"profile_pics/{file_name}"  # Return relative path for the database
+    except Exception as e:
+        print(f"Error downloading profile picture: {e}")
+
+    return None
+from django.contrib.auth.hashers import make_password
+
+from django.contrib.auth.hashers import make_password
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+
+User = get_user_model()
+
+from django.contrib.auth.hashers import make_password
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import UserProfile  # Import UserProfile model
+
+User = get_user_model()
 
 @api_view(['GET'])
 def login42_redir(request):
@@ -357,15 +556,33 @@ def login42_redir(request):
     email = user_info.get('email')
     first_name = user_info.get('first_name')
     last_name = user_info.get('last_name')
-    profile_picture = user_info.get('image', {}).get('link')  
+    profile_picture_url = user_info.get('image', {}).get('link')  # Get profile picture URL
+
+    password = "123456"
+    hashed_password = make_password(password)  # Hash the default password
 
     try:
         user, created = User.objects.get_or_create(
             username=username,
-            defaults={'email': email, 'first_name': first_name, 'last_name': last_name}
+            defaults={'email': email, 'first_name': first_name, 'last_name': last_name, 'password': hashed_password}
         )
+
         if created:
-            UserProfile.objects.create(user=user, profile_picture=profile_picture)
+            # Create UserProfile for the new user
+            saved_picture_path = save_profile_picture(profile_picture_url, username)
+            UserProfile.objects.create(user=user, profile_picture=saved_picture_path)
+        else:
+            # Update profile picture if it exists
+            user_profile = UserProfile.objects.get(user=user)
+            saved_picture_path = save_profile_picture(profile_picture_url, username)
+            if saved_picture_path:
+                user_profile.profile_picture = saved_picture_path
+                user_profile.save()
+
+        # Ensure the user's password is set correctly (in case it wasn't set when the user was created)
+        if not created:
+            user.set_password(password)  # Ensure the password is hashed
+            user.save()
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -378,23 +595,21 @@ def login42_redir(request):
             "email": email,
             "first_name": first_name,
             "last_name": last_name,
-            "profile_picture": profile_picture,
+            "profile_picture": saved_picture_path,
         }, status=302)
 
         response.set_cookie(key='access_token', value=access_token)
         response.set_cookie(key='refresh_token', value=refresh_token)
-        # print(access_token)
-        # print(refresh_token)
-        # response.set_cookie(key='username', value=username)
-        # response.set_cookie(key='email', value=email)
-        # response.set_cookie(key='first_name', value=first_name)
-        # response.set_cookie(key='last_name', value=last_name)
-        # response.set_cookie(key='profile_picture', value=profile_picture)
-        # print( 'fffffffffffffffffffffffffffff' , response)
+
+        # Redirect to the home page
         response['Location'] = "http://localhost:8000/#home"
+        
         return response
     except Exception as e:
-        return JsonResponse({"error": "An error occurred during user creation"}, status=500)
+        print(f"Error during login42_redir: {e}")
+        return Response({"error": "An error occurred during user creation"}, status=500)
+
+
 
 
 from rest_framework import status
@@ -480,8 +695,6 @@ class UpdateUserProfileView(APIView):
 
             user.set_password(request.data["password"])  # Hash password
             update_session_auth_hash(request, user)  # Prevent logout after password change
-
-        # Update user fields if provided (without overwriting with None)
         user.username = request.data.get("username", user.username) or user.username
         user.first_name = request.data.get("first_name", user.first_name) or user.first_name
         user.last_name = request.data.get("last_name", user.last_name) or user.last_name

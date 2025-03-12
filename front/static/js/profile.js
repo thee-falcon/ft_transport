@@ -37,10 +37,7 @@ class Profile extends HTMLElement {
                                <img id="player-profile-picture" 
                                src=${profilePicture}>
                            </div>
-                           <div >
-                                <input type="file" id="profilePictureInput" accept="image/*">
-                                <button id="change" class="omar-gameStatus">Edit</button>
-                                </div>
+    
                            <div class="omar-info">
                                <div id="player-won" class="omar-info-won">
                                    games won: ${matches_won}

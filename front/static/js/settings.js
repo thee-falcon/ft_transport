@@ -4,92 +4,9 @@ class SettingsPage extends HTMLElement {
         const profilePicture = storedUserData.profile_picture || "media/Screen Shot 2024-10-02 at 2.05.14 AM.png";
 
         this.innerHTML = `
-        <style>
-        /* ✅ Full-Screen Overlay */
-        .settings-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-        
-        /* ✅ Full-Screen Overlay */
-        .settings-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-        }
-        
-        /* ✅ Settings Panel */
-        .settings-content {
-            background: #8e9095;;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-        }
-        
-        .settings-content input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        .settings-content button {
-            padding: 10px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .omarr-imgConatinerr {
-            height: 150px;
-            overflow: hidden;
-            border-radius: 32px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .omarr-imgConatinerr img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 32px;
-            object-fit: cover; /* Adjust this if needed */
-        }
-        
-
-        #save-settings {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        #close-settings {
-            background-color: #f44336;
-            color: white;
-        }
-    </style>
-
+            
         <!-- ✅ Settings Panel -->
-
+        <link rel="stylesheet" href="static/css/profile.css">
         <div id="settings-overlay" class="settings-overlay">
             <div class="settings-content">
                 <h2>Settings</h2>

@@ -97,7 +97,7 @@ class signin extends HTMLElement {
       try {
           const response = await fetch("http://localhost:8000/get_user_stats/", {
               method: "GET",
-              headers: {
+                  headers: {
                   "Authorization": `Bearer ${token}`,
                   "Content-Type": "application/json"
               },

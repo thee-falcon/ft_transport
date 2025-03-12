@@ -1,0 +1,355 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1B3E46;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    min-height: 100vh;
+    padding: 1rem;
+    font-family: "Bai Jamjuree", sans-serif;
+} 
+
+.omar-main-profile {
+    width: 100%;
+    max-width: 1400px;
+}
+
+.omar-main-parentt {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 8px;
+    height: 100%;
+    width: 100%;
+    padding: clamp(1rem, 3vw, 2rem);
+}
+    
+.omar-div1 {
+    grid-column: span 3 / span 3;
+    grid-row: span 10 / span 10;
+    background-image: url("/media/Screen Shot 2024-10-02 at 2.10.41 AM.png");
+    background-size: cover;
+    background-position: center;
+    border-radius: 32px;
+    min-height: 300px;
+}
+
+.omar-div2 {
+    grid-column: span 6 / span 6;
+    grid-row: span 10 / span 10;
+    grid-column-start: 4;
+}
+
+.omar-parent-right {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    gap: clamp(10px, 2vw, 20px);
+    height: 100%;
+    width: 100%;
+    border: 3px solid #E5F690;
+    background-color: #EFF3DD;
+    padding: clamp(1rem, 3vw, 2rem);
+    border-radius: 32px;
+}
+
+.omar-div1-rightt {
+    grid-column: span 7 / span 7;
+    grid-row: span 5 / span 5;
+    border: 3px solid #E5F690;
+    border-radius: 32px;
+    background-color: #1B3E46;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    padding: 1rem;
+}
+
+.omar-div1-div1-rightt {
+    grid-column: span 2 / span 2;
+    grid-row: span 4 / span 4;
+    overflow: hidden;
+    border-radius: 32px;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.omar-div1-div1-rightt .omar-imgConatiner {
+    height: 150px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 32px;
+    margin-bottom: 20px;
+}
+
+.omar-div1-div1-rightt img {
+    width: 100%;
+    max-width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 32px;
+    border: 3px solid #E5F690;
+}
+
+.omar-div1-div1-rightt .omar-info {
+    font-family: "Bai Jamjuree", sans-serif;
+    text-transform: capitalize;
+    color: #E5F690;
+    font-weight: bold;
+    font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+    margin-top: auto;
+}
+
+.omar-info-won, .omar-info-lose {
+    margin-bottom: 8px;
+}
+
+.omar-div2-div1-right {
+    grid-column: span 3 / span 3;
+    grid-row: span 4 / span 4;
+    grid-column-start: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: start;
+    font-family: "Bai Jamjuree", sans-serif;
+    text-transform: capitalize;
+    color: #E5F690;
+    font-weight: bold;
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+}
+
+.omar-info-fullname {
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    margin-bottom: 0.5rem;
+}
+
+.omar-info-nickname {
+    font-size: clamp(0.9rem, 1.3vw, 1.2rem);
+    margin-bottom: 0.5rem;
+}
+
+.omar-info-level {
+    font-size: clamp(0.9rem, 1.3vw, 1.2rem);
+    margin-bottom: 0.5rem;
+}
+
+.omar-info-description {
+    font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+}
+
+.dash-card44 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    border: 3px solid #E5F690;
+    height: 60%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.dash-statistics-graphss {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #EFF3DD;
+    height: 100%;
+    min-height: 300px;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.dash-statistics-graphss canvas {
+    width: 100%;
+    max-height: 150px;
+    margin: 10px 0;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1200px) {
+    .omar-main-parentt {
+        padding: 1.5rem;
+        gap: 15px;
+    }
+    
+    .omar-div2-div1-right {
+        font-size: 1.1rem;
+    }
+    
+    .dash-statistics-graphss {
+        min-height: 250px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .omar-main-parentt {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 20px;
+    }
+    
+    .omar-div1 {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        height: 250px;
+    }
+    
+    .omar-div2 {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+    
+    .omar-parent-right {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+    }
+    
+    .omar-div1-rightt {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        height: auto;
+    }
+    
+    .omar-div1-div1-rightt {
+        width: 40%;
+        margin-right: 20px;
+    }
+    
+    .omar-div2-div1-right {
+        width: 60%;
+        align-items: flex-start;
+    }
+    
+    .dash-card44 {
+        height: auto;
+    }
+    
+    .dash-statistics-graphss {
+        padding: 20px;
+    }
+    
+    .dash-statistics-graphss canvas {
+        margin: 15px 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .omar-main-parentt {
+        padding: 1rem;
+    }
+    
+    .omar-div1-rightt {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .omar-div1-div1-rightt {
+        width: 100%;
+        max-width: 200px;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .omar-div2-div1-right {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .dash-statistics-graphss canvas {
+        max-height: 130px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .omar-main-profile {
+        padding: 0.5rem;
+    }
+    
+    .omar-main-parentt {
+        padding: 0.8rem;
+        gap: 15px;
+    }
+    
+    .omar-parent-right {
+        padding: 1rem;
+        gap: 15px;
+    }
+    
+    .omar-div1 {
+        height: 200px;
+    }
+    
+    .omar-div1-rightt {
+        padding: 1rem;
+    }
+    
+    .omar-div1-div1-rightt .omar-imgConatiner {
+        height: 120px;
+    }
+    
+    .omar-div1-div1-rightt img {
+        height: 120px;
+    }
+    
+    .dash-statistics-graphss {
+        min-height: 220px;
+        padding: 10px;
+    }
+    
+    .dash-statistics-graphss canvas {
+        max-height: 100px;
+        margin: 10px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .omar-div1 {
+        height: 180px;
+    }
+    
+    .omar-div1-div1-rightt .omar-imgConatiner {
+        height: 100px;
+    }
+    
+    .omar-div1-div1-rightt img {
+        height: 100px;
+    }
+    
+    .omar-info-fullname {
+        font-size: 1.1rem;
+    }
+    
+    .omar-info-nickname,
+    .omar-info-level,
+    .omar-info-description {
+        font-size: 0.9rem;
+    }
+    
+    .omar-div1-div1-rightt .omar-info {
+        font-size: 0.8rem;
+    }
+    
+    .dash-statistics-graphss {
+        min-height: 200px;
+    }
+}
