@@ -39,24 +39,16 @@ class Gameoption extends HTMLElement {
 let invitebutton = document.getElementById("special-ping-pong");
         // console.log("Response:", allinvites);
         let sender = hasInviteForMe(username);
-        if(sender    != null)
+        console.log(sender);
+        if(sender != null)
         {
             invitebutton.disabled = false; // Enable the button
             invitebutton.classList.remove("blocked_button"); // Remove the blocked styles
             invitebutton.textContent = "accept invite"; // Change button text
         }
-        // // console.log("----------")
-        // console.log(hasInviteForMe("theswoord"))
-        invitebutton.addEventListener('click', function (event) {
+        invitebutton.addEventListener('click', async function (event) {
             event.preventDefault();
-            // console.log(window.location.hash);
-            // console.log(window.location.host);
-            // console.log(window.location.hostname);
-            // console.log(window.location.href);
-            // window.location.hash = "multiplayer";
-            // console.log(window.location.hash);
-
-                    const responsed = fetch("http://localhost:8000/accept_invite/", {
+                    const responsed = await fetch("http://localhost:8000/accept_invite/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -67,10 +59,14 @@ let invitebutton = document.getElementById("special-ping-pong");
             body: JSON.stringify({ sender_username: sender })
 
         });
-
-        });
+        
 
         
+
+        });
+        
+        // // console.log("----------")
+        // console.log(hasInviteForMe("theswoord"))
 
         function hasInviteForMe(myUsername) {
             try {

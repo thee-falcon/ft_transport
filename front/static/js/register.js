@@ -2,6 +2,7 @@ class signup extends HTMLElement {
  
   connectedCallback() {
     this.innerHTML = `
+    <link rel="stylesheet" href="static/css/style.css">
       <div class="contonair">
         <form id="signup-form">
           <h1>Sign Up</h1>

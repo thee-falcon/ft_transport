@@ -21,6 +21,10 @@ class NormalMode extends HTMLElement {
 
         this.gamestandby = this.gamestandby.bind(this);
         this.startgame = this.startgame.bind(this);
+        this.op = null;
+        this.me = null;
+        this.win =null;
+        this.lose= null;
         // this.hh = this.hh.bind(this);
     }
 
@@ -52,7 +56,11 @@ class NormalMode extends HTMLElement {
         // this.custoctx = this.custo.getContext('2d');
         // this.cont = this.canvas.getContext('2d');
         // this.custoDiv = document.querySelector('.customization');
+        
         this.storedUserData = JSON.parse(localStorage.getItem('userData'));
+        this.op = this.hasInviteForMe(this.storedUserData.username)
+        this.me = this.storedUserData.username;
+        // this.username = storedUserData.username;
 
 
         this.images = []; // Property to hold images
@@ -357,9 +365,12 @@ class NormalMode extends HTMLElement {
         // });
 
         // Draw scoreboard text
+        // const op = this.hasInviteForMe(this.storedUserData.username);
+        // console.log(this.hasInviteForMe(this.storedUserData.username));
+
         this.ctx.fillText(text, x, y);
         this.ctx.fillText(this.storedUserData.username, (this.board.width) / 8, this.board.height/6+30);
-        this.ctx.fillText(this.storedUserData.username, (this.board.width - this.board.width/3), this.board.height/6+30);
+        this.ctx.fillText(this.op, (this.board.width - this.board.width/3), this.board.height/6+30);
         this.ctx.fillText("0", (this.board.width) / 4, y);
         this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
         this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height/6);
@@ -371,6 +382,26 @@ class NormalMode extends HTMLElement {
         this.ctx.fillText("Blue Team", this.board.width - this.board.width/3, this.board.height/6);
         this.ctx.fillStyle = "#000000";
     }
+     hasInviteForMe(myUsername) {
+        try {
+          const invitesData = JSON.parse(localStorage.getItem('the-invites'));
+          
+          if (!invitesData || !invitesData.invites || !Array.isArray(invitesData.invites)) {
+            return null;
+          }
+          
+          // Find an invite where the receiver is you (myUsername) and you are the receiver
+          const invite = invitesData.invites.find(invite => 
+            invite.receiver === myUsername && invite.is_receiver === true
+          );
+          
+          // Return the sender's name if found, otherwise null
+          return invite ? invite.sender : null;
+        } catch (error) {
+          console.error("Error checking invites:", error);
+          return null;
+        }
+      }
     
     drawball() {
         this.cont.beginPath();
@@ -561,11 +592,15 @@ class NormalMode extends HTMLElement {
     // }
     async sendscoreandfinish(result) {
         const csrfToken = getCookie("csrftoken");
-        console.log(this.storedUserData.username)
-        console.log(getCookie("access_token"))
+        // console.log(this.storedUserData.username)
+        // console.log(getCookie("access_token"))
 
-        console.log("-----------")
-        console.log(csrfToken);
+        // console.log("-----------")
+        // console.log(csrfToken);
+        const username = this.storedUserData.username;
+        const loser_is = this.lose;
+        const winner_is = this.win;
+
         const response = await fetch("http://localhost:8000/update_game_result/", {
             method: "POST",
             headers: {
@@ -574,8 +609,25 @@ class NormalMode extends HTMLElement {
                 "X-CSRFToken": csrfToken
             },
             credentials: "include",
-            body: JSON.stringify({ result }) 
+            body: JSON.stringify({ 
+                winner: winner_is, 
+                loser: loser_is 
+            }) 
         });
+
+        // const response = await fetch("http://localhost:8000/update_game_result/", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Authorization": `Bearer ${accessToken}`, 
+        //         "X-CSRFToken": csrfToken
+        //     },
+        //     credentials: "include",
+        //     body: JSON.stringify({ 
+        //         winner: winner_is, 
+        //         loser: loser_is 
+        //     }) 
+        // });
         
         if (response.ok) {
             // Handle success (optional)
@@ -584,6 +636,42 @@ class NormalMode extends HTMLElement {
             // Handle error (optional)
             console.error("Failed to update score", response.statusText);
         }
+
+        const responsed = await fetch("http://localhost:8000/clean_invites/", {
+            method: "POST",  // Changed from GET to POST
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${getCookie("access_token")}`,
+              "X-CSRFToken": getCookie("csrftoken")
+            },
+            credentials: "include",
+            body: JSON.stringify({ username })  // This now works correctly with POST
+          });
+
+        // try {
+        //     const response = await fetch("http://localhost:8000/clean_invites/", {
+        //       method: "POST",  // Changed from GET to POST
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         "Authorization": `Bearer ${getCookie("access_token")}`,
+        //         "X-CSRFToken": getCookie("csrftoken")
+        //       },
+        //       credentials: "include",
+        //       body: JSON.stringify({ username })  // This now works correctly with POST
+        //     });
+            
+        //     if (response.ok) {
+        //       const data = await response.json();
+        //     //   localStorage.setItem('the-invites', JSON.stringify(data));
+        //       return data;
+        //     } else {
+        //       console.error("Failed to clean invites:", response.status);
+        //       return null;
+        //     }
+        //   } catch (error) {
+        //     console.error("Error cleaning invites:", error);
+        //     return null;
+        //   }
     
         window.location.hash = "home"; // Redirect after the request
     }
@@ -600,6 +688,9 @@ class NormalMode extends HTMLElement {
 
         if (this.scores.l_score > this.scores.r_score) {
             console.log("rb7o zr9in");
+
+            this.lose = this.me; // l3ks
+            this.win = this.op; // l3ks
             imagesToDraw = [
                 { img: this.images[1], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
                 // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
@@ -610,9 +701,10 @@ class NormalMode extends HTMLElement {
             this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
             
              this.ctx.fillStyle = "#000000";
-        
+            
             } else {
-
+                this.lose = this.op; // l3ks
+                this.win = this.me; // l3ks
             console.log("rb7o 7mrin");
             imagesToDraw = [
                 { img: this.images[0], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
@@ -656,3 +748,80 @@ class NormalMode extends HTMLElement {
 
 // Register the normal mode component
 customElements.define('normal-mode', NormalMode);
+
+
+// async function sendInvite(receiverUsername) {
+//     try {
+//         const response = await fetch("http://localhost:8000/send_invite/", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "Authorization": `Bearer ${getCookie("access_token")}`,
+//                 "X-CSRFToken": csrfToken
+//             },
+//             credentials: "include",
+//             body: JSON.stringify({ receiver_username: receiverUsername })
+//         });
+
+//         if (response.ok) {
+//             // Proceed to game screen
+//             window.location.hash = "normal";
+//             return true;
+//         } else {
+//             const errorData = await response.json();
+//             alert(errorData.error || "Failed to send invitation");
+//             return false;
+//         }
+//     } catch (error) {
+//         console.error("Invite sending failed", error);
+//         alert("Failed to send invitation. Please try again.");
+//         return false;
+//     }
+// }
+
+// async function checkInvitationStatus() {
+//     try {
+//         const response = await fetch("http://localhost:8000/check_invitation_status/", {
+//             method: "GET",
+//             headers: {
+//                 "Authorization": `Bearer ${getCookie("access_token")}`,
+//                 "X-CSRFToken": csrfToken
+//             },
+//             credentials: "include"
+//         });
+
+//         const invitationStatus = await response.json();
+//         return invitationStatus;
+//     } catch (error) {
+//         console.error("Error checking invitation status:", error);
+//         return { bothAccepted: false, status: 'ERROR' };
+//     }
+// }
+
+// async function acceptInvite(senderUsername) {
+//     try {
+//         const response = await fetch("http://localhost:8000/accept_invite/", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "Authorization": `Bearer ${getCookie("access_token")}`,
+//                 "X-CSRFToken": csrfToken
+//             },
+//             credentials: "include",
+//             body: JSON.stringify({ sender_username: senderUsername })
+//         });
+
+//         if (response.ok) {
+//             return true;
+//         } else {
+//             const errorData = await response.json();
+//             alert(errorData.error || "Failed to accept invitation");
+//             return false;
+//         }
+//     } catch (error) {
+//         console.error("Invite acceptance failed", error);
+//         alert("Failed to accept invitation. Please try again.");
+//         return false;
+//     }
+// }
+//---------------------------------------------------------------------------------------------------

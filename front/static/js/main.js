@@ -55,7 +55,7 @@ async function navigate() {
 	 const navbarContainer = document.getElementById('navbar-container');
     
 	 // Only show the navbar if the route is not 'home'
-	 if (path === 'home' || path === 'signin') {
+	 if (path === 'home' || path === 'signin'|| path === 'signup') {
 		 navbarContainer.innerHTML = '';
 	 } else {
 		 // Optional: avoid re-rendering if it already exists

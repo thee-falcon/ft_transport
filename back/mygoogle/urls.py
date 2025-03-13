@@ -26,8 +26,9 @@ urlpatterns = [
     path('refresh-token/', RefreshTokenView.as_view(), name='refresh-token'),
     path('update-profile/', UpdateUserProfileView.as_view(), name='update-profile'),
     path("search-users/", search_users, name="search_users"),
-    path('get_invites/' , views.get_invites),
     path('check_invitation_status/' , views.check_invitation_status),
     path('accept_invite/' , views.accept_invite),
     path('send_invite/' , views.send_invite),
+    path('get_invites/' , views.get_invites),
+    path('clean_invites/' , views.clean_expired_invitations),
     ]

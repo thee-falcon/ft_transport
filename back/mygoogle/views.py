@@ -194,35 +194,48 @@ def search_users(request):
  
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def update_game_result(req ):
-    user_profile = get_object_or_404(UserProfile, user=req.user)
-    # user_2 = get_object_or_404(UserProfile, user=req.user1)
-    # Extract the result from the request body
-    result = req.data.get('result')  # Expecting 'win' or 'lose'
+def update_game_result(req):
+    # Extract winner and loser usernames from the request
+    winner_username = req.data.get('winner')
+    loser_username = req.data.get('loser')
 
-    if result == 'win':
-        user_profile.matches_won += 1
-        # user_profile.matches_count += 1
-    elif result == 'lose':
-        user_profile.matches_lost += 1
-        # user_profile.matches_count += 1
-    else:
-        return Response({"error": "Invalid result value. Use 'win' or 'lose'."}, status=status.HTTP_400_BAD_REQUEST)
+    if not winner_username or not loser_username:
+        return Response({"error": "Both 'winner' and 'loser' fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    user_profile.matches_count += 1
+    if winner_username == loser_username:
+        return Response({"error": "Winner and loser cannot be the same user."}, status=status.HTTP_400_BAD_REQUEST)
 
-    user_profile.save()
+    # Fetch user profiles
+    winner_profile = get_object_or_404(UserProfile, user__username=winner_username)
+    loser_profile = get_object_or_404(UserProfile, user__username=loser_username)
+
+    # Update winner stats
+    winner_profile.matches_won += 1
+    winner_profile.matches_count += 1
+    winner_profile.save()
+
+    # Update loser stats
+    loser_profile.matches_lost += 1
+    loser_profile.matches_count += 1
+    loser_profile.save()
 
     response_data = {
-        "nickname": user_profile.nickname,
-        "matches_won": user_profile.matches_won,
-        "matches_lost": user_profile.matches_lost,
-        "matches_count": user_profile.matches_count,
+        "winner": {
+            "nickname": winner_profile.nickname,
+            "matches_won": winner_profile.matches_won,
+            "matches_lost": winner_profile.matches_lost,
+            "matches_count": winner_profile.matches_count,
+        },
+        "loser": {
+            "nickname": loser_profile.nickname,
+            "matches_won": loser_profile.matches_won,
+            "matches_lost": loser_profile.matches_lost,
+            "matches_count": loser_profile.matches_count,
+        }
     }
-    print(user_profile.nickname)
-    print(req.data.get('nickname'))
 
     return Response(response_data, status=status.HTTP_200_OK)
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -398,6 +411,52 @@ def get_invites(request):
         'invites': invites_data
     }, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def clean_expired_invitations(request):
+    """
+    Delete ONLY expired or accepted invitations for a specific user
+    """
+    username = request.data.get('username')
+    
+    if not username:
+        return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Delete ONLY accepted invitations
+    accepted_invitations = Invitation.objects.filter(
+        Q(sender__username=username) | Q(receiver__username=username),
+        status='ACCEPTED'
+    )
+    
+    accepted_deleted = accepted_invitations.count()
+    accepted_invitations.delete()
+    
+    # Delete ONLY expired invitations
+    expired_invitations = Invitation.objects.filter(
+        Q(sender__username=username) | Q(receiver__username=username),
+        status='EXPIRED'
+    )
+    
+    expired_deleted = expired_invitations.count()
+    expired_invitations.delete()
+    
+    # Get remaining invitations for this user to return
+    remaining_invitations = Invitation.objects.filter(
+        Q(sender__username=username) | Q(receiver__username=username)
+    ).select_related('sender', 'receiver')
+    
+    invites_data = [{
+        'id': invite.id,
+        'sender': invite.sender.username,
+        'receiver': invite.receiver.username,
+        'status': invite.status,
+        'created_at': invite.created_at
+    } for invite in remaining_invitations]
+    
+    return Response({
+        'message': f'Deleted {accepted_deleted} accepted and {expired_deleted} expired invitations.',
+        'invitations': invites_data
+    })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

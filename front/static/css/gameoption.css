@@ -25,7 +25,7 @@ body {
 
 .container .glass {
     position: relative ;
-    width: 150px ; 
+    width: 250px ; 
     display: flex;
     flex-direction: row;
     aspect-ratio: 3 / 4 ;
