@@ -12,7 +12,14 @@ class Multiplayer extends HTMLElement {
         this.RIGHT = 1;
         this.RESET_DELAY = 1000; // 3000 mzyana
         
-        console.log(getCookie('username'));
+        this.countdownActive = false;
+        this.countdownValue = 3;
+        this.countdownSound = new Audio('../media/beep.mp3'); // Add sound files
+        this.goSound = new Audio('../media/go.mp3');
+
+        // this.gamestandby = this.gamestandby.bind(this);
+        this.startgame = this.startgame.bind(this);
+        // console.log(getCookie('username'));
         // Initialize null properties that will be set later
         this.canvas = null;
         this.board = null;
@@ -67,6 +74,8 @@ class Multiplayer extends HTMLElement {
         };
         
         // Bind methods to maintain 'this' context
+        this.handleStartButtonClick = this.handleStartButtonClick.bind(this);
+
         this.gameLoop = this.gameLoop.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
@@ -77,7 +86,30 @@ class Multiplayer extends HTMLElement {
         
         <link rel="stylesheet" href="static/css/test.css">
             <div class="board" id="boardd">
-                <canvas id="boardcanva"></canvas>
+            <canvas id="boardcanva"></canvas>
+            <div class="all" id="namess">
+            <div class="left">
+                <div class="info">
+                    <div class="user1">
+                        <label class="name1">
+                            team 1
+                        </label>
+                        <input type="text" class="input_player1">
+                    </div>
+                    <div class="user1">
+                        <label class="name1">
+                            team 2
+                        </label>
+                        <input type="text" class="input_player2">
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <button class="start_bt">
+                    START
+                </button>
+            </div>
+        </div>
                 <div class="game-area" id="game">
                     <canvas id="gamecanvas"></canvas>
                 </div>
@@ -89,6 +121,8 @@ class Multiplayer extends HTMLElement {
         `;
 
         this.initializeGame();
+        this.setupStartButton();
+
     }
         loadImages() {
         const imageSources = [
@@ -115,6 +149,9 @@ class Multiplayer extends HTMLElement {
         this.custoctx = this.custo.getContext('2d');
         this.cont = this.canvas.getContext('2d');
         this.finish = document.getElementById("finish");
+        this.finishinng = document.getElementById("finishing");
+        this.aceptiti = document.getElementById("acceptit");
+        this.names =  document.getElementById("namess");
         this.custoDiv.style.display = 'none'
 
 //         const canvasWidth = this.custo.width; // Get the width of the canvas
@@ -155,12 +192,69 @@ class Multiplayer extends HTMLElement {
 
         // Start game loop
         this.drawBoard();
-        requestAnimationFrame(this.gameLoop);
+        // requestAnimationFrame(this.gameLoop);
     }
     
     setupEventListeners() {
         document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('keyup', this.handleKeyUp);
+    }
+
+    setupStartButton() {
+        const startButton = this.querySelector('.start_bt');
+        if (startButton) {
+            startButton.addEventListener('click', this.handleStartButtonClick);
+        }
+    }
+
+
+
+    updateInputFields() {
+        const player1Input = this.querySelector('.input_player1');
+        const player2Input = this.querySelector('.input_player2');
+
+        if (this.is_tournament) {
+            const nextMatchPlayers = JSON.parse(localStorage.getItem("nextMatch"));
+
+            player1Input.value = this.nextMatchPlayer[0];
+            player2Input.value = this.nextMatchPlayer[1];
+            player1Input.readOnly = true;
+            player2Input.readOnly = true;
+            player1Input.style.backgroundColor = '#e0e0e0';
+            player2Input.style.backgroundColor = '#e0e0e0';
+            player1Input.style.color = '#808080';
+            player2Input.style.color = '#808080';
+        } else {
+            player1Input.readOnly = false;
+            player2Input.readOnly = false;
+            player1Input.style.backgroundColor = '';
+            player2Input.style.backgroundColor = '';
+            player1Input.style.color = '';
+            player2Input.style.color = '';
+        }
+    }
+
+    handleStartButtonClick() {
+        const player1Input = this.querySelector('.input_player1');
+        const player2Input = this.querySelector('.input_player2');
+
+        
+
+        if (player1Input && player2Input) {
+            this.me = player1Input.value;
+            this.op = player2Input.value;
+
+            if (!this.me || !this.op) {
+                alert("Please enter names for both players.");
+                return;
+            }
+
+            console.log("Player 1:", this.me);
+            console.log("Player 2:", this.op);
+            this.names.style.display = 'none';
+
+            this.startgame();
+        }
     }
     
     handleKeyDown(e) {
@@ -266,6 +360,59 @@ class Multiplayer extends HTMLElement {
             this.paddles.right2.y = Math.min((3 * this.canvas.height / 4 - this.paddles.height / 2), 
                 this.paddles.right2.y + this.PADDLE_SPEED);
         }
+    }
+
+    startCountdown() {
+        this.countdownActive = true;
+        this.countdownValue = 3;
+        this.playCountdownSound();
+        if (this.countdownActive) {
+            this.cont.fillStyle = '#e4c1b9';
+            this.cont.font = 'bold 150px Bai Jamjuree';
+            this.cont.textAlign = 'center';
+            this.cont.textBaseline = 'middle';
+            this.cont.fillText(this.countdownValue.toString(),
+                this.canvas.width / 2,
+                this.canvas.height / 2);
+        }
+        const countdownInterval = setInterval(() => {
+            this.countdownValue--;
+
+            if (this.countdownValue > 0) {
+                this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.cont.fillText(this.countdownValue.toString(),
+                    this.canvas.width / 2,
+                    this.canvas.height / 2);
+                this.playCountdownSound();
+            } else {
+                this.playGoSound();
+                this.countdownActive = false;
+                clearInterval(countdownInterval);
+                this.gameLoop(); // Start actual game loop
+            }
+        }, 1000);
+    }
+    playCountdownSound() {
+        if (this.countdownSound) {
+            this.countdownSound.currentTime = 0;
+            this.countdownSound.play();
+        }
+    }
+
+    playGoSound() {
+        if (this.goSound) {
+            this.goSound.currentTime = 0;
+            this.goSound.play();
+        }
+    }
+
+
+    startgame() {
+        this.startCountdown();
+
+
+        // this.gameLoop();
     }
     
     drawRoundedRect(ctx, x, y, width, height, borderRadius) {
@@ -547,8 +694,8 @@ class Multiplayer extends HTMLElement {
 
         // Draw scoreboard text
         this.ctx.fillText(text, x, y);
-        this.ctx.fillText(getCookie('username'), (this.board.width) / 8, this.board.height/6+30);
-        this.ctx.fillText(getCookie('username'), (this.board.width - this.board.width/3), this.board.height/6+30);
+        this.ctx.fillText("getCookie('username')", (this.board.width) / 8, this.board.height/6+30); // hadi li khasha tbdl
+        this.ctx.fillText("Stong -- strong", (this.board.width - this.board.width/3), this.board.height/6+30);
         this.ctx.fillText("0", (this.board.width) / 4, y);
         this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
         this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height/6);
@@ -576,15 +723,15 @@ class Multiplayer extends HTMLElement {
     }
     async sendscoreandfinish()
     {
-        const response = await fetch("http://localhost:8000/set_user_stats/", {
-            method: "POST",
-            headers: {
+        // const response = await fetch("http://localhost:8000/set_user_stats/", {
+        //     method: "POST",
+        //     headers: {
 
-            },
-            credentials: "include"
-        });
+        //     },
+        //     credentials: "include"
+        // });
         window.location.hash = "home"
-        console.log("miiiiw");
+        // console.log("miiiiw");
     }
     drawEndgame() {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);

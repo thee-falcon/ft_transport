@@ -1,4 +1,4 @@
-class NormalMode extends HTMLElement {
+class OfflineMode extends HTMLElement {
     constructor() {
         super();
         this.canvas = null;
@@ -23,38 +23,71 @@ class NormalMode extends HTMLElement {
         this.startgame = this.startgame.bind(this);
         this.op = null;
         this.me = null;
-        this.win =null;
-        this.lose= null;
+        this.win = null;
+        this.lose = null;
+        this.is_tournament = null;
+        this.handleStartButtonClick = this.handleStartButtonClick.bind(this);
         // this.hh = this.hh.bind(this);
     }
-
+   async type_definer()
+    {
+        this.nextMatchPlayer = JSON.parse(localStorage.getItem("nextMatch"));
+    }
+    
     async connectedCallback() {
         this.innerHTML = `
 		<link rel="stylesheet" href="static/css/test.css">
-            <div class="board" id="boardd">
-                <canvas id="boardcanva"></canvas>
+        <div class="board" id="boardd">
+        <canvas id="boardcanva"></canvas>
+        <div class="all" id="namess">
+        <div class="left">
+            <div class="info">
+                <div class="user1">
+                    <label class="name1">
+                        Player 1
+                    </label>
+                    <input type="text" class="input_player1">
+                </div>
+                <div class="user1">
+                    <label class="name1">
+                        Player 2
+                    </label>
+                    <input type="text" class="input_player2">
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <button class="start_bt">
+                START
+            </button>
+        </div>
+    </div>
                 <div class="game-area" id="game">
                     <canvas id="gamecanvas"></canvas>
                     </div>
                     <div class="customization" id="custo">
                     <button class="finish-button"id="finish">Finish Match</button>
                     <canvas id="custocanvas"></canvas>
+                    
                 </div>
             </div>
         `;
 
-        
-    this.initializeGame();
+        await this.type_definer();
+        this.initializeGame();
+        this.setupStartButton();
+        this.type_definer();
+        this.updateInputFields();
     }
 
-     initializeGame() {
+    initializeGame() {
 
-        
-        this.storedUserData = JSON.parse(localStorage.getItem('userData'));
-        this.me = this.storedUserData.username;
+
+        // this.storedUserData = JSON.parse(localStorage.getItem('userData'));
+        // this.me = this.storedUserData.username;
         // this.op = await this.hasInviteForMe(this.me)
-        this.op = localStorage.getItem('opponentUsername');
-        console.log(this.op);
+        // this.op = localStorage.getItem('opponentUsername');
+        // console.log(this.op);
 
 
         this.images = []; // Property to hold images
@@ -72,13 +105,13 @@ class NormalMode extends HTMLElement {
         this.finish = document.getElementById("finish");
         this.finishinng = document.getElementById("finishing");
         this.aceptiti = document.getElementById("acceptit");
-
+        this.names =  document.getElementById("namess");
 
         this.custoDiv.style.display = 'none'
         // Hide customization div
 
         // Set up canvas dimensions
-        this.finished=false;
+        this.finished = false;
 
         this.canvas.height = 480;
         this.canvas.width = 1072;
@@ -94,7 +127,7 @@ class NormalMode extends HTMLElement {
         this.LEFT = -1;
         this.RIGHT = 1;
         this.round_winner = Math.random() < 0.5 ? (Math.random() * -1) : (Math.random() * 1);
-        
+
         // Initialize paddle properties
         this.paddle_height = 200;
         this.paddle_width = 15;
@@ -133,6 +166,62 @@ class NormalMode extends HTMLElement {
         this.gamestandby()
         // Start game loop
     }
+    setupStartButton() {
+        const startButton = this.querySelector('.start_bt');
+        if (startButton) {
+            startButton.addEventListener('click', this.handleStartButtonClick);
+        }
+    }
+
+
+
+    updateInputFields() {
+        const player1Input = this.querySelector('.input_player1');
+        const player2Input = this.querySelector('.input_player2');
+
+        if (this.is_tournament) {
+            const nextMatchPlayers = JSON.parse(localStorage.getItem("nextMatch"));
+
+            player1Input.value = this.nextMatchPlayer[0];
+            player2Input.value = this.nextMatchPlayer[1];
+            player1Input.readOnly = true;
+            player2Input.readOnly = true;
+            player1Input.style.backgroundColor = '#e0e0e0';
+            player2Input.style.backgroundColor = '#e0e0e0';
+            player1Input.style.color = '#808080';
+            player2Input.style.color = '#808080';
+        } else {
+            player1Input.readOnly = false;
+            player2Input.readOnly = false;
+            player1Input.style.backgroundColor = '';
+            player2Input.style.backgroundColor = '';
+            player1Input.style.color = '';
+            player2Input.style.color = '';
+        }
+    }
+
+    handleStartButtonClick() {
+        const player1Input = this.querySelector('.input_player1');
+        const player2Input = this.querySelector('.input_player2');
+
+        
+
+        if (player1Input && player2Input) {
+            this.me = player1Input.value;
+            this.op = player2Input.value;
+
+            if (!this.me || !this.op) {
+                alert("Please enter names for both players.");
+                return;
+            }
+
+            console.log("Player 1:", this.me);
+            console.log("Player 2:", this.op);
+            this.names.style.display = 'none';
+
+            this.startgame();
+        }
+    }
     // async hh()
     // {
     //     const responsed = await fetch("http://localhost:8000/accept_invite/", {
@@ -149,17 +238,16 @@ class NormalMode extends HTMLElement {
 
     // }
 
-    async gamestandby()
-    {
+    async gamestandby() {
         // let imagesToDraw;
 
-        this.cont.fillStyle = "#e4c1b9";
-        this.cont.font = "24px Bai Jamjuree";
-        this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.cont.fillText("waiting for players to join ...", (this.canvas.width - this.cont.measureText("waiting for players to join ...").width) / 2, this.canvas.height/4);
-                // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
-        
-        this.cont.fillStyle = "#000000";
+        // this.cont.fillStyle = "#e4c1b9";
+        // this.cont.font = "24px Bai Jamjuree";
+        // this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.cont.fillText("waiting for players to join ...", (this.canvas.width - this.cont.measureText("waiting for players to join ...").width) / 2, this.canvas.height/4);
+        //         // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
+
+        // this.cont.fillStyle = "#000000";
         // await 
         // const responsed = await fetch("http://localhost:8000/send_invite/", {
         //     method: "POST",
@@ -174,36 +262,36 @@ class NormalMode extends HTMLElement {
         // });
 
 
-        this.checkInvitationTimeout = setTimeout(() => {
-            // alert("The other player did not accept the invitation in time. Redirecting to home.");
-            clearInterval(this.invitationCheckInterval);
+        // this.checkInvitationTimeout = setTimeout(() => {
+        //     // alert("The other player did not accept the invitation in time. Redirecting to home.");
+        //     clearInterval(this.invitationCheckInterval);
 
-            window.location.hash = "home";
-        }, 30000);
-        
-            this.invitationCheckInterval = setInterval(async () => {
-                const response = await fetch("http://localhost:8000/check_invitation_status/", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${getCookie("access_token")}`, 
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
-                    credentials: "include"
-                });
-        
-                const invitationStatus = await response.json();
-                console.log(JSON.stringify(invitationStatus, null, 2));
- 
+        //     window.location.hash = "home";
+        // }, 30000);
 
-                if (invitationStatus.bothAccepted) {
-                    clearTimeout(this.checkInvitationTimeout);
-                    clearInterval(this.invitationCheckInterval); 
-                    this.startgame(); 
-                }
-            }, 5000); 
-        
-        
-            
+        //     this.invitationCheckInterval = setInterval(async () => {
+        //         const response = await fetch("http://localhost:8000/check_invitation_status/", {
+        //             method: "GET",
+        //             headers: {
+        //                 "Authorization": `Bearer ${getCookie("access_token")}`, 
+        //                 "X-CSRFToken": getCookie("csrftoken")
+        //             },
+        //             credentials: "include"
+        //         });
+
+        //         const invitationStatus = await response.json();
+        //         console.log(JSON.stringify(invitationStatus, null, 2));
+
+
+        //         if (invitationStatus.bothAccepted) {
+        //             clearTimeout(this.checkInvitationTimeout);
+        //             clearInterval(this.invitationCheckInterval); 
+        //             this.startgame(); 
+        //         }
+        //     }, 5000); 
+
+
+
         // imagesToDraw = [
         //     { img: this.images[0], x: (this.canvas.width / 2) - (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
         //     { img: this.images[1], x: (this.canvas.width / 2) + (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
@@ -217,7 +305,7 @@ class NormalMode extends HTMLElement {
         //     this.cont.clip();
         //     this.cont.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
         //     this.cont.restore();
-            
+
         // });
 
     }
@@ -229,20 +317,20 @@ class NormalMode extends HTMLElement {
             this.cont.fillStyle = '#e4c1b9';
             this.cont.font = 'bold 150px Bai Jamjuree';
             this.cont.textAlign = 'center';
-            this.cont.textBaseline = 'middle'; 
-            this.cont.fillText(this.countdownValue.toString(), 
-                this.canvas.width/2, 
-                this.canvas.height/2);
+            this.cont.textBaseline = 'middle';
+            this.cont.fillText(this.countdownValue.toString(),
+                this.canvas.width / 2,
+                this.canvas.height / 2);
         }
         const countdownInterval = setInterval(() => {
             this.countdownValue--;
-            
+
             if (this.countdownValue > 0) {
                 this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                this.cont.fillText(this.countdownValue.toString(), 
-                this.canvas.width/2, 
-                this.canvas.height/2);
+                this.cont.fillText(this.countdownValue.toString(),
+                    this.canvas.width / 2,
+                    this.canvas.height / 2);
                 this.playCountdownSound();
             } else {
                 this.playGoSound();
@@ -267,9 +355,10 @@ class NormalMode extends HTMLElement {
     }
 
 
-    startgame()
-    {
+    startgame() {
+        
         this.startCountdown();
+        // this.drawBoard();
 
 
         // this.gameLoop();
@@ -298,24 +387,24 @@ class NormalMode extends HTMLElement {
         }
         return false;
     }
-    
+
     updatePaddles() {
         const paddleSpeed = 10;
-    
+
         if (this.isRightUp) {
-            this.right_paddleY = Math.max((this.paddle_height / 2)+5, this.right_paddleY - paddleSpeed);
+            this.right_paddleY = Math.max((this.paddle_height / 2) + 5, this.right_paddleY - paddleSpeed);
         }
         if (this.isRightDown) {
-            this.right_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-5, this.right_paddleY + paddleSpeed);
+            this.right_paddleY = Math.min((this.canvas.height - this.paddle_height / 2) - 5, this.right_paddleY + paddleSpeed);
         }
         if (this.isLeftW) {
-            this.left_paddleY = Math.max((this.paddle_height / 2)+5, this.left_paddleY - paddleSpeed);
+            this.left_paddleY = Math.max((this.paddle_height / 2) + 5, this.left_paddleY - paddleSpeed);
         }
         if (this.isLeftS) {
-            this.left_paddleY = Math.min((this.canvas.height - this.paddle_height / 2)-5, this.left_paddleY + paddleSpeed);
+            this.left_paddleY = Math.min((this.canvas.height - this.paddle_height / 2) - 5, this.left_paddleY + paddleSpeed);
         }
     }
-    
+
     draw() {
         this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.cont.fillStyle = '#E5F690FF';
@@ -324,17 +413,19 @@ class NormalMode extends HTMLElement {
         this.drawRoundedRect(this.cont, this.right_paddleX, this.right_paddleY - this.paddle_height / 2, this.paddle_width, this.paddle_height, 8);
         this.draw_board();
     }
-    
+
     draw_board() {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);
         this.ctx.font = "Bold 40px 'Bai Jamjuree'";
-        
+
         // Draw title text
         const text = "Match score";
         const textWidth = this.ctx.measureText(text).width;
         const x = (this.board.width - textWidth) / 2;
         const y = this.board.height - 90;
-        
+
+        const left_scorestring = this.scores.l_score.toString();
+        const right_scorestring = this.scores.r_score.toString();
         // Set up player images
         // const imageSize = 90;
         // const images = [
@@ -363,47 +454,60 @@ class NormalMode extends HTMLElement {
         // console.log(this.hasInviteForMe(this.storedUserData.username));
 
         this.ctx.fillText(text, x, y);
-        this.ctx.fillText(this.storedUserData.username, (this.board.width) / 8, this.board.height/6+30);
-        this.ctx.fillText(this.op, (this.board.width - this.board.width/3), this.board.height/6+30);
-        this.ctx.fillText("0", (this.board.width) / 4, y);
-        this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
-        this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height/6);
-        
+        this.ctx.fillText(this.me, (this.board.width) / 8, this.board.height / 6 + 30);
+        this.ctx.fillText(this.op, (this.board.width - this.board.width / 3), this.board.height / 6 + 30);
+        this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
+        this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
+        this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height / 6);
+
         // Draw team names with colors
         this.ctx.fillStyle = "#FF0000";
-        this.ctx.fillText("Red Team", this.board.width/8, this.board.height/6);
+        this.ctx.fillText("Red Team", this.board.width / 8, this.board.height / 6);
         this.ctx.fillStyle = "#0000FF";
-        this.ctx.fillText("Blue Team", this.board.width - this.board.width/3, this.board.height/6);
+        this.ctx.fillText("Blue Team", this.board.width - this.board.width / 3, this.board.height / 6);
         this.ctx.fillStyle = "#000000";
     }
     async hasInviteForMe(myUsername) { // null
         try {
-          const invitesData = await JSON.parse(localStorage.getItem('the-invites'));
-          
-          if (!invitesData || !invitesData.invites || !Array.isArray(invitesData.invites)) {
-            return null;
-          }
-          
-          // Find an invite where the receiver is you (myUsername) and you are the receiver
-          const invite = invitesData.invites.find(invite => 
-            invite.receiver === myUsername && invite.is_receiver === true
-          );
-          
-          // Return the sender's name if found, otherwise null
-          return invite ? invite.sender : null;
+            const invitesData = await JSON.parse(localStorage.getItem('the-invites'));
+
+            if (!invitesData || !invitesData.invites || !Array.isArray(invitesData.invites)) {
+                return null;
+            }
+
+            // Find an invite where the receiver is you (myUsername) and you are the receiver
+            const invite = invitesData.invites.find(invite =>
+                invite.receiver === myUsername && invite.is_receiver === true
+            );
+
+            // Return the sender's name if found, otherwise null
+            return invite ? invite.sender : null;
         } catch (error) {
-          console.error("Error checking invites:", error);
-          return null;
+            console.error("Error checking invites:", error);
+            return null;
         }
-      }
-    
+    }
+    drawScore() {
+        const y = this.board.height - 90;
+        
+        // Clear previous scores
+        this.ctx.clearRect(this.board.width/4, y-40, 100, 100);
+        this.ctx.clearRect(this.board.width - this.board.width/4, y-40, 100, 100);
+
+        // Draw updated scores
+        // const left_scorestring = this.scores.l_score.toString();
+        // const right_scorestring = this.scores.r_score.toString();
+        // this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
+        // this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
+    }
+
     drawball() {
         this.cont.beginPath();
         this.cont.arc(this.ballx, this.bally, this.radius, 0, Math.PI * 2);
         this.cont.fill();
         this.cont.closePath();
     }
-    
+
     drawRoundedRect(ctx, x, y, width, height, borderRadius) {
         ctx.beginPath();
         ctx.moveTo(x + borderRadius, y); // Start at the top-left corner
@@ -418,7 +522,7 @@ class NormalMode extends HTMLElement {
         ctx.closePath();
         ctx.fill(); // Fill the rounded rectangle
     }
-    
+
     reset_ball() {
         this.lastResetTime = performance.now(); // Save the current time
         this.isResetting = true; // Set the resetting state
@@ -443,11 +547,10 @@ class NormalMode extends HTMLElement {
         return this.imageLoadedCount === this.imageSources.length;
     }
 
-    endgame()
-    {
+    endgame() {
         this.finished = true;
     }
-    
+
     update() {
 
         if (this.countdownActive) {
@@ -463,21 +566,20 @@ class NormalMode extends HTMLElement {
                 this.right_paddleY = this.canvas.height / 2;
                 this.paddle_height = 200;
                 // this.streak = 0;
-    
+
                 let randomAngleDegrees = Math.random() < 0.5 ? Math.random() * 30 - 30 : Math.random() * 30;
                 let randomAngleRadians = randomAngleDegrees * (Math.PI / 180);
                 const direction = this.round_winner;
-    
+
                 this.ballspeedX = direction * this.ballspeed * Math.cos(randomAngleRadians);
                 this.ballspeedY = this.ballspeed * Math.sin(randomAngleRadians);
                 this.isResetting = false; // Reset the state
                 this.custoDiv.style.display = 'none';
-    
+
             }
             return;
         }
-        else if(this.finished)
-        {
+        else if (this.finished) {
             return (1);
         }
         // document.addEventListener('keydown', (e) => {
@@ -486,48 +588,50 @@ class NormalMode extends HTMLElement {
         //     if (e.code === "KeyW") this.isLeftW = true;
         //     if (e.code === "KeyS") this.isLeftS = true;
         // });
-    
+
         // document.addEventListener('keyup', (e) => {
         //     if (e.code === "ArrowUp") this.isRightUp = false;
         //     if (e.code === "ArrowDown") this.isRightDown = false;
         //     if (e.code === "KeyW") this.isLeftW = false;
         //     if (e.code === "KeyS") this.isLeftS = false;
         // });
-    
+
         this.ballx += this.ballspeedX;
         this.bally += this.ballspeedY;
-    
-        
+
+
         if (this.ballx + this.radius >= this.canvas.width) {
             this.scores.increment_rscore();
             this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
 
-            if(this.scores.get_total >=5 ){
+            if (this.scores.get_total >= 5) {
                 this.endgame();
 
             }
             this.round_winner = this.RIGHT;
             this.reset_ball();
+            this.drawScore();
             return;
         }
         if (this.ballx + this.radius < 0) {
             this.scores.increment_lscore();
             this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
 
-            if(this.scores.get_total >=5 ){
+            if (this.scores.get_total >= 5) {
                 this.endgame();
             }
             this.round_winner = this.LEFT;
             this.reset_ball();
+            this.drawScore();
             return;
         }
-    
+
         if (this.bally + 1.5 * this.radius >= this.canvas.height) {
             this.bally = this.canvas.height - 1.5 * this.radius; // Reposition outside the boundary
             this.ballspeedY *= -1;
@@ -535,18 +639,18 @@ class NormalMode extends HTMLElement {
             this.bally = 1.5 * this.radius; // Reposition outside the boundary
             this.ballspeedY *= -1;
         }
-    
+
         if (this.ballx + this.radius >= this.right_paddleX && this.ballx - this.radius <= this.right_paddleX + this.paddle_width) {
             if (this.check_colision(this.right_paddleY)) {
                 this.ballx = this.right_paddleX - this.radius - this.paddle_width;
                 const relativeIntersectY = this.right_paddleY - this.bally;
                 const normalizedIntersectY = relativeIntersectY / (this.paddle_height / 2);
-    
+
                 const bounceAngle = normalizedIntersectY * 0.75;
                 this.ballspeedX = -this.ballspeed * Math.cos(bounceAngle);
                 this.ballspeedY = -this.ballspeed * Math.sin(bounceAngle);
                 this.streak++;
-    
+
                 if (this.ballspeed <= 15) {
                     this.ballspeed *= 1.1;
                 } else {
@@ -554,7 +658,7 @@ class NormalMode extends HTMLElement {
                 }
             }
         }
-    
+
         if (this.ballx + this.radius >= this.left_paddleX && this.ballx - this.radius <= this.left_paddleX + this.paddle_width) {
             if (this.check_colision(this.left_paddleY)) {
                 this.ballx = this.left_paddleX + this.paddle_width + this.radius;
@@ -564,7 +668,7 @@ class NormalMode extends HTMLElement {
                 this.ballspeedX = this.ballspeed * Math.cos(bounceAngle);
                 this.ballspeedY = -this.ballspeed * Math.sin(bounceAngle);
                 this.streak++;
-    
+
                 if (this.ballspeed <= 15) {
                     this.ballspeed *= 1.1;
                 } else {
@@ -585,72 +689,73 @@ class NormalMode extends HTMLElement {
     //     window.location.hash = "home"
     // }
     async sendscoreandfinish(result) {
-        const csrfToken = getCookie("csrftoken");
-        // console.log(this.storedUserData.username)
-        // console.log(getCookie("access_token"))
+        // const csrfToken = getCookie("csrftoken");
+        // // console.log(this.storedUserData.username)
+        // // console.log(getCookie("access_token"))
 
-        // console.log("-----------")
-        // console.log(csrfToken);
-        const username = this.storedUserData.username;
-        const loser_is = this.lose;
-        const winner_is = this.win;
-
-        const response = await fetch("http://localhost:8000/update_game_result/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${getCookie("access_token")}`, 
-                "X-CSRFToken": csrfToken
-            },
-            credentials: "include",
-            body: JSON.stringify({ 
-                winner: winner_is, 
-                loser: loser_is 
-            }) 
-        });
+        // // console.log("-----------")
+        // // console.log(csrfToken);
+        // const username = this.storedUserData.username;
+        // const loser_is = this.lose;
+        // const winner_is = this.win;
 
         // const response = await fetch("http://localhost:8000/update_game_result/", {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json",
-        //         "Authorization": `Bearer ${accessToken}`, 
+        //         "Authorization": `Bearer ${getCookie("access_token")}`,
         //         "X-CSRFToken": csrfToken
         //     },
         //     credentials: "include",
-        //     body: JSON.stringify({ 
-        //         winner: winner_is, 
-        //         loser: loser_is 
-        //     }) 
+        //     body: JSON.stringify({
+        //         winner: winner_is,
+        //         loser: loser_is
+        //     })
         // });
-        
-        if (response.ok) {
-            // Handle success (optional)
-            console.log("Score updated successfully");
-        } else {
-            // Handle error (optional)
-            console.error("Failed to update score", response.statusText);
-        }
 
-        const responsed = await fetch("http://localhost:8000/clean_invites/", {
-            method: "POST",  // Changed from GET to POST
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${getCookie("access_token")}`,
-              "X-CSRFToken": getCookie("csrftoken")
-            },
-            credentials: "include",
-            body: JSON.stringify({ username })  // This now works correctly with POST
-          });
+        // // const response = await fetch("http://localhost:8000/update_game_result/", {
+        // //     method: "POST",
+        // //     headers: {
+        // //         "Content-Type": "application/json",
+        // //         "Authorization": `Bearer ${accessToken}`, 
+        // //         "X-CSRFToken": csrfToken
+        // //     },
+        // //     credentials: "include",
+        // //     body: JSON.stringify({ 
+        // //         winner: winner_is, 
+        // //         loser: loser_is 
+        // //     }) 
+        // // });
 
-          localStorage.removeItem('opponentUsername')
+        // if (response.ok) {
+        //     // Handle success (optional)
+        //     console.log("Score updated successfully");
+        // } else {
+        //     // Handle error (optional)
+        //     console.error("Failed to update score", response.statusText);
+        // }
+
+        // const responsed = await fetch("http://localhost:8000/clean_invites/", {
+        //     method: "POST",  // Changed from GET to POST
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Authorization": `Bearer ${getCookie("access_token")}`,
+        //         "X-CSRFToken": getCookie("csrftoken")
+        //     },
+        //     credentials: "include",
+        //     body: JSON.stringify({ username })  // This now works correctly with POST
+        // });
+
+        // localStorage.removeItem('opponentUsername')
         window.location.hash = "home"; // Redirect after the request
     }
+
 
     drawEndgame() {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);
         this.custoDiv.style.display = 'flex';
         this.custoctx.clearRect(0, 0, this.custo.width, this.custo.height);
-    
+
         // Determine winning team and set images accordingly
         let imagesToDraw;
         const right_score = this.scores.r_score;
@@ -665,25 +770,25 @@ class NormalMode extends HTMLElement {
                 { img: this.images[1], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
                 // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
             ];
-             this.ctx.fillStyle = "#0000FF";
-             this.ctx.fillText("👑👑 Blue Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Blue Team won! 👑👑").width) / 2, this.board.height/6);
+            this.ctx.fillStyle = "#0000FF";
+            this.ctx.fillText("👑👑 Blue Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Blue Team won! 👑👑").width) / 2, this.board.height / 6);
             //  this.ctx.fillText(`${this.scores.lscore}-${this.scores.rscore}`, (this.board.width - this.ctx.measureText(`${this.scores.lscore}-${this.scores.rscore}`).width) / 2, this.board.height/6);
-            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
-            
-             this.ctx.fillStyle = "#000000";
-            
-            } else {
-                this.lose = this.op; // l3ks
-                this.win = this.me; // l3ks
+            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height / 5 + 20);
+
+            this.ctx.fillStyle = "#000000";
+
+        } else {
+            this.lose = this.op; // l3ks
+            this.win = this.me; // l3ks
             console.log("rb7o 7mrin");
             imagesToDraw = [
                 { img: this.images[0], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
                 // { img: this.images[1], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
             ];
             this.ctx.fillStyle = "#FF0000";
-            this.ctx.fillText("👑👑 Red Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Red Team won! 👑👑").width) / 2, this.board.height/6);
-            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
-            
+            this.ctx.fillText("👑👑 Red Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Red Team won! 👑👑").width) / 2, this.board.height / 6);
+            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height / 5 + 20);
+
             this.ctx.fillStyle = "#000000";
 
         }
@@ -694,9 +799,9 @@ class NormalMode extends HTMLElement {
             this.custoctx.clip();
             this.custoctx.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
             this.custoctx.restore();
-            
+
         });
-        
+
         // this.finish.addEventListener("click",this.sendscoreandfinish)
         this.finish.addEventListener("click", () => this.sendscoreandfinish("lose")); // or "lose"
         console.log(this.custo.width);
@@ -705,8 +810,7 @@ class NormalMode extends HTMLElement {
 
     gameLoop() {
         this.updatePaddles();
-        if(this.update())
-        {
+        if (this.update()) {
             this.drawEndgame();
 
             return;
@@ -717,7 +821,7 @@ class NormalMode extends HTMLElement {
 }
 
 // Register the normal mode component
-customElements.define('normal-mode', NormalMode);
+customElements.define('offline-mode', OfflineMode);
 
 
 // async function sendInvite(receiverUsername) {

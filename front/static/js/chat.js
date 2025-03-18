@@ -116,7 +116,7 @@ class Chat extends HTMLElement {
         });
 
         
-        
+        localStorage.setItem('opponentUsername', this.currentusername);
         window.location.hash = "normal";
         
 

@@ -1,5 +1,5 @@
 // training.js - Keep everything except the Scores class
-class TrainingHTML extends HTMLElement {
+class aiMode extends HTMLElement {
     constructor() {
         super();
         this.canvas = null;
@@ -13,14 +13,16 @@ class TrainingHTML extends HTMLElement {
 
     async connectedCallback() {
         this.innerHTML = `
-		<link rel="stylesheet" href="static/css/test.css">
+        
+        <link rel="stylesheet" href="static/css/test.css">
             <div class="board" id="boardd">
                 <canvas id="boardcanva"></canvas>
                 <div class="game-area" id="game">
                     <canvas id="gamecanvas"></canvas>
                 </div>
                 <div class="customization" id="custo">
-                    <canvas id="custos"></canvas>
+                <button class="finish-button"id="finish">Finish Match</button>
+                    <canvas id="custocanvas"></canvas>
                 </div>
             </div>
         `;
@@ -33,20 +35,26 @@ class TrainingHTML extends HTMLElement {
         // Get DOM elements
         this.canvas = document.getElementById('gamecanvas');
         this.board = document.getElementById('boardcanva');
-        this.custo = document.getElementById('custos');
+        this.custoDiv = document.getElementById('custo');
+        this.custo = document.getElementById('custocanvas');
         this.ctx = this.board.getContext('2d');
         this.custoctx = this.custo.getContext('2d');
         this.cont = this.canvas.getContext('2d');
-        this.custoDiv = document.querySelector('.customization');
+        this.finish = document.getElementById("finish");
+        this.custoDiv.style.display = 'none'
+
+        // this.custoDiv = document.querySelector('.customization');
         
         // Hide customization div
-        this.custoDiv.style.display = 'none';
+        // this.custoDiv.style.display = 'none';
 
         // Set up canvas dimensions
         this.canvas.height = 480;
         this.canvas.width = 1072;
         this.board.height = 900;
         this.board.width = 1400;
+        this.custo.height = 480;
+        this.custo.width = 1072;
 
         // Initialize game variables
         this.resetDelay = 1000;
@@ -55,7 +63,8 @@ class TrainingHTML extends HTMLElement {
         this.LEFT = -1;
         this.RIGHT = 1;
         this.round_winner = Math.random() < 0.5 ? (Math.random() * -1) : (Math.random() * 1);
-        
+        this.finished = false;
+
         // Initialize paddle properties
         this.paddle_height = 100;
         this.paddle_width = 15;
@@ -148,18 +157,31 @@ class TrainingHTML extends HTMLElement {
         const left_scorestring = this.scores.l_score.toString();
         const right_scorestring = this.scores.r_score.toString();
     
-        const textWidth = this.ctx.measureText("Practice mode !").width;
+        const textWidth = this.ctx.measureText("Ai easy difficulty").width;
     
         const x = (this.board.width - textWidth) / 2;
         const y = this.board.height - 90;
     
-        this.ctx.fillText("Practice mode !", x, this.board.height/6);
+        this.ctx.fillText("Ai easy difficulty", x, this.board.height/6);
         this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
         this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
         // this.ctx.fillText(getCookie('username'), (this.board.width - this.ctx.measureText(getCookie('username')).width) / 2, 150);
         // this.ctx.fillText(this.streak, (this.board.width) / 2, 100);
         // this.ctx.fillText(this.ballspeed, (this.board.width) / 2, y+50);
         // this.ctx.fillText(this.paddle_height, ((this.board.width) / 2)-150, y+50);
+    }
+    drawScore() {
+        const y = this.board.height - 90;
+        
+        // Clear previous scores
+        this.ctx.clearRect(this.board.width/4, y-40, 100, 100);
+        this.ctx.clearRect(this.board.width - this.board.width/4, y-40, 100, 100);
+
+        // Draw updated scores
+        // const left_scorestring = this.scores.l_score.toString();
+        // const right_scorestring = this.scores.r_score.toString();
+        // this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
+        // this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
     }
     
     drawball() {
@@ -190,6 +212,9 @@ class TrainingHTML extends HTMLElement {
         this.ballx = (this.canvas.width / 2);
         this.bally = (this.canvas.height / 2);
     }
+    endgame() {
+        this.finished = true;
+    }
     
     update() {
         if (this.isResetting) {
@@ -213,29 +238,53 @@ class TrainingHTML extends HTMLElement {
             }
             return;
         }
+        else if (this.finished) {
+            return (1);
+        }
     
         this.ballx += this.ballspeedX;
         this.bally += this.ballspeedY;
         
         // AI behavior
-        this.right_paddleY = this.bally;
-
-        if (this.right_paddleY - this.paddle_height / 2 < 0) {
-          this.right_paddleY = this.paddle_height / 2; 
-        } else if (this.right_paddleY + this.paddle_height / 2 > this.canvas.height) {
-          this.right_paddleY = this.canvas.height - this.paddle_height / 2;
+        if(this.bally >= this.canvas.height / 3) // normal /3 hard /4
+         {
+            this.isRightDown = true;
+            this.isRightUp = false;
+        }
+        if(this.bally <= this.right_paddleY) {
+            this.isRightUp = true;
+            this.isRightDown = false;
         }
         
+        // Ball out of bounds - scoring
         if (this.ballx + this.radius >= this.canvas.width) {
             this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+
+            if (this.scores.get_total >= 5) {
+                this.endgame();
+            }
             this.round_winner = this.RIGHT;
             this.reset_ball();
+            this.drawScore();
             return;
         }
         if (this.ballx + this.radius < 0) {
             this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+
+            if (this.scores.get_total >= 5) {
+                this.endgame();
+            }
             this.round_winner = this.LEFT;
             this.reset_ball();
+            this.drawScore();
             return;
         }
     
@@ -288,14 +337,77 @@ class TrainingHTML extends HTMLElement {
             }
         }
     }
+    drawEndgame() {
+        this.ctx.clearRect(0, 0, this.board.width, this.board.height);
+        this.custoDiv.style.display = 'flex';
+        this.custoctx.clearRect(0, 0, this.custo.width, this.custo.height);
+
+        // Determine winning team and set images accordingly
+        // let imagesToDraw;
+        const right_score = this.scores.r_score;
+        const left_score = this.scores.l_score;
+
+        if (this.scores.l_score < this.scores.r_score) {
+            console.log("rb7o zr9in");
+
+            this.lose = this.me; // l3ks
+            this.win = this.op; // l3ks
+            // imagesToDraw = [
+            //     { img: this.images[1], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
+            //     // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
+            // ];
+            this.ctx.fillStyle = "#0000FF";
+            this.ctx.fillText("👑👑 You win ! 👑👑", (this.board.width - this.ctx.measureText("👑👑 You win ! 👑👑").width) / 2, this.board.height / 6);
+            //  this.ctx.fillText(`${this.scores.lscore}-${this.scores.rscore}`, (this.board.width - this.ctx.measureText(`${this.scores.lscore}-${this.scores.rscore}`).width) / 2, this.board.height/6);
+            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height / 5 + 20);
+
+            this.ctx.fillStyle = "#000000";
+
+        } else {
+            this.lose = this.op; // l3ks
+            this.win = this.me; // l3ks
+            console.log("rb7o 7mrin");
+            // imagesToDraw = [
+            //     { img: this.images[0], x: (this.custo.width / 2) - (this.imageSize / 2), y: this.custo.height / 5 }, // Center in left half
+            //     // { img: this.images[1], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
+            // ];
+            this.ctx.fillStyle = "#FF0000";
+            this.ctx.fillText("👑👑 the Cpu won ! 👑👑", (this.board.width - this.ctx.measureText("👑👑 the Cpu won ! 👑👑").width) / 2, this.board.height / 6);
+            this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height / 5 + 20);
+
+            this.ctx.fillStyle = "#000000";
+
+        }
+        // imagesToDraw.forEach(imgData => {
+        //     this.custoctx.save();
+        //     this.custoctx.beginPath();
+        //     this.custoctx.arc(imgData.x + this.imageSize / 2, imgData.y + this.imageSize / 2, this.imageSize / 2, 0, Math.PI * 2);
+        //     this.custoctx.clip();
+        //     this.custoctx.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
+        //     this.custoctx.restore();
+
+        // });
+
+        // this.finish.addEventListener("click",this.sendscoreandfinish)
+        this.finish.addEventListener("click", () => this.sendscoreandfinish()); // or "lose"
+        console.log(this.custo.width);
+        console.log(this.custo.height);
+    }
+    sendscoreandfinish(result) {
+        window.location.hash = "home"; // Redirect after the request
+    }
 
     gameLoop() {
         this.updatePaddles();
-        this.update();
+        if (this.update()) {
+            this.drawEndgame();
+
+            return;
+        }
         this.draw();
         requestAnimationFrame(() => this.gameLoop());
     }
 }
 
 // Register the training component
-customElements.define('training-component', TrainingHTML);
+customElements.define('ai-mode', aiMode);

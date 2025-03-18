@@ -156,31 +156,31 @@ class home extends HTMLElement {
             }
         });
         
-        async function Fetchinvites() {
-            try {
-              const response = await fetch("http://localhost:8000/get_invites/", {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${getCookie("access_token")}`,
-                  "X-CSRFToken": getCookie("csrftoken")
-                },
-                credentials: "include",
-              });
+        // async function Fetchinvites() {
+        //     try {
+        //       const response = await fetch("http://localhost:8000/get_invites/", {
+        //         method: "GET",
+        //         headers: {
+        //           "Content-Type": "application/json",
+        //           "Authorization": `Bearer ${getCookie("access_token")}`,
+        //           "X-CSRFToken": getCookie("csrftoken")
+        //         },
+        //         credentials: "include",
+        //       });
               
-              if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('the-invites', JSON.stringify(data));
-                return data;
-              } else {
-                console.error("Failed to fetch invites:", response.status);
-                return null;
-              }
-            } catch (error) {
-              console.error("Error fetching invites:", error);
-              return null;
-            }
-          }
+        //       if (response.ok) {
+        //         const data = await response.json();
+        //         localStorage.setItem('the-invites', JSON.stringify(data));
+        //         return data;
+        //       } else {
+        //         console.error("Failed to fetch invites:", response.status);
+        //         return null;
+        //       }
+        //     } catch (error) {
+        //       console.error("Error fetching invites:", error);
+        //       return null;
+        //     }
+        //   }
 
        function isTokenExpired(token) {
             if (!token) return true; 
@@ -203,9 +203,8 @@ class home extends HTMLElement {
         });
         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
             event.preventDefault();
-            // console.log("dkhel l game #optionnnn wiliiii")
-            fetchUserStats("gameoption");
             Fetchinvites();
+            fetchUserStats("gameoption");
 
          });
          document.getElementById("go-to-tournoi").addEventListener("click", function (event) {

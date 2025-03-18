@@ -1,6 +1,7 @@
 class Gameoption extends HTMLElement {
     
     async connectedCallback() {
+        await Fetchinvites();
         // const allinvites = JSON.parse(localStorage.getItem('the-invites'));
         const storedUserData = JSON.parse(localStorage.getItem('userData'));
         const username = storedUserData.username;
@@ -27,7 +28,7 @@ class Gameoption extends HTMLElement {
                 <div class="Game_Modes_img">
                     <img src="./media/processor.png" alt="">
                 </div>
-                <button class="button">Ai Mode</button>
+                <button class="button" id="ai-mode">Ai Mode</button>
             </div>
         </div>
         
@@ -65,8 +66,6 @@ let invitebutton = document.getElementById("special-ping-pong");
 
         });
         
-        // // console.log("----------")
-        // console.log(hasInviteForMe("theswoord"))
 
         function hasInviteForMe(myUsername) {
             try {
@@ -76,42 +75,43 @@ let invitebutton = document.getElementById("special-ping-pong");
                 return null;
               }
               
-              // Find an invite where the receiver is you (myUsername) and you are the receiver
               const invite = invitesData.invites.find(invite => 
                 invite.receiver === myUsername && invite.is_receiver === true
               );
-              
-              // Return the sender's name if found, otherwise null
-              return invite ? invite.sender : null;
-            } catch (error) {
-              console.error("Error checking invites:", error);
-              return null;
+            
+              if (invite) {
+                localStorage.setItem('opponentUsername', invite.sender); // Store opponent's username
+                return invite.sender;
+            } else {
+                return null;
             }
+        } catch (error) {
+            console.error("Error checking invites:", error);
+            return null;
+        }
           }
 
         let gotonormal = document.getElementById("normal-mode");
         gotonormal.addEventListener('click', function (event) {
             event.preventDefault();
-            // console.log(window.location.hash);
-            // console.log(window.location.host);
-            // console.log(window.location.hostname);
-            // console.log(window.location.href);
-            window.location.hash = "normal";
-            // console.log(window.location.hash);
+
+            window.location.hash = "offline";
 
         });
         let gotomultiplayer = document.getElementById("multiplayer-mode");
         gotomultiplayer.addEventListener('click', function (event) {
             event.preventDefault();
-            // console.log(window.location.hash);
-            // console.log(window.location.host);
-            // console.log(window.location.hostname);
-            // console.log(window.location.href);
+
             window.location.hash = "multiplayer";
-            // console.log(window.location.hash);
 
         });
+        let gotoaimode = document.getElementById("ai-mode");
+        gotoaimode.addEventListener('click', function (event) {
+            event.preventDefault();
 
+            window.location.hash = "ai";
+
+        });
     }
 }
 
