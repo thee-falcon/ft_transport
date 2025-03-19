@@ -37,3 +37,14 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.nickname or self.user.username
+
+
+
+class GameHistory(models.Model):
+    sent_by = models.ForeignKey(User, related_name='games_played', on_delete=models.CASCADE)
+    send_to = models.ForeignKey(User, related_name='games_received', on_delete=models.CASCADE)
+    result = models.CharField(max_length=10, choices=[('win', 'Win'), ('lose', 'Lose')])
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Game: {self.sent_by.username} vs {self.send_to.username} - {self.result} at {self.timestamp}"

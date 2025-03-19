@@ -3,6 +3,7 @@
 	padding: 0;
 	border: none;
 	box-sizing: border-box;
+	
 	/* overflow: auto; */
 	/* height: 100vh; */
 	
@@ -20,7 +21,8 @@ html {
 }
 
 body {
-	background: #1B3E46;
+	/* background: #1B3E46; */
+	background-color: #1B3E46;
     margin: 0;
     padding: 0;
 	width: 100%;
@@ -45,6 +47,30 @@ body {
 }
 
 
+.notification-container {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	cursor: pointer;
+	z-index: 1000;
+}
+  
+.notification-container .fa-bell {
+	font-size: 24px;
+	color: blue;
+}
+  
+.notification-badge {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	background-color: red;
+	color: #fff;
+	border-radius: 50%;
+	padding: 2px 6px;
+	font-size: 12px;
+}
+
 
 
 .navbar-toggler img {
@@ -67,6 +93,7 @@ body {
 	font-weight: 500;
 	line-height: 25px;
 	text-align: left;
+	padding-bottom: 5%;
 
 }
 

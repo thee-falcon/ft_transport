@@ -762,3 +762,50 @@ class UpdateUserProfileView(APIView):
         user.save()  # Save updates
 
         return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
+
+
+
+# hamza 
+
+from django.db.models import Q
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import GameHistory
+from .serializer import GameHistorySerializer
+
+@api_view(['GET'])
+def game_history_list(request):
+    # Filter records where the user is either the sender or the receiver
+    histories = GameHistory.objects.filter(
+        Q(sent_by=request.user) | Q(send_to=request.user)
+    ).order_by('-timestamp')[:5]
+    serializer = GameHistorySerializer(histories, many=True, context={'request': request})
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def save_game_history(request):
+	try:
+		# Extract data from the request
+		sent_by_id = int(request.data.get("sent_by_id"))  # Convert to integer
+		send_to_id = int(request.data.get("send_to_id"))  # Convert to integer
+		result = request.data.get("result")
+
+		# Fetch user objects
+		sent_by = User.objects.get(pk=sent_by_id)
+		send_to = User.objects.get(pk=send_to_id)
+
+		# Save the game history
+		game_history = GameHistory.objects.create(sent_by=sent_by, send_to=send_to, result=result)
+		
+		return Response({"message": "Game history saved successfully"}, status=201)
+
+	except ValueError:
+
+		return Response({"error": "Invalid user ID format"}, status=400)
+
+	except User.DoesNotExist:
+		return Response({"error": "User not found"}, status=404)
+
+	except Exception as e:
+		return Response({"error": str(e)}, status=500)

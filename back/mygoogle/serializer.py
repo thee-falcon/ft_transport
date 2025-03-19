@@ -69,3 +69,14 @@ class UserSerializer(serializers.ModelSerializer):
 
         profile.save()
         return instance
+
+from rest_framework import serializers
+from .models import GameHistory
+
+class GameHistorySerializer(serializers.ModelSerializer):
+	sent_by = serializers.CharField(source='sent_by.username')
+	send_to = serializers.CharField(source='send_to.username')
+
+	class Meta:
+		model = GameHistory
+		fields = ['sent_by', 'send_to', 'result', 'timestamp']

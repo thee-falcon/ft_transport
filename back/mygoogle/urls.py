@@ -9,6 +9,9 @@ from .views import ProfilePictureUpdateView
 from django.urls import path
 from .views import search_users
 
+from .views import game_history_list
+from .views import save_game_history
+
 urlpatterns = [
     path('', lambda request: HttpResponse(open(settings.BASE_DIR.parent / 'front/index.html').read(), content_type='text/html')),
     path('auth/', include('allauth.urls')),
@@ -31,4 +34,6 @@ urlpatterns = [
     path('send_invite/' , views.send_invite),
     path('get_invites/' , views.get_invites),
     path('clean_invites/' , views.clean_expired_invitations),
+	path('api/game-history/', game_history_list, name='game-history-list'),
+	path('api/save_game/', save_game_history, name='save_game'),
     ]

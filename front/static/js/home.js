@@ -8,17 +8,15 @@ class home extends HTMLElement {
         </style>
         <body>
         <link rel="stylesheet" href="static/css/home.css">
-        <link rel="stylesheet" href="static/css/settings.css">
-
+        
     
         <div id="ok1">
-   <input type="text" id="userSearch" placeholder="Search user..." />
-        <div id="searchResults"></div>
+   			<input type="text" id="userSearch" placeholder="Search user..." />
+        	<div id="searchResults"></div>
+		</div>
         
         <div class="card-container">
-        <button id="open-settings" class="settings-button">⚙ Settings
-        
-        </button>
+        <button id="open-settings" class="settings-button">⚙ Settings</button>
         <settings-component id="settings-panel" style="display: none; position: fixed; z-index: 2"></settings-component>
  
         
@@ -264,6 +262,7 @@ class home extends HTMLElement {
         });
 
          document.getElementById("go-to-dashboard").addEventListener("click", (event) => {
+			console.log("dashboarddd");
             event.preventDefault();
             fetchUserStats("dashboard");
         });

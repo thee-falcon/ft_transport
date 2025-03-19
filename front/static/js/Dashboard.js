@@ -16,7 +16,6 @@ class dashboard extends HTMLElement {
         <link rel="stylesheet" href="static/css/dashboard.css">
     <div id="lo">
         <div class="dash-dashboard-container">
-            <div></div>
             <div class="dash-col2">
                 <div class="dash-card2">
                     <div class="dash-card2-col1">
@@ -58,8 +57,8 @@ class dashboard extends HTMLElement {
                 </div>
                 <div class="dash-card4">
                     <div class="dash-statistics-graphs">
-                    <canvas id="matchesChart"></canvas>
-                    <canvas id="tournamentsChart"></canvas>
+                    <canvas id="matchesChart"  width="1000" height="400" ></canvas>
+                    <canvas id="tournamentsChart"  width="1000" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -93,7 +92,7 @@ class dashboard extends HTMLElement {
                 }]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
                 scales: {
                     y: { beginAtZero: true }
@@ -121,7 +120,7 @@ class dashboard extends HTMLElement {
                 }]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
                 plugins: {
                     title: {

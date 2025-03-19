@@ -39,6 +39,23 @@ def get_friends(user):
     friend_ids = set(friends1) | set(friends2)
     return User.objects.filter(id__in=friend_ids)
 
+
+from collections import defaultdict
+
+def get_friends_by_status(user):
+    friends_by_status = defaultdict(set)
+
+    # Get friendships where the user is user2
+    friendships2 = Friendship.objects.filter(user2=user).values("user1", "status")
+    for friendship in friendships2:
+        friends_by_status[friendship["status"]].add(friendship["user1"])
+
+    # Convert sets to lists of User objects
+    for status in friends_by_status:
+        friends_by_status[status] = list(User.objects.filter(id__in=friends_by_status[status]))
+
+    return friends_by_status
+
 class Message(models.Model):
     sent_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     send_to = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)

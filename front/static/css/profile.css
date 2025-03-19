@@ -6,11 +6,7 @@
 
 body {
     background-color: #1B3E46;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    min-height: 100vh;
-    padding: 1rem;
+
 } 
 
 .omar-main-parent {
@@ -19,8 +15,10 @@ body {
     grid-template-rows: repeat(10, 1fr);
     gap: 8px;
     height: 100%;
-    width: 100%;
-    padding: clamp(1rem, 5vw, 9rem);
+    /* width: 70%; */
+    padding: clamp(1rem, 4vw, 8rem);
+    margin-inline: auto;
+    padding-top: 0;
 }
     
 .omar-div1 {
@@ -343,7 +341,7 @@ body {
     }
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 1502px) {
     .omar-main-parent {
         grid-template-columns: 1fr;
         grid-template-rows: auto;

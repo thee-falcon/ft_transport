@@ -314,104 +314,130 @@ from channels.layers import get_channel_layer
 from .models import Friendship, Message
 from django.db.models import Q
 import json, time
+from .models import get_friends_by_status
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def HomeChatAPI(request):
-    user = request.user
-    friends = get_friends(user)
+	user = request.user
+	friends = get_friends(user)  # Only accepted friends
+	friends_by_status = get_friends_by_status(user)  # All friends categorized by status
 
-    messages = Message.objects.filter(Q(sent_by=user) | Q(send_to=user)).order_by('timestamp')
 
-    messages_with_ids = [
-        {
-            'id': message.id,
-            'content': message.message,
-            'timestamp': message.timestamp.isoformat(),
-            'send_to_id': message.send_to.id,
-            'sent_by_id': message.sent_by.id,
-        }
-        for message in messages
-    ]
+	# Retrieve friendships where the user is involved
+	all_friendships = Friendship.objects.filter(Q(user1=user) | Q(user2=user))
 
-    friends_data = [{'id': friend.id, 'username': friend.username} for friend in friends]
+	# Retrieve messages related to the user
+	messages = Message.objects.filter(Q(sent_by=user) | Q(send_to=user)).order_by('timestamp')
 
-    return Response({
-        "username": user.username,
-        "id": user.id,
-        "friends": friends_data,
-        "messages": messages_with_ids
-    })
+	messages_with_ids = [
+		{
+			'id': message.id,
+			'content': message.message,
+			'timestamp': message.timestamp.isoformat(),
+			'send_to_id': message.send_to.id,
+			'sent_by_id': message.sent_by.id,
+		}
+		for message in messages
+	]
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def send_friend_request(request, user_id):
-    sender = request.user
-    receiver = get_object_or_404(User, id=user_id)
+	# Format only accepted friends
+	friends_data = [{'id': friend.id, 'username': friend.username} for friend in friends]
 
-    if sender == receiver:
-        return Response({"error": "You cannot send a friend request to yourself."}, status=400)
-
-    existing_request = Friendship.objects.filter(user1=sender, user2=receiver).exists() or \
-                       Friendship.objects.filter(user1=receiver, user2=sender).exists()
-
-    if existing_request:
-        return Response({"message": "Friend request already sent or already friends."}, status=400)
-    
-    friendship = Friendship.objects.create(user1=sender, user2=receiver, status="pending")
-    
-    invitation_id = f"{sender.id}_{receiver.id}_{int(time.time())}"
-    invitation_payload = {
-        "action": "invitation",
-        "invitationId": invitation_id,
-        "fromUserId": sender.id,
-        "fromUsername": sender.username,
-        "friendshipId": friendship.id,
+    # Format friends by status with friendship IDs
+	friends_by_status_data = {
+        status: [
+            {
+                'id': friend.id,
+                'username': friend.username,
+                'friendship_id': next(
+                    (fs.id for fs in all_friendships 
+                     if (fs.user1 == friend or fs.user2 == friend) and fs.status == 'pending'),
+                    None
+                ) if status == 'pending' else None,
+            }
+            for friend in friend_list
+        ]
+        for status, friend_list in friends_by_status.items()
     }
-    
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f"user_chatroom_{receiver.id}",
-        {
-            "type": "invitation_message",
-            "text": json.dumps(invitation_payload),
-        }
-    )
-    
-    return Response({"message": "Friend request sent successfully!"}, status=201)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def respond_friend_request(request, friendship_id, response):
-    friendship = get_object_or_404(Friendship, id=friendship_id)
+	return Response({
+		"username": user.username,
+		"id": user.id,
+		"friends": friends_data,  # Only accepted friends
+		"friends_status": friends_by_status_data,  # Friends grouped by status
+		"messages": messages_with_ids
+	})
 
-    if friendship.user2 != request.user:
-        return Response({"error": "You are not authorized to respond to this request."}, status=403)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def send_friend_request(request, user_id):
+#     sender = request.user
+#     receiver = get_object_or_404(User, id=user_id)
 
-    if response == "accept":
-        friendship.status = "accepted"
-        message = "Friend request accepted!"
-    elif response == "decline":
-        friendship.status = "declined"
-        message = "Friend request declined."
-    else:
-        return Response({"error": "Invalid response."}, status=400)
+#     if sender == receiver:
+#         return Response({"error": "You cannot send a friend request to yourself."}, status=400)
 
-    friendship.save()
+#     existing_request = Friendship.objects.filter(user1=sender, user2=receiver).exists() or \
+#                        Friendship.objects.filter(user1=receiver, user2=sender).exists()
+
+#     if existing_request:
+#         return Response({"message": "Friend request already sent or already friends."}, status=400)
     
-    channel_layer = get_channel_layer()
-    response_payload = {
-        "action": "invitation_response",
-        "friendshipId": friendship.id,
-        "response": response,
-        "fromUserId": request.user.id,
-    }
-    async_to_sync(channel_layer.group_send)(
-        f"user_chatroom_{friendship.user1.id}",
-        {
-            "type": "invitation_message",
-            "text": json.dumps(response_payload),
-        }
-    )
+#     friendship = Friendship.objects.create(user1=sender, user2=receiver, status="pending")
     
-    return Response({"message": message}, status=200)
+#     invitation_id = f"{sender.id}_{receiver.id}_{int(time.time())}"
+#     invitation_payload = {
+#         "action": "invitation",
+#         "invitationId": invitation_id,
+#         "fromUserId": sender.id,
+#         "fromUsername": sender.username,
+#         "friendshipId": friendship.id,
+#     }
+    
+#     channel_layer = get_channel_layer()
+#     async_to_sync(channel_layer.group_send)(
+#         f"user_chatroom_{receiver.id}",
+#         {
+#             "type": "invitation_message",
+#             "text": json.dumps(invitation_payload),
+#         }
+#     )
+    
+#     return Response({"message": "Friend request sent successfully!"}, status=201)
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def respond_friend_request(request, friendship_id, response):
+#     friendship = get_object_or_404(Friendship, id=friendship_id)
+
+#     if friendship.user2 != request.user:
+#         return Response({"error": "You are not authorized to respond to this request."}, status=403)
+
+#     if response == "accept":
+#         friendship.status = "accepted"
+#         message = "Friend request accepted!"
+#     elif response == "decline":
+#         friendship.status = "declined"
+#         message = "Friend request declined."
+#     else:
+#         return Response({"error": "Invalid response."}, status=400)
+
+#     friendship.save()
+    
+#     channel_layer = get_channel_layer()
+#     response_payload = {
+#         "action": "invitation_response",
+#         "friendshipId": friendship.id,
+#         "response": response,
+#         "fromUserId": request.user.id,
+#     }
+#     async_to_sync(channel_layer.group_send)(
+#         f"user_chatroom_{friendship.user1.id}",
+#         {
+#             "type": "invitation_message",
+#             "text": json.dumps(response_payload),
+#         }
+#     )
+    
+#     return Response({"message": message}, status=200)

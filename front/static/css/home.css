@@ -1,4 +1,4 @@
-Global Styles
+
 * {
     margin: 0;
     padding: 0;
@@ -8,20 +8,38 @@ Global Styles
 
 body {
     background-color: #10292F;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
 }
+
+.search-result-item {
+	color :red; 
+}
+
 
 #ok1
 {
     padding-top: 50px;
-    height: 100svh;
+    /* height: 100svh; */
     display: flex;
     justify-content: center;
     align-items: center;
 
-} 
+}
+
+#userSearch {
+    border: 2px solid #E5F690;
+    border-radius: 20px;
+    background-color: #10292F;
+    color: #E5F690;
+    padding: 6px 10px 6px 40px;
+    margin-bottom: 10px;
+    background-image: url('../image/magnifying-glass.png');
+    background-size: 20px 20px;
+    background-position: 10px 5px;
+    background-repeat: no-repeat;
+    outline: none; 
+    transition: width 0.4s ease-in-out;
+}
 
 .card-container {
     max-height: 900px;
@@ -58,7 +76,7 @@ body {
     position: relative;
     background-color: #939c5e;
     border-radius: 20px;
-    background-image: url("/media/Screen_Shot_2025-01-12_at_12.47.51_AM-removebg-preview.png");
+	background-image: url("/media/Screen_Shot_2025-01-12_at_12.47.51_AM-removebg-preview.png");
     background-size: 175px 100px;
     background-repeat: no-repeat;
     background-position: center ;
@@ -226,7 +244,7 @@ body {
     }
     #ok1{
         width: 100%;
-        height: 100rem;
+        /* height: 100rem; */
         mask-image: none;
     }
     .card33, .card66{
