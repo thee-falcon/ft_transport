@@ -42,7 +42,7 @@ class Navebar extends HTMLElement {
 				  <a href="#faq" class="nav" id="faq">
 					<img src="static/image/faq.png" alt="">Faq
 				  </a>
-				  <a href="#" class="nav" id="TournamentTree">
+				  <a href="#about" class="nav" id="about">
 					<img src="static/image/info.png" alt="">About
 				  </a>
 				</div>
@@ -180,6 +180,13 @@ class Navebar extends HTMLElement {
 		logoutLink.addEventListener("click", (event) => {
 		  event.preventDefault();
 		  fetchUserStats("logout");
+		});
+	  }
+	  const aboutLink = this.querySelector("#about");
+	  if (aboutLink) {
+		aboutLink.addEventListener("click", (event) => {
+		  event.preventDefault();
+		  fetchUserStats("about");
 		});
 	  }
 	  const tournamentLink = this.querySelector("#go-to-tournoi");

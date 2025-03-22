@@ -336,6 +336,8 @@ class NormalMode extends HTMLElement {
         const x = (this.board.width - textWidth) / 2;
         const y = this.board.height - 90;
         
+		const left_scorestring = this.scores.l_score.toString();
+        const right_scorestring = this.scores.r_score.toString();
         // Set up player images
         // const imageSize = 90;
         // const images = [
@@ -366,8 +368,8 @@ class NormalMode extends HTMLElement {
         this.ctx.fillText(text, x, y);
         this.ctx.fillText(this.storedUserData.username, (this.board.width) / 8, this.board.height/6+30);
         this.ctx.fillText(this.op, (this.board.width - this.board.width/3), this.board.height/6+30);
-        this.ctx.fillText("0", (this.board.width) / 4, y);
-        this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
+        this.ctx.fillText(right_scorestring, (this.board.width) / 4, y);
+        this.ctx.fillText(left_scorestring, (this.board.width - (this.board.width) / 4), y);
         this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height/6);
         
         // Draw team names with colors

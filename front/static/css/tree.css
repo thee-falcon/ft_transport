@@ -5,7 +5,9 @@ body {
 }
 
 
-
+.notification-container {
+	display: none;
+}
 
 .Tournament {
 	padding-top: 1%;
@@ -23,6 +25,26 @@ body {
 	display: flex;
 	flex-direction: column;
 
+}
+
+.button-next-match {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+}
+
+#finalround{
+	background-color: #1B3E41;
+	border: 4px #F27E20 solid;
+	border-radius: 20px;
+	color: white;
+	padding: 5px;
+}
+
+#finalround:hover {
+	background-color: #E5F690;
+	color: black;
 }
 
 

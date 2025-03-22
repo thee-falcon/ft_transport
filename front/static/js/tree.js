@@ -111,7 +111,7 @@ class Tournamentree extends HTMLElement {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="button-next-match">
                             <button id="finalround">${buttonText}</button>
                         </div>
                     </div>
