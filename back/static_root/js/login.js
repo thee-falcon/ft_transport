@@ -41,40 +41,28 @@ class signin extends HTMLElement {
 
     this.init2FALogic();
 
-	async function refreshhhToken() {
-		console.log('Refreshing access token...');
-		const refresh_Token = getCookie('refresh_token');
-	
-		if (!refresh_Token|| isTokenExpired()) {
-			console.log("No refresh token found, user not authenticated.");
-
-	
-		try {
-			const response = await fetch("http://localhost:8000/token-refresh/", {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ refresh: refresh_Token }),
-			});
-	
-			if (response.ok) {
-				const data = await response.json();
-				console.log("data  accces=== " , data.access);
-				document.cookie = `access_token=${data.access}; path=/; SameSite=None; Secure`;
-				console.log("New access token received:", data.access);
-				return true;
-			} else {
-				console.error("Failed to refresh token. Redirecting to signin.");
-				deleteCookie("access_token");
-				deleteCookie("refresh_token");
-				return false;
-			}
-		} catch (error) {
-			console.error("Error refreshing token:", error);
-			return false;
-		}
-	}
-	}
+    async function refreshhhToken() {
+      try {
+          const refresh_Token = getCookie('refresh_token');
+          if (!refresh_Token) throw new Error("No refresh token");
+          
+          const response = await fetch("http://localhost:8000/token-refresh/", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refresh: refresh_Token })
+          });
+          
+          if (!response.ok) throw new Error("Refresh failed");
+          
+          const data = await response.json();
+          document.cookie = `access_token=${data.access}; path=/; SameSite=Lax; Secure`;
+          return true;
+      } catch (error) {
+          console.error("Token refresh failed:", error);
+          window.location.hash = "signin";
+          return false;
+      }
+  }
 	
 
   async function fetchUserStats(redirectPage) {
@@ -91,7 +79,6 @@ class signin extends HTMLElement {
         });
 
         if (response.ok) {
-            const responseData = await response.json();
             localStorage.setItem("userData", JSON.stringify(responseData));
             window.location.hash = redirectPage;
         }
@@ -133,6 +120,7 @@ class signin extends HTMLElement {
               document.cookie = `username=${data.username}; path=/`;
               
               // Direct redirect instead of using fetchUserStats
+              window.location.reload();
               window.location.hash = "home";
           } else {
               alert("Login failed. Check your credentials.");

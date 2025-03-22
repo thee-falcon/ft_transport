@@ -12,11 +12,13 @@ const route = {
 	'chat': 'chat-component',
 	'navbar': 'navbar-component',
     'guestprofile': 'guestprofile-component',
+    'signin': 'signin-component',
  };
 
-function getCookie(name) {
-    let match = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return match ? match[2] : null;
+ function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find(c => c.startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
 }
 
 function isAuthenticated() {
@@ -43,8 +45,18 @@ function isAuthenticated() {
 
 async function navigate() {
     const path = window.location.hash.substring(1) || "signin";
-    console.log("Navigating to:", path); // ✅ Debugging
+    const container = document.getElementById("view-container");
+    console.log("Navigating to:", path);
 
+    if (['home', 'profile', 'settings'].includes(path) && !isAuthenticated()) {
+        if (!isAuthenticated()) {
+            window.location.hash = "signin";
+            return;
+        }
+    }    
+    // Load the appropriate component
+    const component = route[path] || 'signin-component';
+    container.innerHTML = `<${component}></${component}>`;
     if ((path === "home" || path === "profile" ||  path==="guestprofile" || path==="tournament" || path==="chat" || path === "dashboard" || path === "gameoption" || path === "normal" || path === "training" || path === "multiplayer" ) && !isAuthenticated()) {
         console.log("User not authenticated, redirecting to signin.");
         window.location.hash = "signin";
@@ -65,7 +77,7 @@ async function navigate() {
 	 }
 
     const page = route[path];
-    const container = document.getElementById("view-container");
+    container.innerHTML = '';
 
     if (!page) {
         console.log("No page found for:", path);
@@ -74,13 +86,17 @@ async function navigate() {
     }
 
     console.log("Loading component:", page); // ✅ Debugging
-    container.innerHTML = `<${page}></${page}>`;
+container.innerHTML = `<${component}></${component}>`;    container.innerHTML = `<${page}></${page}>`;
 }
 
 
 
 window.addEventListener("hashchange", navigate);
 window.addEventListener("DOMContentLoaded", navigate);
+window.addEventListener("DOMContentLoaded", () => {
+    navigate(); // Initial load
+    window.addEventListener("hashchange", navigate); // Hash changes
+  });
 
 
 function isTokenExpired() {

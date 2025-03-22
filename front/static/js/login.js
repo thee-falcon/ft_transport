@@ -1,9 +1,13 @@
-
+function setTokenCookies(data) {
+  document.cookie = `access_token=${data.access_token}; path=/`;
+  document.cookie = `refresh_token=${data.refresh_token}; path=/`;
+  document.cookie = `username=${data.username}; path=/`;
+}
 
 class signin extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
     <div class="contonair">
       <form id="login-form">
           <h1>Sign In</h1>
@@ -18,176 +22,106 @@ class signin extends HTMLElement {
             <input type="password" id="login-password" placeholder="Password" required />
           </div>
 
+          <div class="input-field twofa-input" style="display: none;">
+            <i class="fa-solid fa-shield-halved"></i>
+            <input type="text" id="login-2fa-code" placeholder="2FA Code" />
+          </div>
+
           <div class="btn-field">
             <button type="submit" id="login-btn">Log In</button>
-          </div>
-
-          <div class="btn-field">
-            <button type="button" id="go-to-signup">Don't have an account?</button>
-          </div>
-
-          <div class="btn-field">
-            <button type="button" id="intra-btn">Login with 42 <div class="social-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 137.6 96.6" width="24px" height="24px">
-                <g transform="translate(-229.2,-372.70002)">
-                    <polygon points="229.2,443.9 279.9,443.9 279.9,469.3 305.2,469.3 305.2,423.4 254.6,423.4 305.2,372.7 279.9,372.7 229.2,423.4" style="fill:#ffffff"/>
-                    <polygon points="316.1,398.1 341.4,372.7 316.1,372.7" style="fill:#ffffff"/>
-                    <polygon points="341.4,398.1 316.1,423.4 316.1,448.7 341.4,448.7 341.4,423.4 366.8,398.1 366.8,372.7 341.4,372.7" style="fill:#ffffff"/>
-                    <polygon points="366.8,423.4 341.4,448.7 366.8,448.7" style="fill:#ffffff"/>
-                </g>
-            </svg>
-            </div></button>
+            <button type="button" id="intra-btn">Login with 42</button>
           </div>
       </form>
-    </div>
-    `;
- 
-	async function refreshhhToken() {
-		console.log('Refreshing access token...');
-		const refresh_Token = getCookie('refresh_token');
-	
-		if (!refresh_Token|| isTokenExpired()) {
-			console.log("No refresh token found, user not authenticated.");
+    </div>`;
 
-	
-		try {
-			const response = await fetch("http://localhost:8000/token-refresh/", {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ refresh: refresh_Token }),
-			});
-	
-			if (response.ok) {
-				const data = await response.json();
-				console.log("data  accces=== " , data.access);
-				document.cookie = `access_token=${data.access}; path=/; SameSite=None; Secure`;
-				console.log("New access token received:", data.access);
-				return true;
-			} else {
-				console.error("Failed to refresh token. Redirecting to signin.");
-				deleteCookie("access_token");
-				deleteCookie("refresh_token");
-				return false;
-			}
-		} catch (error) {
-			console.error("Error refreshing token:", error);
-			return false;
-		}
-	}
-	}
-	
-
-    async function fetchUserStats(redirectPage) {
-      let token = getCookie("access_token");
-  
-      // If token is expired, refresh it
-      if (isTokenExpired(token)) {
-          console.log("Access token expired, attempting refresh...");
-          const refreshed = await refreshhhToken();
-          if (!refreshed) {
-              console.error("Failed to refresh token. Redirecting to signin.");
-              // window.location.hash = "signin";
-              // return;
-          }
-          token = getCookie("access_token"); // Get the new token
-      }
-  
-      // Proceed with API request
-      try {
-          const response = await fetch("http://localhost:8000/get_user_stats/", {
-              method: "GET",
-                  headers: {
-                  "Authorization": `Bearer ${token}`,
-                  "Content-Type": "application/json"
-              },
-              credentials: "include"
-          });
-  
-          const responseData = await response.json();
-          if (response.ok) {
-              localStorage.setItem("userData", JSON.stringify(responseData));
-              console.log("User data retrieved:", responseData);
-              window.location.hash = redirectPage;
-          } else {
-              console.error("Error fetching stats:", responseData);
-          }
-      } catch (error) {
-          console.error("Error:", error);
-      }
+    this.init2FALogic();
   }
-  
-    document.getElementById("go-to-signup").addEventListener("click", () => {
-      window.location.hash = "signup";
-    });
-    let intraBtn = document.getElementById("intra-btn");
-    let log = document.getElementById("login-btn");
 
-    log.addEventListener('click', async function (event) {
-      event.preventDefault();
+  init2FALogic() {
+    const loginForm = this.querySelector('#login-form');
+    const twofaInput = this.querySelector('.twofa-input');
+    let requires2FA = false;
+    let tempUsername = '';
 
-      const username = document.getElementById("user").value;
-      const password = document.getElementById("login-password").value;
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = this.querySelector('#user').value;
+        const password = this.querySelector('#login-password').value;
+        const code = this.querySelector('#login-2fa-code').value;
 
-      const response = await fetch('http://localhost:8000/login/', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken")
-    
-        },
-        body: JSON.stringify({ username, password })
-      });
-      console.log('resoinse' , response);
+        try {
+          if (requires2FA) {
+            // Handle 2FA verification during login
+            const response = await fetch('http://localhost:8000/login/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie("csrftoken")
+              },
+              body: JSON.stringify({
+                username: tempUsername,
+                password: this.querySelector('#login-password').value,
+                code: code
+              })
+            });
 
-      const data = await response.json();
-      try {
-        if (response.ok) {
-          console.log("data", data);
-          const accessToken = getCookie('access_token');
-          const refreshToken = getCookie('refresh_token');
-          console.log('Access Token:', accessToken);
-          console.log('Refresh Token:', refreshToken);
-          // console.log('Username:', username);
-          console.log('simple login  Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken);
-            alert('simple login go to home');
-            fetchUserStats('home');
-        } else {
-          alert("Login failed. Check your credentials.");
+            const data = await response.json();
+            
+            if (response.ok) {
+              setTokenCookies(data);
+              window.location.hash = "home";
+            } else {
+              alert(data.detail || 'Invalid 2FA code!');
+            }
+          } else {
+            // Initial login attempt
+            const response = await fetch('http://localhost:8000/login/', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+              },
+              body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            
+            if (response.status === 202) {
+              requires2FA = true;
+              tempUsername = username;
+              twofaInput.style.display = 'block';
+              this.querySelector('#login-btn').textContent = 'Verify Code';
+              alert('Please check your email for the verification code');
+            } else if (response.ok) {
+              setTokenCookies(data);
+              window.location.hash = "home";
+            } else {
+              alert(data.detail || "Login failed. Check your credentials.");
+            }
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          alert("Network error - please try again");
         }
-      }
-      catch {
-        console.error('error while logiing');
-      }
-    })
+      });
+    }
 
-
-    intraBtn.addEventListener('click', async function (event) {
-      event.preventDefault();
-      // Redirect to login42 URL for OAuth or SSO
-      window.location.href = "http://localhost:8000/login42/";
-    });
-    window.addEventListener('load', async function () {
-      try {
-        const accessToken = getCookie('access_token');
-        const refreshToken = getCookie('refresh_token');
-        const username = getCookie('username');
-        console.log('intra acces Token  and refreshtoken ', accessToken, "refreshtoken", refreshToken, 'username', username);
-        if(accessToken &&  refreshToken)
-          alert('intra login go to home');
-          
-          fetchUserStats('home');
-              } catch (error) {
-        console.error('Error during login42 authentication:', error);
-      }
-    });
-
-
+    const intraBtn = this.querySelector("#intra-btn");
+    if (intraBtn) {
+      intraBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = "http://localhost:8000/login42/";
+      });
+    }
   }
 }
 
-
-
-
+function setTokenCookies(data) {
+  document.cookie = `access_token=${data.access_token}; path=/`;
+  document.cookie = `refresh_token=${data.refresh_token}; path=/`;
+  document.cookie = `username=${data.username}; path=/`;
+}
 
 customElements.define('signin-component', signin);

@@ -124,8 +124,8 @@ CORS_ALLOW_METHODS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication', 
-                'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',# Add JWT Authentication
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -163,8 +163,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'makranomar66@gmail.com'
 DEFAULT_FROM_EMAIL = 'makranomar66@gmail.com'
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_HOST_PASSWORD = 'drihdyogmtrvgkpa'
+EMAIL_HOST_PASSWORD = 'tigeyvkwoncbzixa'  # Updated from .env file
 
 STATICFILES_DIRS = [
     BASE_DIR / '../front' / 'static',  # This should point to front/static
@@ -173,6 +172,7 @@ STATICFILES_DIRS = [
 from datetime import timedelta
 
 SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=150000),  # Adjust as needed
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Extend refresh token to 30 days
     'ROTATE_REFRESH_TOKENS': True,  # Issues a new refresh token upon refreshing

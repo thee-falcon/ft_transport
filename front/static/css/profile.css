@@ -446,3 +446,48 @@ body {
         font-size: 0.8rem;
     }
 }
+
+/* 2FA Section Styling */
+.two-factor-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #1B3E46;
+    border-radius: 16px;
+    border: 2px solid #E5F690;
+}
+
+#toggle-2fa {
+    background-color: #f44336;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 24px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+#toggle-2fa.enabled {
+    background-color: #4CAF50;
+}
+
+.twofa-code-input {
+    margin-top: 1.5rem;
+    display: none;
+}
+
+#twofa-code {
+    width: 70%;
+    padding: 0.8rem;
+    border-radius: 24px;
+    border: 2px solid #E5F690;
+    background: #1B3E46;
+    color: white;
+}
+
+#submit-twofa-code {
+    background-color: #E5F690;
+    color: #1B3E46;
+    padding: 0.8rem 1.5rem;
+    border-radius: 24px;
+    margin-left: 1rem;
+    font-weight: bold;
+}

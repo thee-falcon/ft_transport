@@ -80,3 +80,81 @@
     background-color: #f44336;
     color: white;
 }
+
+/* 2FA Specific Styles */
+.two-factor-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+#toggle-2fa {
+    background-color: #ff4444;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+#toggle-2fa.enabled {
+    background-color: #00C851;
+}
+
+.twofa-code-input {
+    margin-top: 15px;
+    display: none;
+}
+
+.twofa-code {
+    width: 60%;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+#submit-twofa-code {
+    background-color: #33b5e5;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#submit-twofa-code:hover {
+    background-color: #0099cc;
+}
+
+/* Status Messages */
+.twofa-status {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    display: none;
+}
+
+.twofa-success {
+    background: #dff0d8;
+    color: #3c763d;
+}
+
+.twofa-error {
+    background: #f2dede;
+    color: #a94442;
+}
+
+.twofa-input {
+    margin-top: 15px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

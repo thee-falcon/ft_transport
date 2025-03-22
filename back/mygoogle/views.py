@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializer import UserSerializer
 from .models import UserProfile
+from two_factor.models import VerificationCode
 import secrets
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -52,35 +53,80 @@ def set_token_cookies(response, refresh_token, access_token):
 
 @api_view(['POST'])
 def login(req):
-    print("Received login request for:", req.data['username'])
+    username = req.data.get('username')
+    password = req.data.get('password')
+    code = req.data.get('code')
 
-    user = get_object_or_404(User, username=req.data['username'])
-    
-    if not user.check_password(req.data['password']):
-        return Response({"detail": "Wrong Password!"}, status=status.HTTP_401_UNAUTHORIZED)
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    if not hasattr(user, 'profile'):
-        return Response({"detail": "User profile missing!"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if not user.check_password(password):
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    # Check if 2FA is enabled
-    if user.profile.otp_enabled:
-        # Return special response for 2FA required
+    try:
+        profile = user.profile
+    except UserProfile.DoesNotExist:
+        # Create a profile if it doesn't exist
+        profile = UserProfile.objects.create(user=user)
+
+    # If 2FA is enabled and no code is provided, send the code
+    if profile.otp_enabled and not code:
+        # Delete any existing codes for this user
+        VerificationCode.objects.filter(user=user).delete()
+        
+        # Generate and save new code
+        new_code = ''.join(secrets.choice('0123456789') for _ in range(6))
+        expires_at = timezone.now() + timezone.timedelta(minutes=30)
+        
+        VerificationCode.objects.create(
+            user=user,
+            code=new_code,
+            expires_at=expires_at
+        )
+        
+        # Send email with the code
+        send_mail(
+            'Your 2FA Code',
+            f'Your verification code is: {new_code}',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        
         return Response({
-            "detail": "2FA required",
-            "username": user.username
+            'detail': '2FA code sent to your email',
+            'username': username
         }, status=status.HTTP_202_ACCEPTED)
 
-    # Regular login flow
+    # If 2FA is enabled and code is provided, verify it
+    if profile.otp_enabled and code:
+        verification_code = VerificationCode.objects.filter(
+            user=user,
+            code=code,
+            expires_at__gte=timezone.now()
+        ).first()
+        
+        if verification_code:
+            verification_code.delete()
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh),
+                'username': username
+            })
+        else:
+            return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # If 2FA is not enabled, proceed with normal login
     refresh = RefreshToken.for_user(user)
-    response = Response({
-        "access_token": str(refresh.access_token),
-        "refresh_token": str(refresh),
-        "username": user.username,
-    }, status=status.HTTP_200_OK)
-
-    set_token_cookies(response, str(refresh), str(refresh.access_token))
-    return response
-
+    return Response({
+        'access_token': str(refresh.access_token),
+        'refresh_token': str(refresh),
+        'username': username
+    })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
