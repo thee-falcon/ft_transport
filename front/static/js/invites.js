@@ -13,6 +13,7 @@ async function Fetchinvites() {
 
             if (response.ok) {
                 const data = await response.json();
+
                 localStorage.setItem('the-invites', JSON.stringify(data));
                 resolve(data);
             } else {

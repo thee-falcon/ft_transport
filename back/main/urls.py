@@ -35,8 +35,8 @@ urlpatterns = [
     # path('login/', views.login),
     # path('logout/', views.logout),
     # path('signup/', views.signup),
-    path('api/', include("mygoogle.urls")),
-    path('api/', include("chat.urls")),
+    path('', include("mygoogle.urls")),
+    path('', include("chat.urls")),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

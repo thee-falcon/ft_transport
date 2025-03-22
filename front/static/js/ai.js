@@ -264,7 +264,7 @@ class aiMode extends HTMLElement {
             // this.scores.increment_rscore();
             // this.scores.increment_rscore();
 
-            if (this.scores.get_total >= 5) {
+            if (this.scores.r_score >= 3) {
                 this.endgame();
             }
             this.round_winner = this.RIGHT;
@@ -279,7 +279,7 @@ class aiMode extends HTMLElement {
             // this.scores.increment_lscore();
             // this.scores.increment_lscore();
 
-            if (this.scores.get_total >= 5) {
+            if (this.scores.l_score >= 3) {
                 this.endgame();
             }
             this.round_winner = this.LEFT;

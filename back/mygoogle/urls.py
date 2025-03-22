@@ -36,4 +36,5 @@ urlpatterns = [
     path('clean_invites/' , views.clean_expired_invitations),
 	path('api/game-history/', game_history_list, name='game-history-list'),
 	path('api/save_game/', save_game_history, name='save_game'),
+	path('update_tournament/' , views.update_tournament),
     ]

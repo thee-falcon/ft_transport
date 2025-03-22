@@ -1,8 +1,8 @@
 class tournament extends HTMLElement {
-    // constructor()
-    // {
-    //     this.last_matchwinner = null;
-    // }
+    constructor()
+    {
+        this.last_matchwinner = null;
+    }
     async connectedCallback() {
         
         const storedUserData = JSON.parse(localStorage.getItem('userData'));
@@ -22,7 +22,7 @@ class tournament extends HTMLElement {
                     <h2>Tournament Competitors</h2>
                 </div>
                 <div class="Inputs">
-                    <input class="containerr_above_all_1_input" type="text" id="player1" value="${username}" readonly>
+                    <input class="containerr_above_all_1_input" type="text" id="mvp" value="${username}" readonly>
                     <input class="containerr_above_all_1_input" type="text" id="player2" placeholder="player2">
                     <input class="containerr_above_all_1_input" type="text" id="player3" placeholder="player3">
                     <input class="containerr_above_all_1_input" type="text" id="player4" placeholder="player4">
@@ -55,18 +55,22 @@ document.getElementById("start_tournament").addEventListener("click", function (
     // Check if we have four players
     if (players && Object.keys(players).length === 4) {
         let playerList = Object.values(players);
-        // let mvp = players.mvp; // Get the MVP (simo)
-        // let mvpWins = false; // Flag to track MVP status
+        let mvp = players.mvp; // Get the MVP (simo)
+        let mvpWins = false; // Flag to track MVP status
         
         console.log("Tournament Matches:");
         // localStorage.setItem("tournament_players", JSON.stringify(selectedUserData));
         // Simulate First Round
-        // this.last_matchwinner = JSON.parse(localStorage.getItem('Winner'));
-
+        this.last_matchwinner = JSON.parse(localStorage.getItem('Winner'));
         
+        console.log(playerList[0],"------------")
+        console.log(playerList[1],"------------")
+        console.log(playerList[2],"------------")
+        console.log(playerList[3],"------------")
+        // console.log(playerList[0])
 
         let semiFinal1Winner = simulateMatch(playerList[0], playerList[1]);
-        // let semiFinal2Winner = simulateMatch(playerList[2], playerList[3]);
+        let semiFinal2Winner = simulateMatch(playerList[2], playerList[3]);
     }
     
     // Function to simulate a match
@@ -75,12 +79,10 @@ document.getElementById("start_tournament").addEventListener("click", function (
         localStorage.setItem("nextMatch", JSON.stringify([player1, player2]));
         window.location.hash = "offline";
         // localStorage.getItem("Winner", JSON.stringify([player1, player2]));
-        // return JSON.parse(localStorage.getItem("Winner"));
+        return JSON.parse(localStorage.getItem("Winner"));
 
         // return Math.random() < 0.5 ? player1 : player2;
 
     }
 
 });}}
-
-customElements.define("tournament-component", tournament);

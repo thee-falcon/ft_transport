@@ -252,7 +252,8 @@ class Multiplayer extends HTMLElement {
             console.log("Player 1:", this.me);
             console.log("Player 2:", this.op);
             this.names.style.display = 'none';
-
+            
+            this.drawBoard();
             this.startgame();
         }
     }
@@ -530,7 +531,7 @@ class Multiplayer extends HTMLElement {
             // this.scores.increment_rscore();
         // this.gameState.finished = 1; // hada ghir debug
 
-            if(this.scores.get_total >=5 ){
+        if (this.scores.r_score >= 3){
                 this.endgame();
 
             }
@@ -546,7 +547,7 @@ class Multiplayer extends HTMLElement {
             // this.scores.increment_lscore();
             // this.scores.increment_lscore();
             // this.scores.increment_lscore();
-            if(this.scores.get_total >=5 ){
+            if (this.scores.l_score >= 3){
                 this.endgame();
             }
             this.gameState.round_winner = this.LEFT;
@@ -658,6 +659,54 @@ class Multiplayer extends HTMLElement {
         const paddleBottom = paddleY + this.paddles.height / 2;
         return this.ball.y >= paddleTop && this.ball.y <= paddleBottom;
     }
+    drawInitialBoard() { //draw the board without the names
+        this.ctx.clearRect(0, 0, this.board.width, this.board.height);
+        this.ctx.font = "Bold 40px 'Bai Jamjuree'";
+
+        // Draw title text
+        const text = "Match score";
+        const textWidth = this.ctx.measureText(text).width;
+        const x = (this.board.width - textWidth) / 2;
+        const y = this.board.height - 90;
+
+        // Set up player images
+        const imageSize = 90;
+        const images = [
+            { src: "../media/red1.jpg", x: this.board.width / 8 + this.ctx.measureText("Red Team").width + imageSize, y: this.board.height / 9 },
+            { src: "../media/red3.jpg", x: this.board.width / 8 + this.ctx.measureText("Red Team").width + 2 * imageSize, y: this.board.height / 9 },
+            { src: "../media/blue1.jpg", x: (this.board.width - this.board.width / 3) - imageSize, y: this.board.height / 9 },
+            { src: "../media/blue2.jpg", x: (this.board.width - this.board.width / 3) - 2 * imageSize, y: this.board.height / 9 }
+        ];
+
+        // Load and draw circular images
+        images.forEach(imgData => {
+            const img = new Image();
+            img.src = imgData.src;
+            img.onload = () => {
+                this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.arc(imgData.x + imageSize / 2, imgData.y + imageSize / 2, imageSize / 2, 0, Math.PI * 2);
+                this.ctx.clip();
+                this.ctx.drawImage(img, imgData.x, imgData.y, imageSize, imageSize);
+                this.ctx.restore();
+            };
+        });
+
+        // Draw scoreboard text
+        this.ctx.fillText(text, x, y);
+        this.ctx.fillText("Team 1", (this.board.width) / 8, this.board.height / 6 + 30); // Place holder names
+        this.ctx.fillText("Team 2", (this.board.width - this.board.width / 3), this.board.height / 6 + 30); // Place holder names
+        this.ctx.fillText("0", (this.board.width) / 4, y);
+        this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
+        this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height / 6);
+
+        // Draw team names with colors
+        this.ctx.fillStyle = "#FF0000";
+        this.ctx.fillText("Red Team", this.board.width / 8, this.board.height / 6);
+        this.ctx.fillStyle = "#0000FF";
+        this.ctx.fillText("Blue Team", this.board.width - this.board.width / 3, this.board.height / 6);
+        this.ctx.fillStyle = "#000000";
+    }
     
     drawBoard() {
         this.ctx.clearRect(0, 0, this.board.width, this.board.height);
@@ -694,8 +743,8 @@ class Multiplayer extends HTMLElement {
 
         // Draw scoreboard text
         this.ctx.fillText(text, x, y);
-        this.ctx.fillText("getCookie('username')", (this.board.width) / 8, this.board.height/6+30); // hadi li khasha tbdl
-        this.ctx.fillText("Stong -- strong", (this.board.width - this.board.width/3), this.board.height/6+30);
+        this.ctx.fillText(this.me, (this.board.width) / 8, this.board.height/6+30); // hadi li khasha tbdl
+        this.ctx.fillText(this.op, (this.board.width - this.board.width/3), this.board.height/6+30);
         this.ctx.fillText("0", (this.board.width) / 4, y);
         this.ctx.fillText("0", (this.board.width - (this.board.width) / 4), y);
         this.ctx.fillText("VS", (this.board.width - this.ctx.measureText("VS").width) / 2, this.board.height/6);

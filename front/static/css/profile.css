@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.notification-container {
+	display: none;
+}
+
 body {
     background-color: #1B3E46;
 

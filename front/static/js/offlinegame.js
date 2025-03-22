@@ -25,13 +25,37 @@ class OfflineMode extends HTMLElement {
         this.me = null;
         this.win = null;
         this.lose = null;
+        this.lastwinner = null;
         this.is_tournament = null;
+        this.nextMatchPlayer = null;
+        this.is_secondmatch = false;
+        this.is_finale = false;
+
         this.handleStartButtonClick = this.handleStartButtonClick.bind(this);
         // this.hh = this.hh.bind(this);
     }
    async type_definer()
     {
         this.nextMatchPlayer = JSON.parse(localStorage.getItem("nextMatch"));
+
+        if(this.nextMatchPlayer != null)
+        {
+            this.is_tournament = "true";
+        }
+        console.log(this.nextMatchPlayer);
+        const last_winner = JSON.parse(localStorage.getItem("onewinner"));
+        const last_2winner = JSON.parse(localStorage.getItem("twowinner"));
+        console.log("last winner is " , last_winner)
+        if(last_winner != null )
+        {
+            this.is_secondmatch = true;
+        }
+        if(last_2winner != null )
+        {
+            this.is_finale = true;
+        }
+
+
     }
     
     async connectedCallback() {
@@ -73,7 +97,6 @@ class OfflineMode extends HTMLElement {
             </div>
         `;
 
-        await this.type_definer();
         this.initializeGame();
         this.setupStartButton();
         this.type_definer();
@@ -83,7 +106,7 @@ class OfflineMode extends HTMLElement {
     initializeGame() {
 
 
-        // this.storedUserData = JSON.parse(localStorage.getItem('userData'));
+        this.storedUserData = JSON.parse(localStorage.getItem('userData'));
         // this.me = this.storedUserData.username;
         // this.op = await this.hasInviteForMe(this.me)
         // this.op = localStorage.getItem('opponentUsername');
@@ -222,92 +245,13 @@ class OfflineMode extends HTMLElement {
             this.startgame();
         }
     }
-    // async hh()
-    // {
-    //     const responsed = await fetch("http://localhost:8000/accept_invite/", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": `Bearer ${getCookie("access_token")}`, 
-    //             "X-CSRFToken": getCookie("csrftoken")
-    //         },
-    //         credentials: "include",
-    //         body: JSON.stringify({ sender_username: "nbouhali" })
-
-    //     });
-
-    // }
-
-    async gamestandby() {
-        // let imagesToDraw;
-
-        // this.cont.fillStyle = "#e4c1b9";
-        // this.cont.font = "24px Bai Jamjuree";
-        // this.cont.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // this.cont.fillText("waiting for players to join ...", (this.canvas.width - this.cont.measureText("waiting for players to join ...").width) / 2, this.canvas.height/4);
-        //         // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
-
-        // this.cont.fillStyle = "#000000";
-        // await 
-        // const responsed = await fetch("http://localhost:8000/send_invite/", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Authorization": `Bearer ${getCookie("access_token")}`, 
-        //         "X-CSRFToken": getCookie("csrftoken")
-        //     },
-        //     credentials: "include",
-        //     body: JSON.stringify({ receiver_username: "theswoord" })
-
-        // });
 
 
-        // this.checkInvitationTimeout = setTimeout(() => {
-        //     // alert("The other player did not accept the invitation in time. Redirecting to home.");
-        //     clearInterval(this.invitationCheckInterval);
-
-        //     window.location.hash = "home";
-        // }, 30000);
-
-        //     this.invitationCheckInterval = setInterval(async () => {
-        //         const response = await fetch("http://localhost:8000/check_invitation_status/", {
-        //             method: "GET",
-        //             headers: {
-        //                 "Authorization": `Bearer ${getCookie("access_token")}`, 
-        //                 "X-CSRFToken": getCookie("csrftoken")
-        //             },
-        //             credentials: "include"
-        //         });
-
-        //         const invitationStatus = await response.json();
-        //         console.log(JSON.stringify(invitationStatus, null, 2));
-
-
-        //         if (invitationStatus.bothAccepted) {
-        //             clearTimeout(this.checkInvitationTimeout);
-        //             clearInterval(this.invitationCheckInterval); 
-        //             this.startgame(); 
-        //         }
-        //     }, 5000); 
-
-
-
-        // imagesToDraw = [
-        //     { img: this.images[0], x: (this.canvas.width / 2) - (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
-        //     { img: this.images[1], x: (this.canvas.width / 2) + (this.imageSize / 2), y: this.canvas.height / 5 }, // Center in left half
-        //     // { img: this.images[3], x: (3 * this.custo.width / 4) - (this.imageSize / 2), y: this.custo.height / 4 } // Center in right half
-        // ];
-
-        // imagesToDraw.forEach(imgData => {
-        //     this.cont.save();
-        //     this.cont.beginPath();
-        //     this.cont.arc(imgData.x + this.imageSize / 2, imgData.y + this.imageSize / 2, this.imageSize / 2, 0, Math.PI * 2);
-        //     this.cont.clip();
-        //     this.cont.drawImage(imgData.img, imgData.x, imgData.y, this.imageSize, this.imageSize);
-        //     this.cont.restore();
-
-        // });
-
+    async gamestandby()
+    {
+    //    khawi
+    // await this.type_definer();
+        // console.log(this.nextMatchPlayer);
     }
     startCountdown() {
         this.countdownActive = true;
@@ -602,12 +546,8 @@ class OfflineMode extends HTMLElement {
 
         if (this.ballx + this.radius >= this.canvas.width) {
             this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            // this.scores.increment_rscore();
-            // this.scores.increment_rscore();
-            // this.scores.increment_rscore();
 
-            if (this.scores.get_total >= 5) {
+            if (this.scores.r_score >= 3) {
                 this.endgame();
 
             }
@@ -618,12 +558,8 @@ class OfflineMode extends HTMLElement {
         }
         if (this.ballx + this.radius < 0) {
             this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            // this.scores.increment_lscore();
-            // this.scores.increment_lscore();
-            // this.scores.increment_lscore();
 
-            if (this.scores.get_total >= 5) {
+            if (this.scores.l_score >= 3 ) {
                 this.endgame();
             }
             this.round_winner = this.LEFT;
@@ -745,9 +681,64 @@ class OfflineMode extends HTMLElement {
         //     credentials: "include",
         //     body: JSON.stringify({ username })  // This now works correctly with POST
         // });
+        if(this.is_finale == true)
+        {
+        localStorage.removeItem('nextMatch');
+        localStorage.removeItem('onewinner');
+        localStorage.removeItem('twowinner');
+        localStorage.removeItem('Tour_usernames');
+
+        let result = null; 
+
+            if(this.win == this.storedUserData.username)
+            {
+                result = "win";
+                // alert("rb7ti tournament")
+            }
+            else
+            {
+                result = "lose";
+            }
+            const responsed = await fetch("http://localhost:8000/update_tournament/", {
+            method: "POST",  // Changed from GET to POST
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getCookie("access_token")}`,
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            credentials: "include",
+            body: JSON.stringify({ result })  // This now works correctly with POST
+        });
+
+
+            window.location.hash = "home";
+
+        }
 
         // localStorage.removeItem('opponentUsername')
-        window.location.hash = "home"; // Redirect after the request
+        else if (this.is_tournament != null){
+            if (this.is_secondmatch == false){
+
+                localStorage.setItem("onewinner", JSON.stringify(this.win));
+            }
+            else 
+            {
+                localStorage.setItem("twowinner", JSON.stringify(this.win));
+
+            }
+        localStorage.removeItem('nextMatch');
+        window.location.hash = "tree"; // Redirect after the request
+        }
+        // else if(this.is_secondmatch)
+        // {
+        // window.location.hash = "tree"; // Redirect after the request
+
+        // }
+        else 
+        {
+            window.location.hash = "home"; // Redirect after the request
+
+        }
     }
 
 

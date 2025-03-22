@@ -20,9 +20,9 @@ class dashboard extends HTMLElement {
                 <div class="dash-card2">
                     <div class="dash-card2-col1">
                         <div class="dash-card2-buttons">     
-                            <a href="#" class="dash-Start">Start Game</a>
-                            <a href="#" class="dash-Start">Start Gym</a>
-                            <a href="#" class="dash-Start">Start Tournament</a>
+                            <a href="#offline" class="dash-Start">Start Game</a>
+                            <a href="#training" class="dash-Start">Start Gym</a>
+                            <a href="#tournament" class="dash-Start">Start Tournament</a>
                         </div>
                     </div>
                     <div class="dash-card2-image">

@@ -51,6 +51,7 @@ class NormalMode extends HTMLElement {
 
         
         this.storedUserData = JSON.parse(localStorage.getItem('userData'));
+		console.log("chat : ", this.storedUserData)
         this.me = this.storedUserData.username;
         // this.op = await this.hasInviteForMe(this.me)
         this.op = localStorage.getItem('opponentUsername');
@@ -500,12 +501,12 @@ class NormalMode extends HTMLElement {
         
         if (this.ballx + this.radius >= this.canvas.width) {
             this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
-            this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
+            // this.scores.increment_rscore();
 
-            if(this.scores.get_total >=5 ){
+            if (this.scores.r_score >= 3){
                 this.endgame();
 
             }
@@ -515,12 +516,12 @@ class NormalMode extends HTMLElement {
         }
         if (this.ballx + this.radius < 0) {
             this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
-            this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
+            // this.scores.increment_lscore();
 
-            if(this.scores.get_total >=5 ){
+            if (this.scores.l_score >= 3){
                 this.endgame();
             }
             this.round_winner = this.LEFT;
@@ -592,8 +593,84 @@ class NormalMode extends HTMLElement {
         // console.log("-----------")
         // console.log(csrfToken);
         const username = this.storedUserData.username;
+		console.log("update :",  this.me ,  " :  ", this.op , "  : ")
+		
         const loser_is = this.lose;
         const winner_is = this.win;
+
+		let gameData;
+
+		if (this.me === winner_is) {
+			gameData = {
+				sent_by: this.me,  // Usernames instead of IDs
+				send_to: this.op ,
+				result: "Win",  // "win" or "lose"
+			};
+		}
+		else
+		{
+			gameData = {
+				sent_by: this.me,  // Usernames instead of IDs
+				send_to: this.op ,
+				result: "Lose",  // "win" or "lose"
+			};
+		}
+
+		fetch("http://localhost:8000/api/save_game/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+                "Authorization": `Bearer ${getCookie("access_token")}`, 
+                "X-CSRFToken": csrfToken
+			},
+			body: JSON.stringify(gameData),
+		})
+		.then(response => response.text())  // Change to .text() instead of .json()
+		.then(text => {
+			console.log("Raw response:", text);
+			return JSON.parse(text);  // Convert manually to JSON
+		})
+		.then(data => console.log("Game history saved:", data))
+		.catch(error => console.error("Error saving game history:", error));
+
+
+		// let gameData;
+		// if (username === winner_is)
+		// {
+		// 	gameData = {
+		// 		sent_by_id: username,
+		// 		send_to_id: loser_is,
+		// 		result: "Win",  // "win" or "lose"
+		// 	};
+		// }
+		// else
+		// {
+		// 	gameData = {
+		// 		sent_by_id: username,
+		// 		send_to_id: winner_is,
+		// 		result: "Lose",
+		// 	};
+		// }
+
+		// fetch("http://localhost:8000/api/save_game/", {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Authorization": `Bearer ${this.accessToken}`,
+		// 		"Content-Type": "application/json",
+		// 	},
+		// 	body: JSON.stringify(gameData),
+		// })
+		// .then(response => response.text())  // Change to .text() instead of .json()
+		// .then(text => {
+		// 	console.log("Raw response:", text);
+		// 	return JSON.parse(text);  // Convert manually to JSON
+		// })
+		// .then(data => console.log("Game history saved:", data))
+		// .catch(error => console.error("Error saving game history:", error));
+
+
+		
+		
 
         const response = await fetch("http://localhost:8000/update_game_result/", {
             method: "POST",
@@ -667,7 +744,7 @@ class NormalMode extends HTMLElement {
             ];
              this.ctx.fillStyle = "#0000FF";
              this.ctx.fillText("👑👑 Blue Team won! 👑👑", (this.board.width - this.ctx.measureText("👑👑 Blue Team won! 👑👑").width) / 2, this.board.height/6);
-            //  this.ctx.fillText(`${this.scores.lscore}-${this.scores.rscore}`, (this.board.width - this.ctx.measureText(`${this.scores.lscore}-${this.scores.rscore}`).width) / 2, this.board.height/6);
+            //  this.ctx.fillText(`${this.scores.lscore}-${this.scores.rscore}`, (this.board.width - this.ctx.measureText(`${this.scores.lscore}-${this.scores.rscore}`).width) / 2, this.board.height/6); //here
             this.ctx.fillText(`${left_score}-${right_score}`, (this.board.width - this.ctx.measureText(`${left_score}-${right_score}`).width) / 2, this.board.height/5+20);
             
              this.ctx.fillStyle = "#000000";

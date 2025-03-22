@@ -191,7 +191,37 @@ def search_users(request):
 
     return JsonResponse([], safe=False)
 
- 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_tournament(req):
+
+    user_profile = get_object_or_404(UserProfile, user=req.user)
+    result = req.data.get('result')
+    if result == "win":
+        user_profile.tournaments_won += 1
+        user_profile.tournaments_count += 1
+
+    elif result == "lose":
+        user_profile.tournaments_lost +=1
+        user_profile.tournaments_count += 1
+
+    user_profile.save()
+
+    response_data = {
+        "winner": {
+            "nickname": user_profile.nickname,
+            "matches_won": user_profile.matches_won,
+            "matches_lost": user_profile.matches_lost,
+            "matches_count": user_profile.matches_count,
+        }
+    }
+
+    return Response(response_data, status=status.HTTP_200_OK)
+
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_game_result(req):
@@ -785,27 +815,23 @@ def game_history_list(request):
 
 @api_view(['POST'])
 def save_game_history(request):
-	try:
-		# Extract data from the request
-		sent_by_id = int(request.data.get("sent_by_id"))  # Convert to integer
-		send_to_id = int(request.data.get("send_to_id"))  # Convert to integer
-		result = request.data.get("result")
+    try:
+        # Extract data from the request
+        sent_by_username = request.data.get("sent_by")  # Get the username
+        send_to_username = request.data.get("send_to")  # Get the username
+        result = request.data.get("result")
 
-		# Fetch user objects
-		sent_by = User.objects.get(pk=sent_by_id)
-		send_to = User.objects.get(pk=send_to_id)
+        # Fetch user objects using username
+        sent_by = User.objects.get(username=sent_by_username)
+        send_to = User.objects.get(username=send_to_username)
 
-		# Save the game history
-		game_history = GameHistory.objects.create(sent_by=sent_by, send_to=send_to, result=result)
-		
-		return Response({"message": "Game history saved successfully"}, status=201)
+        # Save the game history
+        game_history = GameHistory.objects.create(sent_by=sent_by, send_to=send_to, result=result)
+        
+        return Response({"message": "Game history saved successfully"}, status=201)
 
-	except ValueError:
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=404)
 
-		return Response({"error": "Invalid user ID format"}, status=400)
-
-	except User.DoesNotExist:
-		return Response({"error": "User not found"}, status=404)
-
-	except Exception as e:
-		return Response({"error": str(e)}, status=500)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

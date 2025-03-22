@@ -6,7 +6,7 @@ class Navebar extends HTMLElement {
 		<link rel="stylesheet" href="/static/bootstrap-5.3.3-dist/css/bootstrap.min.css">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent" id="mainNavBar">
 		  <div class="container-fluid">
-			<a class="navbar-brand" href="#" id="index-link">
+			<a class="navbar-brand" href="#home" id="home">
 			  <img src="static/image/logo.png" alt="Logo">
 			</a>
 			<button class="navbar-toggler shadow-none border-1" type="button" data-bs-toggle="offcanvas" 
@@ -58,7 +58,7 @@ class Navebar extends HTMLElement {
 			</div>
 		  </div>
 		</nav>
-		<script src="static/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+
 	  `;
 
 	  function isTokenExpired(token) {

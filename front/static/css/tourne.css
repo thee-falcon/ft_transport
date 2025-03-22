@@ -1,18 +1,16 @@
-
 body{
-    /* display: flex;
-    min-height: 100vh;
     background-color: #1B3E46;
-    justify-content: center;
-    align-items: center; */
-	background-color: #1B3E46;
+}
+
+.notification-container {
+	display: none;
 }
 
 .biggie{
     display: flex;
-    min-height: 100vh;
-    max-height: 150vh;
-
+    min-height: 60rem;
+ 
+    background-color: #1B3E46;
     justify-content: center;
     align-items: center;
 }
@@ -22,7 +20,7 @@ body{
     justify-content: center;
     align-content: center;
     column-gap: 3px;
-    /* max-width: 1400px; */
+    max-width: 1400px;
     /* min-width: 800px; */
 }
 
@@ -31,9 +29,10 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: center;
+	align-items: center;
     row-gap: 50px;
     border-radius: 20px;
-    width: 60%;
+    width: 200%;
     min-height: 100%;
 }
 
@@ -52,24 +51,33 @@ body{
     row-gap: 20px;
 }
 
+.butt {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
 .buttons{
-    position: relative;
+    /* position: relative; */
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     background-color: #10292F;
     border-radius: 10px;
     color: #E5F690;
-    align-items: center;
-    text-align: center;
-    align-content: center;
+    /* align-items: center; */
+    /* text-align: center; */
+    /* align-content: center; */
     justify-content: center;
     padding: 7px; 
     border-radius: 20px;
     font-size: 15px;
     cursor: pointer;
     border: #E5F690 1px solid;
-    text-decoration: none;
+    /* text-decoration: none; */
     transition: background-color 0.3s ease;
+	width: 50%;
 }
 
 .buttons a{
@@ -109,7 +117,7 @@ input:placeholder-shown {
     display: flex;
     justify-content: center;
     border-radius: 20px;
-    width: 40%;
+    width: 100%;
     min-height: 100%;
 
 } 

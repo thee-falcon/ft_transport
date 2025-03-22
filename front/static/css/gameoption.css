@@ -4,22 +4,26 @@ body {
     justify-content: center;
     align-items: center; */
 }
+
+.notification-container {
+	display: none;
+}
 .container {
     position: relative ;
     display: flex ;
     flex-direction: row;
     justify-content: center  ;
     align-items: center  ;
-    justify-content: center  ;
-    align-items: center  ;
-    width: 300px ! ;
-    height: 350px  ;
+
+	
+    height: 50rem ;
+
     border-radius: 10px ;
 }
 
 .container .glass {
     position: relative ;
-    width: 150px ; 
+    width: 200px ; 
     display: flex;
     flex-direction: row;
     aspect-ratio: 3 / 4 ;

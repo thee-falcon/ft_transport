@@ -1,6 +1,7 @@
 class home extends HTMLElement {
     async connectedCallback() {
-
+		const storedUserData = JSON.parse(localStorage.getItem('userData')) || {};
+		let profilePicture = storedUserData.profile_picture || "media/Screen Shot 2024-10-02 at 2.05.14 AM.png";
 
         this.innerHTML = `
         <style>
@@ -8,7 +9,7 @@ class home extends HTMLElement {
         </style>
         <body>
         <link rel="stylesheet" href="static/css/home.css">
-        
+		<link rel="stylesheet" href="static/css/settings.css">
     
         <div id="ok1">
    			<input type="text" id="userSearch" placeholder="Search user..." />
@@ -116,7 +117,8 @@ class home extends HTMLElement {
                         } else {
                             data.forEach(user => {
                                 let userElement = document.createElement("div");
-                                userElement.textContent = `${user.username} (${user.email})`;
+                                userElement.textContent = `${user.username} `;
+                                // userElement.textContent = `${user.username} (${user.email})`;
                                 userElement.classList.add("search-result-item");
                                 userElement.dataset.userId = user.id; // Store user ID
         
@@ -199,6 +201,7 @@ class home extends HTMLElement {
         document.getElementById("open-settings").addEventListener("click", () => {
              document.getElementById("settings-panel").style.display = "block"; // Show settings
         });
+
         document.getElementById("go-to-gameoption").addEventListener("click", function (event) {
             event.preventDefault();
             Fetchinvites();
