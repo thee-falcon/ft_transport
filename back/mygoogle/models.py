@@ -34,6 +34,7 @@ class UserProfile(models.Model):
     tournaments_won = models.IntegerField(default=0)
     tournaments_lost = models.IntegerField(default=0)
     tournaments_count = models.IntegerField(default=0)
+    otp_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nickname or self.user.username

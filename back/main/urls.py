@@ -13,6 +13,7 @@ from django.shortcuts import render
 
 from django.conf import settings
 import os
+from two_factor.views import send_code, verify_code
 # from mygoogle import google_login
 
 
@@ -37,6 +38,8 @@ urlpatterns = [
     # path('signup/', views.signup),
     path('', include("mygoogle.urls")),
     path('', include("chat.urls")),
+    path('send_code/', send_code, name='send_code'),
+    path('verify_code/', verify_code, name='verify_code'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

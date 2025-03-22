@@ -38,9 +38,9 @@ from django.db.models import Q
 from .serializer import UserProfileSerializer
 
 # OAuth Credentials
-SECRET = "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"  
-UID = "u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df"
-AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
+SECRET = "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"  
+UID = "u-s4t2ud-126f7d1f4eb207d04f438aee82e0f81129d449a150959bb41b42f373d0549219"
+AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-126f7d1f4eb207d04f438aee82e0f81129d449a150959bb41b42f373d0549219&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
 def set_token_cookies(response, refresh_token, access_token):
@@ -55,20 +55,27 @@ def login(req):
     print("Received login request for:", req.data['username'])
 
     user = get_object_or_404(User, username=req.data['username'])
-    print("Stored password (hashed):", user.password)
-    print("Entered password:", req.data['password'])
-
+    
     if not user.check_password(req.data['password']):
-        print("Password check failed!")
-        return Response({"detail": "Wrong Password!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({"detail": "Wrong Password!"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    print("Password check passed!")
+    if not hasattr(user, 'profile'):
+        return Response({"detail": "User profile missing!"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    # Check if 2FA is enabled
+    if user.profile.otp_enabled:
+        # Return special response for 2FA required
+        return Response({
+            "detail": "2FA required",
+            "username": user.username
+        }, status=status.HTTP_202_ACCEPTED)
+
+    # Regular login flow
     refresh = RefreshToken.for_user(user)
     response = Response({
         "access_token": str(refresh.access_token),
         "refresh_token": str(refresh),
-        "username": req.data['username'],
+        "username": user.username,
     }, status=status.HTTP_200_OK)
 
     set_token_cookies(response, str(refresh), str(refresh.access_token))
@@ -306,7 +313,8 @@ def get_user_stats(req):
     print("Raw Profile Picture Path:", profile_picture)
 
     # No need to call save_profile_picture here. Just return the stored path.
-    profile_picture_path = profile_picture.url if profile_picture else None
+    # profile_picture_path = profile_picture.url if profile_picture else None
+    profile_picture_path = profile_picture.url.split('media/')[-1] if profile_picture else None
 
     response = Response({
         "nickname": user_profile.nickname,
@@ -320,7 +328,8 @@ def get_user_stats(req):
         "email": user.email,        
         "profile_picture": profile_picture_path,  # Use stored path
         "first_name": user.first_name,  
-        "last_name": user.last_name,    
+        "last_name": user.last_name,
+        "otp_enabled": user_profile.otp_enabled,
     }, status=status.HTTP_200_OK)
 
     print('Response Data:', response.data)

@@ -10,6 +10,53 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from two_factor.permissions import Is2FAVerified
+from django.conf import settings
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_code(request):
+    user = request.user
+    VerificationCode.objects.filter(user=user).delete()
+    
+    code = generate_code()
+    expires_at = timezone.now() + timezone.timedelta(minutes=30)
+    
+    VerificationCode.objects.create(
+        user=user,
+        code=code,
+        expires_at=expires_at
+    )
+    
+    # Use email settings from configuration
+    send_mail(
+        'Your 2FA Code',
+        f'Your verification code is: {code}',
+        settings.DEFAULT_FROM_EMAIL,  # Use configured email
+        [user.email],
+        fail_silently=False,
+    )
+    
+    return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_code(request):
+    user = request.user
+    code = request.data.get('code', '').strip()
+    
+    verification_code = VerificationCode.objects.filter(
+        user=user,
+        code=code,
+        expires_at__gte=timezone.now()
+    ).first()
+    
+    if verification_code:
+        verification_code.delete()
+        # Update using proper relationship
+        user.profile.otp_enabled = True
+        user.profile.save()
+        return Response({'detail': '2FA enabled successfully!'}, status=status.HTTP_200_OK)
+    return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProtectedView(APIView):
     permission_classes = [IsAuthenticated, Is2FAVerified]
@@ -64,9 +111,6 @@ def verify_code(request):
     user = request.user
     code = request.data.get('code', '').strip()
     
-    print(f"Verification attempt for {user.email}")
-    print(f"Submitted code: {code}")
-
     verification_code = VerificationCode.objects.filter(
         user=user,
         code=code,
@@ -74,19 +118,11 @@ def verify_code(request):
     ).first()
     
     if verification_code:
-        print("Valid code found!")
-        print(f"Expires at: {verification_code.expires_at}")
         verification_code.delete()
-        # generate new token with 2FA verified
-        refresh = RefreshToken.for_user(user)
-        refresh['twofa_verified'] = True
-        return Response({
-            'access': str(refresh.access_token),
-            'refresh': str(refresh)
-        }, status=status.HTTP_200_OK)
+        # Enable 2FA for the user
+        user.profile.otp_enabled = True  # Update UserProfile
+        user.profile.save()
+        return Response({'detail': '2FA enabled successfully!'}, status=status.HTTP_200_OK)
     else:
-        print("No valid code found in DB")
-        print("Existing codes:", VerificationCode.objects.filter(user=user).values_list('code', flat=True))
-    
-    return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
 
