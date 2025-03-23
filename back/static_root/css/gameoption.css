@@ -1,0 +1,122 @@
+body {
+    background-color: #10292F;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.notification-container {
+	display: none;
+}
+.container {
+    position: relative ;
+    display: flex ;
+    flex-direction: row;
+    justify-content: center  ;
+    align-items: center  ;
+
+	
+    height: 50rem ;
+
+    border-radius: 10px ;
+}
+
+.container .glass {
+    position: relative ;
+    width: 200px ; 
+    display: flex;
+    flex-direction: row;
+    aspect-ratio: 3 / 4 ;
+    background: linear-gradient(#8E995C, transparent) ;
+    border: 2px solid #8E995C ; ;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25) ;
+    flex-direction: column ;
+    justify-content: center ;
+    align-items: center ;
+    transition: 0.5s ease ;
+    border-radius: 10px ;
+    margin: 0 10px ;
+    backdrop-filter: blur(10px) ;
+    transform: rotate(calc(var(--r) * 1deg)) ;
+}
+
+.container:hover .glass {
+    transform: rotate(0deg);
+    margin: 0 10px;
+}
+
+.container .glass i {
+    font-size: 3vw; 
+    color: #10292F;
+}
+
+.button {
+    border: 2px solid #E5F690;
+    text-align: center;
+    background-color: #10292F;
+    color: #8E995C;;
+    text-decoration: none;
+    width: 80%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: medium; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 40px;
+    /* transform: translateY(30px); */
+}
+
+.button:hover {
+    background-color: #E5F690;
+    color: #10292F;
+}
+
+.Game_Modes_img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Game_Modes_img img {
+    width: 100%; 
+    max-width: 70px; 
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .container {
+        gap: 40px;
+        flex-direction: column;
+		margin-top: 30%;
+    }
+
+    .container .glass {
+        flex-direction: column;
+    }
+
+    .button { 
+        font-size: medium;
+        padding: 4px;
+    }
+
+}
+
+
+@media (max-width: 630px) {
+    .container {
+        gap: 40px;
+        flex-direction: column;
+    }
+
+    .container .glass {
+        flex-direction: column;
+    }
+
+
+    .button {
+        font-size: medium; 
+        padding: 4px;
+    }
+
+}
