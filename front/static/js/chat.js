@@ -84,7 +84,7 @@ class Chat extends HTMLElement {
 			</button>
               <div class="dropdown-content">
                 <a href="#" id="block-user">block</a>
-                <a href="#" id="profile-user">profile</a>
+                
                 <a href="#" class="sendinvite_button" id="justsend">invitation game</a>
               </div>
             </div>
@@ -472,9 +472,9 @@ class Chat extends HTMLElement {
     
     const self = this;
     let wsStart = "ws://";
-    // if (this.loc.protocol === "https:") {
-    //   wsStart = "wss://";
-    // }
+    if (this.loc.protocol === "https:") {
+      wsStart = "wss://";
+    }
     
     const endpoint = wsStart + this.loc.host + "/chat/?token=" + this.accessToken;
     const newSocket = new WebSocket(endpoint);
@@ -518,13 +518,13 @@ class Chat extends HTMLElement {
 
 		  this.updateFriendsStatus();
 
-      	// 	this.showFriendsStatus();
+      		this.showFriendsStatus();
 	} else if (data.response === "declined") {
 		self.showNotification("Your invitation has been declined.", 10000);
 		this.updateFriendsStatus();
 
 
-      	// 	this.showFriendsStatus();
+      		this.showFriendsStatus();
         }
 	}
 
@@ -581,7 +581,7 @@ class Chat extends HTMLElement {
 		  <div class="user_info">
 			<div class="user-item" data-chat-id="${user.id}">
 				<div class="user-image">
-					<img src="" class="user-avatar" alt="${user.username}">
+				<img src="/static/image/Screen Shot 2024-10-02 at 3.53.12 AM.png" class="user-avatar">
 					<strong>${user.username}</strong>
 				</div>
 			  ${invitationHtml}
@@ -743,64 +743,7 @@ class Chat extends HTMLElement {
       }
     });
 
-	const profileUserBtn = document.getElementById("profile-user");
-
-	if (profileUserBtn) {
-		profileUserBtn.addEventListener("click", (e) => {
-			e.preventDefault();
-
-			// Ensure currentChatId and currentusername exist
-			if (!currentChatId || !self.currentusername) {
-				console.error("No user selected.");
-				return;
-			}
-
-			// Fetch user details from the backend based on currentChatId
-			fetch(`/api/get-user-profile?id=${currentChatId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${getCookie("access_token")}`, 
-					"X-CSRFToken": getCookie("csrftoken")
-				},
-			})
-				.then(response => response.json())
-				.then(userData => {
-					if (!userData) {
-						console.error("User data not found.");
-						return;
-					}
-
-					// Prepare the guest profile data
-					const guestData = {
-						id: currentChatId,
-						username: self.currentusername,
-						first_name: userData.first_name || "",  // Use data from API
-						last_name: userData.last_name || "",
-						profile_picture: userData.profile_picture || "",
-						nickname: userData.nickname || "",
-						matches_won: userData.matches_won || 0,
-						matches_lost: userData.matches_lost || 0,
-						matches_count: userData.matches_count || 0,
-						tournaments_won: userData.tournaments_won || 0,
-						tournaments_lost: userData.tournaments_lost || 0,
-						tournaments_count: userData.tournaments_count || 0
-					};
-
-					// Save to localStorage for the guest profile page
-					localStorage.setItem("guestData", JSON.stringify(guestData));
-					console.log("Stored Guest Data:", guestData);
-
-					// Navigate to the guest profile page
-					window.location.hash = "guestprofile";
-				})
-				.catch(error => {
-					console.error("Error fetching user data:", error);
-				});
-			});
-		} else {
-			console.error("Profile user element not found");
-		}
+	
 			
 
 

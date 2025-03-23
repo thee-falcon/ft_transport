@@ -1,8 +1,8 @@
+
 class Navebar extends HTMLElement {
 	async connectedCallback() {
 	  this.innerHTML = `
 		<link rel="stylesheet" href="/static/css/navbar.css" />
-		<link rel="stylesheet" href="/static/css/language-selector.css" />
 		<link rel="stylesheet" href="/static/bootstrap-5.3.3-dist/css/bootstrap.min.css">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent" id="mainNavBar">
 		  <div class="container-fluid">
@@ -28,41 +28,31 @@ class Navebar extends HTMLElement {
 				<!-- All nav elements -->
 				<div class="nav-links">
 				  <a href="#game" class="nav" id="go-to-gameoption">
-					<img src="static/image/game.png" alt="">
-					<span data-i18n="Game">Game</span>
+					<img src="static/image/game.png" alt="">Game
 				  </a>
 				  <a href="#tournaments" class="nav" id="go-to-tournoi">
-					<img src="static/image/Tournament.png" alt="">
-					<span data-i18n="Tournaments">Tournaments</span>
+					<img src="static/image/Tournament.png" alt="">Tournaments
 				  </a>
 				  <a href="#profil" class="nav" id="go-to-profile">
-					<img src="static/image/profile.png" alt="">
-					<span data-i18n="Profile">Profile</span>
+					<img src="static/image/profile.png" alt="">Profile
 				  </a>
 				  <a href="#chat" class="nav" id="go-to-chat">
-					<img src="static/image/Chat.png" alt="">
-					<span data-i18n="Chat">Chat</span>
+					<img src="static/image/Chat.png" alt="">Chat
 				  </a>
 				  <a href="#faq" class="nav" id="faq">
-					<img src="static/image/faq.png" alt="">
-					<span data-i18n="Faq">Faq</span>
+					<img src="static/image/faq.png" alt="">Faq
 				  </a>
-				  <a href="#" class="nav" id="TournamentTree">
-					<img src="static/image/info.png" alt="">
-					<span data-i18n="About">About</span>
+				  <a href="#about" class="nav" id="about">
+					<img src="static/image/info.png" alt="">About
 				  </a>
 				</div>
 				<!-- SignIn and SignUp buttons -->
 				<div class="auth-links">
-				  <a href="#" class="SignIn" id="logout">
-					<span data-i18n="Logout">Logout</span>
-				  </a>
+				  <a href="#" class="SignIn" id="logout">Logout</a>
 				  <div class="notification-container">
 					<i class="fa fa-bell"></i>
 					<span id="notification-badge" class="notification-badge">0</span>
-				  </div>
-				  <!-- Add language selector -->
-				  <div id="language-selector-container"></div>
+				</div>
 				</div>
 			  </nav>
 			</div>
@@ -70,32 +60,6 @@ class Navebar extends HTMLElement {
 		</nav>
 
 	  `;
-
-      // Add language selector to navbar
-      console.log('Adding language selector to navbar');
-      setTimeout(() => {
-        const languageSelectorContainer = this.querySelector('#language-selector-container');
-        console.log('Language selector container:', languageSelectorContainer);
-        console.log('LanguageUtils available:', !!window.LanguageUtils);
-        
-        if (languageSelectorContainer && window.LanguageUtils) {
-          const languageSelector = window.LanguageUtils.createLanguageSelector();
-          console.log('Language selector created:', languageSelector);
-          languageSelectorContainer.appendChild(languageSelector);
-          console.log('Language selector added to DOM');
-        } else {
-          console.error('Language selector container or LanguageUtils not found');
-        }
-      }, 100); // Small delay to ensure LanguageUtils is loaded
-
-	  function getCookie(name) {
-        let match = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return match ? match[2] : null;
-      }
-      
-      function deleteCookie(name) {
-        document.cookie = name + '=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
-      }
 
 	  function isTokenExpired(token) {
 		if (!token) return true; 
@@ -118,10 +82,8 @@ class Navebar extends HTMLElement {
 		console.log('Refreshing access token...');
 		const refresh_Token = getCookie('refresh_token');
 	
-		if (!refresh_Token || isTokenExpired(refresh_Token)) {
+		if (!refresh_Token|| isTokenExpired()) {
 			console.log("No refresh token found, user not authenticated.");
-          return false;
-        }
 
 	
 		try {
@@ -148,6 +110,7 @@ class Navebar extends HTMLElement {
 			console.error("Error refreshing token:", error);
 			return false;
 		}
+	}
 	}
 		
 	  async function fetchUserStats(redirectPage) {
@@ -219,6 +182,13 @@ class Navebar extends HTMLElement {
 		  fetchUserStats("logout");
 		});
 	  }
+	  const aboutLink = this.querySelector("#about");
+	  if (aboutLink) {
+		aboutLink.addEventListener("click", (event) => {
+		  event.preventDefault();
+		  fetchUserStats("about");
+		});
+	  }
 	  const tournamentLink = this.querySelector("#go-to-tournoi");
 	  if (tournamentLink) {
 		tournamentLink.addEventListener("click", (event) => {
@@ -230,14 +200,4 @@ class Navebar extends HTMLElement {
   }
   
   customElements.define('navbar-component', Navebar);
-  
-  // Add the language selector to the navbar when DOM is loaded
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add language selector to navbar if it exists
-    const languageSelectorContainer = document.querySelector('#language-selector-container');
-    if (languageSelectorContainer && window.LanguageUtils) {
-        const languageSelector = window.LanguageUtils.createLanguageSelector();
-        languageSelectorContainer.appendChild(languageSelector);
-    }
-  });
   

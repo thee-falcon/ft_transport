@@ -126,10 +126,11 @@ class Multiplayer extends HTMLElement {
     }
         loadImages() {
         const imageSources = [
-            "../media/badge1.png",
-            "../media/badge2.png",
-            "../media/badge3.png",
-            "../media/badge4.png"
+
+			"../media/red1.jpg",
+            "../media/red3.jpg",
+            "../media/blue1.jpg",
+            "../media/blue2.jpg"
         ];
 
         this.images = imageSources.map(src => {

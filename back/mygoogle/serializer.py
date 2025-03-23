@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
-        profile_picture = profile_data.pop('profile_picture', '/media/blue2.jpg')  # Default value
+        profile_picture = profile_data.pop('profile_picture', '/blue2.jpg')  # Default value
 
         user = User.objects.create_user(
             username=validated_data['username'],

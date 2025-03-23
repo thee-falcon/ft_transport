@@ -336,7 +336,7 @@ class NormalMode extends HTMLElement {
         const x = (this.board.width - textWidth) / 2;
         const y = this.board.height - 90;
         
-        const left_scorestring = this.scores.l_score.toString();
+		const left_scorestring = this.scores.l_score.toString();
         const right_scorestring = this.scores.r_score.toString();
         // Set up player images
         // const imageSize = 90;

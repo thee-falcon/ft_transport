@@ -154,6 +154,8 @@ class SettingsPage extends HTMLElement {
         #change:hover {
           background-color: rgba(255, 255, 255, 0.8);
         }
+        
+
       </style>
       
 
@@ -247,11 +249,11 @@ class SettingsPage extends HTMLElement {
             const newPassword = document.getElementById("newPassword").value;
             const conf_password = document.getElementById("conf-password").value;
             if (!oldPassword) {
-                alert(window.LanguageUtils.translate("settings.oldPasswordRequired"));
+                alert(("settings.oldPasswordRequired"));
                 return;
             }
             if (newPassword && newPassword !== conf_password) {
-                alert(window.LanguageUtils.translate("PasswordsDontMatch"));
+                alert(("PasswordsDontMatch"));
                 return;
             }
             const data = {
@@ -274,9 +276,9 @@ class SettingsPage extends HTMLElement {
                 });
                 const responseData = await response.json();
                 if (response.ok) {
-                    alert(window.LanguageUtils.translate("settings.profileUpdated"));
+                    alert(("settings.profileUpdated"));
                 } else {
-                    alert(window.LanguageUtils.translate("settings.updateError") + ": " + responseData.message || window.LanguageUtils.translate("settings.unknownError"));
+                    alert(("settings.updateError") + ": " + responseData.message || ("settings.unknownError"));
                 }
             } catch (error) {
                 console.error("Error:", error);
@@ -285,7 +287,7 @@ class SettingsPage extends HTMLElement {
         document.getElementById("change").addEventListener("click", function (event) {
             const fileInput = document.getElementById("profilePictureInput");
             if (fileInput.files.length === 0) {
-                alert(window.LanguageUtils.translate("settings.selectFile"));
+                alert(("settings.selectFile"));
                 return;
             }
             // Use the global function to upload the file
@@ -305,12 +307,12 @@ class SettingsPage extends HTMLElement {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    alert(window.LanguageUtils.translate("settings.pictureUpdated"));
+                    alert(("settings.pictureUpdated"));
                     document.getElementById("profilePreview").src = data.profile_picture_url; // Update preview
                     document.getElementById("player-profile-picture").src = data.profile_picture_url; // Update the profile image
                 } else {
                     const errorData = await response.json();
-                    alert(window.LanguageUtils.translate("Error") + ": " + JSON.stringify(errorData));
+                    alert(("Error") + ": " + JSON.stringify(errorData));
                 }
             } catch (error) {
                 console.error("Upload failed:", error);
