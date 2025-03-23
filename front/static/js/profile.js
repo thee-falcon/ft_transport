@@ -1,4 +1,3 @@
-
 class Profile extends HTMLElement {
     async connectedCallback() {
         // Retrieve and set user data
@@ -20,7 +19,7 @@ class Profile extends HTMLElement {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Profile</title>
+            <title data-i18n="profile.title">Profile</title>
         
             <link rel="stylesheet" href="static/css/profile.css">
             <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,10 +40,10 @@ class Profile extends HTMLElement {
                                     </div>
 
                                     <div class="omar-info">
-                                        <div id="player-won" class="omar-info-won">
+                                        <div id="player-won" class="omar-info-won" data-i18n="profile.gamesWon">
                                             games won: ${matches_won}
                                         </div>
-                                        <div id="player-lose" class="omar-info-lose">
+                                        <div id="player-lose" class="omar-info-lose" data-i18n="profile.gamesLost">
                                             games lose: ${matches_lost}
                                         </div>
                                     </div>
@@ -56,7 +55,7 @@ class Profile extends HTMLElement {
                                     <div id="player-nickname" class="omar-info-nickname">
                                         <p>${username}</p>
                                     </div>
-                                    <div id="player-description" class="omar-info-description">
+                                    <div id="player-description" class="omar-info-description" data-i18n="profile.description">
                                         The Conqueror of PING-PONG Realm
                                     </div>
                                 </div>
@@ -67,7 +66,7 @@ class Profile extends HTMLElement {
                                     <div id="player-strike-value" class="omar-strike-value">${matches_won}</div>
                                 </div>
                                 <div class="omar-contacts-div3">
-                                    contacts
+                                    <span data-i18n="profile.contacts">contacts</span>
                                     <div class="omar-social-icons">
                                         <i id="player-instagram" class="omar-fab fa-instagram"></i>
                                         <i id="player-discord" class="omar-fab fa-discord"></i>
@@ -78,9 +77,9 @@ class Profile extends HTMLElement {
                             <div class="omar-div4-right">
                                 <div class="omar-match-history">
                                     <div class="omar-match-header">
-                                        <span>TIME</span>
-                                        <span>LAST 5 MATCHES</span>
-                                        <span>Result</span>
+                                        <span data-i18n="profile.time">TIME</span>
+                                        <span data-i18n="profile.lastMatches">LAST 5 MATCHES</span>
+                                        <span data-i18n="profile.result">Result</span>
                                     </div>
                                     <div id="match-history-container">
                                         <!-- Match history will be injected here -->
@@ -88,9 +87,9 @@ class Profile extends HTMLElement {
                                 </div>
                             </div>
                             <div class="omar-div5-right">
-                                <button id="player-start-game" class="omar-gameStatus">start game</button>
-                                <button id="player-start-gym" class="omar-gameStatus">start gym</button>
-                                <button id="player-join-tournament" class="omar-gameStatus">join tournament</button>
+                                <button id="player-start-game" class="omar-gameStatus" data-i18n="profile.startGame">start game</button>
+                                <button id="player-start-gym" class="omar-gameStatus" data-i18n="profile.startGym">start gym</button>
+                                <button id="player-join-tournament" class="omar-gameStatus" data-i18n="profile.joinTournament">join tournament</button>
                             </div>
                         </div>
                     </div>
@@ -195,7 +194,10 @@ class Profile extends HTMLElement {
         console.log("Recent Matches:", recentMatches);
     
         if (recentMatches.length === 0) {
-            container.innerHTML = "<p>No match history available.</p>";
+            const noHistoryPara = document.createElement('p');
+            noHistoryPara.setAttribute('data-i18n', 'profile.noMatchHistory');
+            noHistoryPara.textContent = "No match history available.";
+            container.appendChild(noHistoryPara);
             return;
         }
     
@@ -217,11 +219,27 @@ class Profile extends HTMLElement {
                 displayResult = match.result.toLowerCase() === 'win' ? 'LOSE' : 'WIN';
             }
     
-            matchDiv.innerHTML = `
-                <span id="player-match-time-${index+1}" class="omar-match-time">${time}</span>
-                <span id="player-fight-${index+1}" class="omar-match-players">${match.sent_by} VS ${match.send_to}</span>
-                <span id="player-game-status-${index+1}" class="omar-match-result ${match.result.toLowerCase()}">${displayResult}</span>
-            `;
+            // Use the LanguageUtils.createTranslatedElement for dynamically created elements
+            const timeSpan = window.LanguageUtils.createTranslatedElement('span', 'profile.matchTime', {
+                id: `player-match-time-${index+1}`,
+                className: 'omar-match-time'
+            });
+            timeSpan.textContent = time;
+            
+            const playersSpan = document.createElement('span');
+            playersSpan.id = `player-fight-${index+1}`;
+            playersSpan.className = 'omar-match-players';
+            playersSpan.textContent = `${match.sent_by} VS ${match.send_to}`;
+            
+            const resultSpan = window.LanguageUtils.createTranslatedElement('span', `profile.${displayResult.toLowerCase()}`, {
+                id: `player-game-status-${index+1}`,
+                className: `omar-match-result ${match.result.toLowerCase()}`
+            });
+            
+            matchDiv.appendChild(timeSpan);
+            matchDiv.appendChild(playersSpan);
+            matchDiv.appendChild(resultSpan);
+            
             container.appendChild(matchDiv);
         });
     }

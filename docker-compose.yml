@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  web:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./back:/back
+      - ./front:/front
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - DJANGO_SETTINGS_MODULE=main.settings
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data: 

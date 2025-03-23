@@ -472,9 +472,9 @@ class Chat extends HTMLElement {
     
     const self = this;
     let wsStart = "ws://";
-    if (this.loc.protocol === "https:") {
-      wsStart = "wss://";
-    }
+    // if (this.loc.protocol === "https:") {
+    //   wsStart = "wss://";
+    // }
     
     const endpoint = wsStart + this.loc.host + "/chat/?token=" + this.accessToken;
     const newSocket = new WebSocket(endpoint);

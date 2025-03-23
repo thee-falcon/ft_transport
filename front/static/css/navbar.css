@@ -52,11 +52,9 @@ body {
 
 
 .notification-container {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	cursor: pointer;
-	z-index: 1000;
+	position: relative;
+	display: inline-block;
+	margin-left: 10px;
 }
   
 .notification-container .fa-bell {
@@ -139,11 +137,14 @@ body {
 
 .auth-links {
 	display: flex;
-	flex-direction: row;
 	align-items: center;
-	justify-content: space-around;
-	width: 200px;
-	
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+#language-selector-container {
+	margin-left: 10px;
+	min-width: 100px;
 }
 
 .SignIn {
@@ -249,6 +250,73 @@ body {
 }
 
 /* #10292F */
+
+/* Language selector styling */
+.language-selector {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.language-selector select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    outline: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.language-selector select:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.language-selector select option {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+/* Add RTL support for Arabic */
+html[dir="rtl"] .navbar-brand {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+html[dir="rtl"] .language-selector {
+    margin-left: 0;
+    margin-right: 15px;
+}
+
+html[dir="rtl"] .notification-container {
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+/* Support for mobile */
+@media (max-width: 768px) {
+    .language-selector {
+        margin-top: 15px;
+        margin-left: 0;
+    }
+    
+    html[dir="rtl"] .language-selector {
+        margin-right: 0;
+    }
+
+    .auth-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    #language-selector-container {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
 
 
 

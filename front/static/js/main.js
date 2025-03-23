@@ -1,3 +1,6 @@
+// Remove the import statement
+// import './utils/LanguageUtils.js';
+
 const route = {
     'signin': 'signin-component',
     'signup': 'signup-component',
@@ -80,12 +83,28 @@ async function navigate() {
 
     console.log("Loading component:", page); // ✅ Debugging
     container.innerHTML = `<${page}></${page}>`;
+    
+    // Apply translations to new content after it's loaded
+    if (window.LanguageUtils) {
+        // Small delay to ensure component is fully rendered
+        setTimeout(() => {
+            window.LanguageUtils.applyTranslations();
+        }, 50);
+    }
 }
 
 
 
 window.addEventListener("hashchange", navigate);
-window.addEventListener("DOMContentLoaded", navigate);
+window.addEventListener("DOMContentLoaded", () => {
+    // Initialize LanguageUtils before first navigation
+    if (window.LanguageUtils) {
+        window.LanguageUtils.initializeLanguage();
+    }
+    
+    // Then navigate to the current route
+    navigate();
+});
 
 
 function isTokenExpired() {
@@ -140,3 +159,5 @@ function isTokenExpired() {
 //         return false;
 //     }
 // }
+
+// The document direction is now handled by LanguageUtils.setDocumentDirection

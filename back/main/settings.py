@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+import os
+import certifi
+
+os.environ["SSL_CERT_FILE"] = certifi.where()
 
 import os
 
@@ -57,8 +61,25 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'chat',
+    'two_factor.apps.TwoFactorConfig',
 
 ]
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.core.mail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -137,10 +158,25 @@ TEMPLATES = [
 STATIC_URL = '/static/'
 
 # STATIC_ROOT = BASE_DIR / "static_root"
+STATIC_ROOT = BASE_DIR / "static_root"
 
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'makranomar66@gmail.com'
+DEFAULT_FROM_EMAIL = 'makranomar66@gmail.com'
+EMAIL_HOST_PASSWORD = 'tigeyvkwoncbzixa'  # Updated from .env file
 
 STATICFILES_DIRS = [
     BASE_DIR / '../front' / 'static',  # This should point to front/static
+]
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / '../front' / 'static',  # Frontend static files
+    BASE_DIR / 'static',               # Backend static files
 ]
 
 from datetime import timedelta
@@ -165,8 +201,12 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 import os

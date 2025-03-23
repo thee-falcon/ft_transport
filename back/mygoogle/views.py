@@ -38,9 +38,9 @@ from django.db.models import Q
 from .serializer import UserProfileSerializer
 
 # OAuth Credentials
-SECRET = "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"  
-UID = "u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df"
-AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-12c9a4d3eabdcee8f3648a0e5d01b28899a1fe6aa613fd1ff0193b6ed02cb2df&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
+SECRET = "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"  
+UID = "u-s4t2ud-126f7d1f4eb207d04f438aee82e0f81129d449a150959bb41b42f373d0549219"
+AUTH_URL = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-126f7d1f4eb207d04f438aee82e0f81129d449a150959bb41b42f373d0549219&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin42_redir&response_type=code"
 REDIRECT_URI = 'http://localhost:8000/login42_redir'
 
 def set_token_cookies(response, refresh_token, access_token):
